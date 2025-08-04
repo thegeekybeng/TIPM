@@ -477,20 +477,30 @@ Results include trade flow disruptions, industry responses, and consumer effects
 
         # Create results DataFrame
         results_data = []
-        for country, impact in analysis_results.get("country_impacts", {}).items():
-            results_data.append({
-                "Country": country,
-                "Overall Impact": f"{impact.get('total_impact', 0.5):.1%}",
-                "GDP Impact": f"${impact.get('gdp_impact', 10.5):.1f}B",
-                "Risk Level": "Medium"
-            })
-        
-        results_df = pd.DataFrame(results_data) if results_data else pd.DataFrame([{
-            "Country": "No Data",
-            "Overall Impact": "N/A", 
-            "GDP Impact": "N/A",
-            "Risk Level": "N/A"
-        }])
+        for impact in analysis_results.get("country_impacts", []):
+            results_data.append(
+                {
+                    "Country": impact.get("country", "Unknown"),
+                    "Overall Impact": f"{impact.get('economic_disruption', 0.5):.1%}",
+                    "GDP Impact": f"${impact.get('gdp_impact', 10.5):.1f}B",
+                    "Risk Level": "Medium",
+                }
+            )
+
+        results_df = (
+            pd.DataFrame(results_data)
+            if results_data
+            else pd.DataFrame(
+                [
+                    {
+                        "Country": "No Data",
+                        "Overall Impact": "N/A",
+                        "GDP Impact": "N/A",
+                        "Risk Level": "N/A",
+                    }
+                ]
+            )
+        )
 
         success_msg = f"✅ Analysis complete for {len(countries)} countries and {len(sectors)} sectors"
 
@@ -553,11 +563,11 @@ Results include trade flow disruptions, industry responses, and consumer effects
 
         # Create results DataFrame
         results_data = []
-        for country, impact in analysis_results["country_impacts"].items():
+        for impact in analysis_results["country_impacts"]:
             results_data.append(
                 {
-                    "Country": country,
-                    "Overall Impact": f"{impact.get('total_impact', 0.5):.1%}",
+                    "Country": impact.get("country", "Unknown"),
+                    "Overall Impact": f"{impact.get('economic_disruption', 0.5):.1%}",
                     "GDP Impact": f"${impact.get('gdp_impact', 10.5):.1f}B",
                     "Risk Level": "Medium",
                 }
