@@ -112,7 +112,6 @@ streamlit==1.47.1
 sympy==1.14.0
 tenacity==9.1.2
 threadpoolctl==3.6.0
--e git+https://github.com/thegeekybeng/TIPM.git@9e8dee5fa34aa6966d7261f8b1a8f1184c7d7aea#egg=tipm
 tokenizers==0.21.4
 toml==0.10.2
 tomlkit==0.13.3
