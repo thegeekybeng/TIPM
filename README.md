@@ -3,7 +3,9 @@ title: TIPM - Tariff Impact Propagation Model
 emoji: 📊
 colorFrom: blue
 colorTo: red
-sdk: docker
+sdk: gradio
+sdk_version: 4.44.0
+app_file: app_gradio.py
 pinned: false
 license: mit
 ---
