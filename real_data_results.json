@@ -1,0 +1,234 @@
+{
+  "US-China Technology Trade": {
+    "scenario": {
+      "name": "US-China Technology Trade",
+      "countries": [
+        "840",
+        "156"
+      ],
+      "hs_codes": [
+        "8517",
+        "8471",
+        "8542"
+      ],
+      "description": "Analyzing tariff impacts on US-China technology trade"
+    },
+    "tariff_shock": {
+      "tariff_id": "demo_us_china_technology_trade",
+      "policy_text": "20% tariff on imports from 156",
+      "effective_date": "2024-01-01",
+      "hs_codes": [
+        "8517",
+        "8471",
+        "8542"
+      ],
+      "rate_change": 0.2,
+      "origin_country": "156",
+      "destination_country": "840"
+    },
+    "prediction": {
+      "trade_flow_impact": "TradeFlowPrediction(affected_routes=[{'route_id': '156-US', 'origin': '156', 'destination': 'US', 'hs_code': '8517', 'baseline_volume': 20165238.595585454, 'baseline_cost': 60957.007727615266, 'baseline_time': 33.498709125936124, 'flow_change': np.float64(1.6120962348764947), 'cost_change': np.float64(20.048561763905546)}, {'route_id': '840-US', 'origin': '840', 'destination': 'US', 'hs_code': '8517', 'baseline_volume': 14466380.773936296, 'baseline_cost': 55761.24309059031, 'baseline_time': 36.35475624914398, 'flow_change': np.float64(0.6069789404170958), 'cost_change': np.float64(20.07840283605594)}], reallocation_matrix=array([[0.        , 1.61209623, 0.        ],\n       [0.        , 0.        , 0.        ],\n       [0.        , 0.60697894, 0.        ]]), supply_chain_disruption={'8517': np.float64(6.407656400978268e-08)}, alternative_sources={'156-US': ['840'], '840-US': ['156']}, cost_increases={'156-US': np.float64(20.048561763905546), '840-US': np.float64(20.07840283605594)}, time_delays={'156-US': np.float64(100.24280881952774), '840-US': np.float64(100.3920141802797)})",
+      "industry_response": "IndustryResponse(sector_impacts={'agriculture': 0.1, 'mining': 0.1, 'manufacturing': 0.1, 'electronics': 0.1, 'automotive': 0.1, 'textiles': 0.1, 'chemicals': 0.1, 'food_processing': 0.1, 'energy': 0.1, 'services': 0.1, 'construction': 0.1, 'transportation': 0.1}, substitution_effects={'agriculture': 0.06, 'mining': 0.06, 'manufacturing': 0.06, 'electronics': 0.06, 'automotive': 0.06, 'textiles': 0.06, 'chemicals': 0.06, 'food_processing': 0.06, 'energy': 0.06, 'services': 0.06, 'construction': 0.06, 'transportation': 0.06}, cost_adjustments={'agriculture': 0.12, 'mining': 0.12, 'manufacturing': 0.12, 'electronics': 0.12, 'automotive': 0.12, 'textiles': 0.12, 'chemicals': 0.12, 'food_processing': 0.12, 'energy': 0.12, 'services': 0.12, 'construction': 0.12, 'transportation': 0.12}, capacity_utilization={'agriculture': 0.97, 'mining': 0.97, 'manufacturing': 0.97, 'electronics': 0.97, 'automotive': 0.97, 'textiles': 0.97, 'chemicals': 0.97, 'food_processing': 0.97, 'energy': 0.97, 'services': 0.97, 'construction': 0.97, 'transportation': 0.97}, employment_effects={'agriculture': -0.04000000000000001, 'mining': -0.04000000000000001, 'manufacturing': -0.04000000000000001, 'electronics': -0.04000000000000001, 'automotive': -0.04000000000000001, 'textiles': -0.04000000000000001, 'chemicals': -0.04000000000000001, 'food_processing': -0.04000000000000001, 'energy': -0.04000000000000001, 'services': -0.04000000000000001, 'construction': -0.04000000000000001, 'transportation': -0.04000000000000001})",
+      "firm_impact": "FirmImpact(layoff_risk={'agriculture': 0.08000000000000002, 'mining': 0.08000000000000002, 'manufacturing': 0.08000000000000002, 'electronics': 0.08000000000000002, 'automotive': 0.08000000000000002, 'textiles': 0.08000000000000002, 'chemicals': 0.08000000000000002, 'food_processing': 0.08000000000000002, 'energy': 0.08000000000000002, 'services': 0.08000000000000002, 'construction': 0.08000000000000002, 'transportation': 0.08000000000000002}, relocation_probability={'agriculture': 0.03, 'mining': 0.03, 'manufacturing': 0.03, 'electronics': 0.03, 'automotive': 0.03, 'textiles': 0.03, 'chemicals': 0.03, 'food_processing': 0.03, 'energy': 0.03, 'services': 0.03, 'construction': 0.03, 'transportation': 0.03}, adaptation_strategies={'agriculture': 'pass_through', 'mining': 'pass_through', 'manufacturing': 'pass_through', 'electronics': 'pass_through', 'automotive': 'pass_through', 'textiles': 'pass_through', 'chemicals': 'pass_through', 'food_processing': 'pass_through', 'energy': 'pass_through', 'services': 'pass_through', 'construction': 'pass_through', 'transportation': 'pass_through'}, employment_changes={'agriculture': -40, 'mining': -40, 'manufacturing': -40, 'electronics': -40, 'automotive': -40, 'textiles': -40, 'chemicals': -40, 'food_processing': -40, 'energy': -40, 'services': -40, 'construction': -40, 'transportation': -40}, firm_survival={'agriculture': 0.9, 'mining': 0.9, 'manufacturing': 0.9, 'electronics': 0.9, 'automotive': 0.9, 'textiles': 0.9, 'chemicals': 0.9, 'food_processing': 0.9, 'energy': 0.9, 'services': 0.9, 'construction': 0.9, 'transportation': 0.9})",
+      "consumer_impact": "ConsumerImpact(price_increases={'agriculture': 0.012000000000000002, 'mining': 0.012000000000000002, 'manufacturing': 0.012000000000000002, 'electronics': 0.012000000000000002, 'automotive': 0.012000000000000002, 'textiles': 0.012000000000000002, 'chemicals': 0.012000000000000002, 'food_processing': 0.012000000000000002, 'energy': 0.012000000000000002, 'services': 0.012000000000000002, 'construction': 0.012000000000000002, 'transportation': 0.012000000000000002}, cpi_changes={'agriculture': 0.0036000000000000003, 'mining': 0.0036000000000000003, 'manufacturing': 0.0036000000000000003, 'electronics': 0.0036000000000000003, 'automotive': 0.0036000000000000003, 'textiles': 0.0036000000000000003, 'chemicals': 0.0036000000000000003, 'food_processing': 0.0036000000000000003, 'energy': 0.0036000000000000003, 'services': 0.0036000000000000003, 'construction': 0.0036000000000000003, 'transportation': 0.0036000000000000003}, demand_responses={'agriculture': -0.009600000000000003, 'mining': -0.009600000000000003, 'manufacturing': -0.009600000000000003, 'electronics': -0.009600000000000003, 'automotive': -0.009600000000000003, 'textiles': -0.009600000000000003, 'chemicals': -0.009600000000000003, 'food_processing': -0.009600000000000003, 'energy': -0.009600000000000003, 'services': -0.009600000000000003, 'construction': -0.009600000000000003, 'transportation': -0.009600000000000003}, welfare_effects={'agriculture': -0.006000000000000001, 'mining': -0.006000000000000001, 'manufacturing': -0.006000000000000001, 'electronics': -0.006000000000000001, 'automotive': -0.006000000000000001, 'textiles': -0.006000000000000001, 'chemicals': -0.006000000000000001, 'food_processing': -0.006000000000000001, 'energy': -0.006000000000000001, 'services': -0.006000000000000001, 'construction': -0.006000000000000001, 'transportation': -0.006000000000000001}, substitution_patterns={'agriculture': 'no_change', 'mining': 'no_change', 'manufacturing': 'no_change', 'electronics': 'no_change', 'automotive': 'no_change', 'textiles': 'no_change', 'chemicals': 'no_change', 'food_processing': 'no_change', 'energy': 'no_change', 'services': 'no_change', 'construction': 'no_change', 'transportation': 'no_change'})",
+      "geopolitical_impact": "GeopoliticalImpact(social_tension={'agriculture': 0.024000000000000004, 'mining': 0.024000000000000004, 'manufacturing': 0.024000000000000004, 'electronics': 0.024000000000000004, 'automotive': 0.024000000000000004, 'textiles': 0.024000000000000004, 'chemicals': 0.024000000000000004, 'food_processing': 0.024000000000000004, 'energy': 0.024000000000000004, 'services': 0.024000000000000004, 'construction': 0.024000000000000004, 'transportation': 0.024000000000000004}, protest_probability={'agriculture': 0.018000000000000002, 'mining': 0.018000000000000002, 'manufacturing': 0.018000000000000002, 'electronics': 0.018000000000000002, 'automotive': 0.018000000000000002, 'textiles': 0.018000000000000002, 'chemicals': 0.018000000000000002, 'food_processing': 0.018000000000000002, 'energy': 0.018000000000000002, 'services': 0.018000000000000002, 'construction': 0.018000000000000002, 'transportation': 0.018000000000000002}, political_stability={'agriculture': 0.988, 'mining': 0.988, 'manufacturing': 0.988, 'electronics': 0.988, 'automotive': 0.988, 'textiles': 0.988, 'chemicals': 0.988, 'food_processing': 0.988, 'energy': 0.988, 'services': 0.988, 'construction': 0.988, 'transportation': 0.988}, policy_responses={'agriculture': 'no_action', 'mining': 'no_action', 'manufacturing': 'no_action', 'electronics': 'no_action', 'automotive': 'no_action', 'textiles': 'no_action', 'chemicals': 'no_action', 'food_processing': 'no_action', 'energy': 'no_action', 'services': 'no_action', 'construction': 'no_action', 'transportation': 'no_action'}, migration_pressure={'agriculture': 0.007200000000000001, 'mining': 0.007200000000000001, 'manufacturing': 0.007200000000000001, 'electronics': 0.007200000000000001, 'automotive': 0.007200000000000001, 'textiles': 0.007200000000000001, 'chemicals': 0.007200000000000001, 'food_processing': 0.007200000000000001, 'energy': 0.007200000000000001, 'services': 0.007200000000000001, 'construction': 0.007200000000000001, 'transportation': 0.007200000000000001})",
+      "confidence_scores": {
+        "policy_confidence": 0.85,
+        "trade_flow_confidence": 0.78,
+        "industry_confidence": 0.82,
+        "firm_confidence": 0.73,
+        "consumer_confidence": 0.79,
+        "geopolitical_confidence": 0.65,
+        "overall_confidence": 0.77
+      },
+      "timestamp": "2025-08-04T08:35:42.793929"
+    },
+    "data_provenance": {
+      "last_update": "2025-08-04T08:35:40.587147",
+      "datasets_available": [],
+      "data_quality_metrics": {},
+      "model_metadata": {
+        "data_sources": [],
+        "data_quality": {},
+        "training_countries": [
+          "840",
+          "156",
+          "276",
+          "392"
+        ],
+        "training_hs_codes": [
+          "7208",
+          "7210"
+        ],
+        "training_years": [
+          2023
+        ],
+        "last_trained": "2025-08-04T08:35:45.200330"
+      },
+      "configuration": {
+        "cache_directory": "real_data_cache",
+        "fallback_enabled": true,
+        "quality_thresholds": {
+          "min_data_points": 10,
+          "min_trade_coverage": 0.7,
+          "max_missing_data_ratio": 0.3
+        }
+      }
+    },
+    "processing_time": "2025-08-04T08:35:42.793933"
+  },
+  "EU-US Automotive Trade": {
+    "scenario": {
+      "name": "EU-US Automotive Trade",
+      "countries": [
+        "276",
+        "840"
+      ],
+      "hs_codes": [
+        "8703",
+        "8708"
+      ],
+      "description": "Analyzing tariff impacts on EU-US automotive sector"
+    },
+    "tariff_shock": {
+      "tariff_id": "demo_eu_us_automotive_trade",
+      "policy_text": "20% tariff on imports from 840",
+      "effective_date": "2024-01-01",
+      "hs_codes": [
+        "8703",
+        "8708"
+      ],
+      "rate_change": 0.2,
+      "origin_country": "840",
+      "destination_country": "276"
+    },
+    "prediction": {
+      "trade_flow_impact": "TradeFlowPrediction(affected_routes=[{'route_id': '840-US', 'origin': '840', 'destination': 'US', 'hs_code': '8703', 'baseline_volume': 21239517.30978554, 'baseline_cost': 51591.68910744106, 'baseline_time': 39.80988692915594, 'flow_change': np.float64(-0.6694592723223975), 'cost_change': np.float64(20.072993178537175)}, {'route_id': '276-US', 'origin': '276', 'destination': 'US', 'hs_code': '8703', 'baseline_volume': 8218902.037832087, 'baseline_cost': 24040.592235038763, 'baseline_time': 46.18375179078508, 'flow_change': np.float64(0.5721424982385799), 'cost_change': np.float64(20.043651478082904)}], reallocation_matrix=array([[ 0.        ,  0.        ,  0.        ],\n       [-0.66945927,  0.        ,  0.        ],\n       [ 0.5721425 ,  0.        ,  0.        ]]), supply_chain_disruption={'8703': np.float64(4.214760323389139e-08)}, alternative_sources={'840-US': ['156', '276'], '276-US': ['156', '840']}, cost_increases={'840-US': np.float64(20.072993178537175), '276-US': np.float64(20.043651478082904)}, time_delays={'840-US': np.float64(100.36496589268587), '276-US': np.float64(100.21825739041452)})",
+      "industry_response": "IndustryResponse(sector_impacts={'agriculture': 0.1, 'mining': 0.1, 'manufacturing': 0.1, 'electronics': 0.1, 'automotive': 0.1, 'textiles': 0.1, 'chemicals': 0.1, 'food_processing': 0.1, 'energy': 0.1, 'services': 0.1, 'construction': 0.1, 'transportation': 0.1}, substitution_effects={'agriculture': 0.06, 'mining': 0.06, 'manufacturing': 0.06, 'electronics': 0.06, 'automotive': 0.06, 'textiles': 0.06, 'chemicals': 0.06, 'food_processing': 0.06, 'energy': 0.06, 'services': 0.06, 'construction': 0.06, 'transportation': 0.06}, cost_adjustments={'agriculture': 0.12, 'mining': 0.12, 'manufacturing': 0.12, 'electronics': 0.12, 'automotive': 0.12, 'textiles': 0.12, 'chemicals': 0.12, 'food_processing': 0.12, 'energy': 0.12, 'services': 0.12, 'construction': 0.12, 'transportation': 0.12}, capacity_utilization={'agriculture': 0.97, 'mining': 0.97, 'manufacturing': 0.97, 'electronics': 0.97, 'automotive': 0.97, 'textiles': 0.97, 'chemicals': 0.97, 'food_processing': 0.97, 'energy': 0.97, 'services': 0.97, 'construction': 0.97, 'transportation': 0.97}, employment_effects={'agriculture': -0.04000000000000001, 'mining': -0.04000000000000001, 'manufacturing': -0.04000000000000001, 'electronics': -0.04000000000000001, 'automotive': -0.04000000000000001, 'textiles': -0.04000000000000001, 'chemicals': -0.04000000000000001, 'food_processing': -0.04000000000000001, 'energy': -0.04000000000000001, 'services': -0.04000000000000001, 'construction': -0.04000000000000001, 'transportation': -0.04000000000000001})",
+      "firm_impact": "FirmImpact(layoff_risk={'agriculture': 0.08000000000000002, 'mining': 0.08000000000000002, 'manufacturing': 0.08000000000000002, 'electronics': 0.08000000000000002, 'automotive': 0.08000000000000002, 'textiles': 0.08000000000000002, 'chemicals': 0.08000000000000002, 'food_processing': 0.08000000000000002, 'energy': 0.08000000000000002, 'services': 0.08000000000000002, 'construction': 0.08000000000000002, 'transportation': 0.08000000000000002}, relocation_probability={'agriculture': 0.03, 'mining': 0.03, 'manufacturing': 0.03, 'electronics': 0.03, 'automotive': 0.03, 'textiles': 0.03, 'chemicals': 0.03, 'food_processing': 0.03, 'energy': 0.03, 'services': 0.03, 'construction': 0.03, 'transportation': 0.03}, adaptation_strategies={'agriculture': 'pass_through', 'mining': 'pass_through', 'manufacturing': 'pass_through', 'electronics': 'pass_through', 'automotive': 'pass_through', 'textiles': 'pass_through', 'chemicals': 'pass_through', 'food_processing': 'pass_through', 'energy': 'pass_through', 'services': 'pass_through', 'construction': 'pass_through', 'transportation': 'pass_through'}, employment_changes={'agriculture': -40, 'mining': -40, 'manufacturing': -40, 'electronics': -40, 'automotive': -40, 'textiles': -40, 'chemicals': -40, 'food_processing': -40, 'energy': -40, 'services': -40, 'construction': -40, 'transportation': -40}, firm_survival={'agriculture': 0.9, 'mining': 0.9, 'manufacturing': 0.9, 'electronics': 0.9, 'automotive': 0.9, 'textiles': 0.9, 'chemicals': 0.9, 'food_processing': 0.9, 'energy': 0.9, 'services': 0.9, 'construction': 0.9, 'transportation': 0.9})",
+      "consumer_impact": "ConsumerImpact(price_increases={'agriculture': 0.012000000000000002, 'mining': 0.012000000000000002, 'manufacturing': 0.012000000000000002, 'electronics': 0.012000000000000002, 'automotive': 0.012000000000000002, 'textiles': 0.012000000000000002, 'chemicals': 0.012000000000000002, 'food_processing': 0.012000000000000002, 'energy': 0.012000000000000002, 'services': 0.012000000000000002, 'construction': 0.012000000000000002, 'transportation': 0.012000000000000002}, cpi_changes={'agriculture': 0.0036000000000000003, 'mining': 0.0036000000000000003, 'manufacturing': 0.0036000000000000003, 'electronics': 0.0036000000000000003, 'automotive': 0.0036000000000000003, 'textiles': 0.0036000000000000003, 'chemicals': 0.0036000000000000003, 'food_processing': 0.0036000000000000003, 'energy': 0.0036000000000000003, 'services': 0.0036000000000000003, 'construction': 0.0036000000000000003, 'transportation': 0.0036000000000000003}, demand_responses={'agriculture': -0.009600000000000003, 'mining': -0.009600000000000003, 'manufacturing': -0.009600000000000003, 'electronics': -0.009600000000000003, 'automotive': -0.009600000000000003, 'textiles': -0.009600000000000003, 'chemicals': -0.009600000000000003, 'food_processing': -0.009600000000000003, 'energy': -0.009600000000000003, 'services': -0.009600000000000003, 'construction': -0.009600000000000003, 'transportation': -0.009600000000000003}, welfare_effects={'agriculture': -0.006000000000000001, 'mining': -0.006000000000000001, 'manufacturing': -0.006000000000000001, 'electronics': -0.006000000000000001, 'automotive': -0.006000000000000001, 'textiles': -0.006000000000000001, 'chemicals': -0.006000000000000001, 'food_processing': -0.006000000000000001, 'energy': -0.006000000000000001, 'services': -0.006000000000000001, 'construction': -0.006000000000000001, 'transportation': -0.006000000000000001}, substitution_patterns={'agriculture': 'no_change', 'mining': 'no_change', 'manufacturing': 'no_change', 'electronics': 'no_change', 'automotive': 'no_change', 'textiles': 'no_change', 'chemicals': 'no_change', 'food_processing': 'no_change', 'energy': 'no_change', 'services': 'no_change', 'construction': 'no_change', 'transportation': 'no_change'})",
+      "geopolitical_impact": "GeopoliticalImpact(social_tension={'agriculture': 0.024000000000000004, 'mining': 0.024000000000000004, 'manufacturing': 0.024000000000000004, 'electronics': 0.024000000000000004, 'automotive': 0.024000000000000004, 'textiles': 0.024000000000000004, 'chemicals': 0.024000000000000004, 'food_processing': 0.024000000000000004, 'energy': 0.024000000000000004, 'services': 0.024000000000000004, 'construction': 0.024000000000000004, 'transportation': 0.024000000000000004}, protest_probability={'agriculture': 0.018000000000000002, 'mining': 0.018000000000000002, 'manufacturing': 0.018000000000000002, 'electronics': 0.018000000000000002, 'automotive': 0.018000000000000002, 'textiles': 0.018000000000000002, 'chemicals': 0.018000000000000002, 'food_processing': 0.018000000000000002, 'energy': 0.018000000000000002, 'services': 0.018000000000000002, 'construction': 0.018000000000000002, 'transportation': 0.018000000000000002}, political_stability={'agriculture': 0.988, 'mining': 0.988, 'manufacturing': 0.988, 'electronics': 0.988, 'automotive': 0.988, 'textiles': 0.988, 'chemicals': 0.988, 'food_processing': 0.988, 'energy': 0.988, 'services': 0.988, 'construction': 0.988, 'transportation': 0.988}, policy_responses={'agriculture': 'no_action', 'mining': 'no_action', 'manufacturing': 'no_action', 'electronics': 'no_action', 'automotive': 'no_action', 'textiles': 'no_action', 'chemicals': 'no_action', 'food_processing': 'no_action', 'energy': 'no_action', 'services': 'no_action', 'construction': 'no_action', 'transportation': 'no_action'}, migration_pressure={'agriculture': 0.007200000000000001, 'mining': 0.007200000000000001, 'manufacturing': 0.007200000000000001, 'electronics': 0.007200000000000001, 'automotive': 0.007200000000000001, 'textiles': 0.007200000000000001, 'chemicals': 0.007200000000000001, 'food_processing': 0.007200000000000001, 'energy': 0.007200000000000001, 'services': 0.007200000000000001, 'construction': 0.007200000000000001, 'transportation': 0.007200000000000001})",
+      "confidence_scores": {
+        "policy_confidence": 0.85,
+        "trade_flow_confidence": 0.78,
+        "industry_confidence": 0.82,
+        "firm_confidence": 0.73,
+        "consumer_confidence": 0.79,
+        "geopolitical_confidence": 0.65,
+        "overall_confidence": 0.77
+      },
+      "timestamp": "2025-08-04T08:35:44.010322"
+    },
+    "data_provenance": {
+      "last_update": "2025-08-04T08:35:40.587147",
+      "datasets_available": [],
+      "data_quality_metrics": {},
+      "model_metadata": {
+        "data_sources": [],
+        "data_quality": {},
+        "training_countries": [
+          "840",
+          "156",
+          "276",
+          "392"
+        ],
+        "training_hs_codes": [
+          "7208",
+          "7210"
+        ],
+        "training_years": [
+          2023
+        ],
+        "last_trained": "2025-08-04T08:35:45.200330"
+      },
+      "configuration": {
+        "cache_directory": "real_data_cache",
+        "fallback_enabled": true,
+        "quality_thresholds": {
+          "min_data_points": 10,
+          "min_trade_coverage": 0.7,
+          "max_missing_data_ratio": 0.3
+        }
+      }
+    },
+    "processing_time": "2025-08-04T08:35:44.010334"
+  },
+  "Global Steel Trade": {
+    "scenario": {
+      "name": "Global Steel Trade",
+      "countries": [
+        "840",
+        "156",
+        "276",
+        "392"
+      ],
+      "hs_codes": [
+        "7208",
+        "7210"
+      ],
+      "description": "Analyzing global steel tariff impacts"
+    },
+    "tariff_shock": {
+      "tariff_id": "demo_global_steel_trade",
+      "policy_text": "20% tariff on imports from 156",
+      "effective_date": "2024-01-01",
+      "hs_codes": [
+        "7208",
+        "7210"
+      ],
+      "rate_change": 0.2,
+      "origin_country": "156",
+      "destination_country": "840"
+    },
+    "prediction": {
+      "trade_flow_impact": "TradeFlowPrediction(affected_routes=[{'route_id': '156-US', 'origin': '156', 'destination': 'US', 'hs_code': '7208', 'baseline_volume': 21239517.30978554, 'baseline_cost': 57015.178816541404, 'baseline_time': 35.02693510748843, 'flow_change': np.float64(2.4365677658656857), 'cost_change': np.float64(20.012103304427708)}, {'route_id': '840-US', 'origin': '840', 'destination': 'US', 'hs_code': '7208', 'baseline_volume': 8218902.037832087, 'baseline_cost': 54572.245590600854, 'baseline_time': 34.46348317680315, 'flow_change': np.float64(0.7909509312302393), 'cost_change': np.float64(20.04051420647962)}], reallocation_matrix=array([[0.        , 0.        , 0.        , 0.        , 0.        ],\n       [0.        , 0.        , 0.        , 0.        , 0.79095093],\n       [0.        , 0.        , 0.        , 0.        , 0.        ],\n       [0.        , 0.        , 0.        , 0.        , 2.43656777],\n       [0.        , 0.        , 0.        , 0.        , 0.        ]]), supply_chain_disruption={'7208': np.float64(1.0956184237213468e-07)}, alternative_sources={'156-US': ['840', '276', '392'], '840-US': ['156', '276', '392']}, cost_increases={'156-US': np.float64(20.012103304427708), '840-US': np.float64(20.04051420647962)}, time_delays={'156-US': np.float64(100.06051652213854), '840-US': np.float64(100.20257103239811)})",
+      "industry_response": "IndustryResponse(sector_impacts={'agriculture': 0.1, 'mining': 0.1, 'manufacturing': 0.1, 'electronics': 0.1, 'automotive': 0.1, 'textiles': 0.1, 'chemicals': 0.1, 'food_processing': 0.1, 'energy': 0.1, 'services': 0.1, 'construction': 0.1, 'transportation': 0.1}, substitution_effects={'agriculture': 0.06, 'mining': 0.06, 'manufacturing': 0.06, 'electronics': 0.06, 'automotive': 0.06, 'textiles': 0.06, 'chemicals': 0.06, 'food_processing': 0.06, 'energy': 0.06, 'services': 0.06, 'construction': 0.06, 'transportation': 0.06}, cost_adjustments={'agriculture': 0.12, 'mining': 0.12, 'manufacturing': 0.12, 'electronics': 0.12, 'automotive': 0.12, 'textiles': 0.12, 'chemicals': 0.12, 'food_processing': 0.12, 'energy': 0.12, 'services': 0.12, 'construction': 0.12, 'transportation': 0.12}, capacity_utilization={'agriculture': 0.97, 'mining': 0.97, 'manufacturing': 0.97, 'electronics': 0.97, 'automotive': 0.97, 'textiles': 0.97, 'chemicals': 0.97, 'food_processing': 0.97, 'energy': 0.97, 'services': 0.97, 'construction': 0.97, 'transportation': 0.97}, employment_effects={'agriculture': -0.04000000000000001, 'mining': -0.04000000000000001, 'manufacturing': -0.04000000000000001, 'electronics': -0.04000000000000001, 'automotive': -0.04000000000000001, 'textiles': -0.04000000000000001, 'chemicals': -0.04000000000000001, 'food_processing': -0.04000000000000001, 'energy': -0.04000000000000001, 'services': -0.04000000000000001, 'construction': -0.04000000000000001, 'transportation': -0.04000000000000001})",
+      "firm_impact": "FirmImpact(layoff_risk={'agriculture': 0.08000000000000002, 'mining': 0.08000000000000002, 'manufacturing': 0.08000000000000002, 'electronics': 0.08000000000000002, 'automotive': 0.08000000000000002, 'textiles': 0.08000000000000002, 'chemicals': 0.08000000000000002, 'food_processing': 0.08000000000000002, 'energy': 0.08000000000000002, 'services': 0.08000000000000002, 'construction': 0.08000000000000002, 'transportation': 0.08000000000000002}, relocation_probability={'agriculture': 0.03, 'mining': 0.03, 'manufacturing': 0.03, 'electronics': 0.03, 'automotive': 0.03, 'textiles': 0.03, 'chemicals': 0.03, 'food_processing': 0.03, 'energy': 0.03, 'services': 0.03, 'construction': 0.03, 'transportation': 0.03}, adaptation_strategies={'agriculture': 'pass_through', 'mining': 'pass_through', 'manufacturing': 'pass_through', 'electronics': 'pass_through', 'automotive': 'pass_through', 'textiles': 'pass_through', 'chemicals': 'pass_through', 'food_processing': 'pass_through', 'energy': 'pass_through', 'services': 'pass_through', 'construction': 'pass_through', 'transportation': 'pass_through'}, employment_changes={'agriculture': -40, 'mining': -40, 'manufacturing': -40, 'electronics': -40, 'automotive': -40, 'textiles': -40, 'chemicals': -40, 'food_processing': -40, 'energy': -40, 'services': -40, 'construction': -40, 'transportation': -40}, firm_survival={'agriculture': 0.9, 'mining': 0.9, 'manufacturing': 0.9, 'electronics': 0.9, 'automotive': 0.9, 'textiles': 0.9, 'chemicals': 0.9, 'food_processing': 0.9, 'energy': 0.9, 'services': 0.9, 'construction': 0.9, 'transportation': 0.9})",
+      "consumer_impact": "ConsumerImpact(price_increases={'agriculture': 0.012000000000000002, 'mining': 0.012000000000000002, 'manufacturing': 0.012000000000000002, 'electronics': 0.012000000000000002, 'automotive': 0.012000000000000002, 'textiles': 0.012000000000000002, 'chemicals': 0.012000000000000002, 'food_processing': 0.012000000000000002, 'energy': 0.012000000000000002, 'services': 0.012000000000000002, 'construction': 0.012000000000000002, 'transportation': 0.012000000000000002}, cpi_changes={'agriculture': 0.0036000000000000003, 'mining': 0.0036000000000000003, 'manufacturing': 0.0036000000000000003, 'electronics': 0.0036000000000000003, 'automotive': 0.0036000000000000003, 'textiles': 0.0036000000000000003, 'chemicals': 0.0036000000000000003, 'food_processing': 0.0036000000000000003, 'energy': 0.0036000000000000003, 'services': 0.0036000000000000003, 'construction': 0.0036000000000000003, 'transportation': 0.0036000000000000003}, demand_responses={'agriculture': -0.009600000000000003, 'mining': -0.009600000000000003, 'manufacturing': -0.009600000000000003, 'electronics': -0.009600000000000003, 'automotive': -0.009600000000000003, 'textiles': -0.009600000000000003, 'chemicals': -0.009600000000000003, 'food_processing': -0.009600000000000003, 'energy': -0.009600000000000003, 'services': -0.009600000000000003, 'construction': -0.009600000000000003, 'transportation': -0.009600000000000003}, welfare_effects={'agriculture': -0.006000000000000001, 'mining': -0.006000000000000001, 'manufacturing': -0.006000000000000001, 'electronics': -0.006000000000000001, 'automotive': -0.006000000000000001, 'textiles': -0.006000000000000001, 'chemicals': -0.006000000000000001, 'food_processing': -0.006000000000000001, 'energy': -0.006000000000000001, 'services': -0.006000000000000001, 'construction': -0.006000000000000001, 'transportation': -0.006000000000000001}, substitution_patterns={'agriculture': 'no_change', 'mining': 'no_change', 'manufacturing': 'no_change', 'electronics': 'no_change', 'automotive': 'no_change', 'textiles': 'no_change', 'chemicals': 'no_change', 'food_processing': 'no_change', 'energy': 'no_change', 'services': 'no_change', 'construction': 'no_change', 'transportation': 'no_change'})",
+      "geopolitical_impact": "GeopoliticalImpact(social_tension={'agriculture': 0.024000000000000004, 'mining': 0.024000000000000004, 'manufacturing': 0.024000000000000004, 'electronics': 0.024000000000000004, 'automotive': 0.024000000000000004, 'textiles': 0.024000000000000004, 'chemicals': 0.024000000000000004, 'food_processing': 0.024000000000000004, 'energy': 0.024000000000000004, 'services': 0.024000000000000004, 'construction': 0.024000000000000004, 'transportation': 0.024000000000000004}, protest_probability={'agriculture': 0.018000000000000002, 'mining': 0.018000000000000002, 'manufacturing': 0.018000000000000002, 'electronics': 0.018000000000000002, 'automotive': 0.018000000000000002, 'textiles': 0.018000000000000002, 'chemicals': 0.018000000000000002, 'food_processing': 0.018000000000000002, 'energy': 0.018000000000000002, 'services': 0.018000000000000002, 'construction': 0.018000000000000002, 'transportation': 0.018000000000000002}, political_stability={'agriculture': 0.988, 'mining': 0.988, 'manufacturing': 0.988, 'electronics': 0.988, 'automotive': 0.988, 'textiles': 0.988, 'chemicals': 0.988, 'food_processing': 0.988, 'energy': 0.988, 'services': 0.988, 'construction': 0.988, 'transportation': 0.988}, policy_responses={'agriculture': 'no_action', 'mining': 'no_action', 'manufacturing': 'no_action', 'electronics': 'no_action', 'automotive': 'no_action', 'textiles': 'no_action', 'chemicals': 'no_action', 'food_processing': 'no_action', 'energy': 'no_action', 'services': 'no_action', 'construction': 'no_action', 'transportation': 'no_action'}, migration_pressure={'agriculture': 0.007200000000000001, 'mining': 0.007200000000000001, 'manufacturing': 0.007200000000000001, 'electronics': 0.007200000000000001, 'automotive': 0.007200000000000001, 'textiles': 0.007200000000000001, 'chemicals': 0.007200000000000001, 'food_processing': 0.007200000000000001, 'energy': 0.007200000000000001, 'services': 0.007200000000000001, 'construction': 0.007200000000000001, 'transportation': 0.007200000000000001})",
+      "confidence_scores": {
+        "policy_confidence": 0.85,
+        "trade_flow_confidence": 0.78,
+        "industry_confidence": 0.82,
+        "firm_confidence": 0.73,
+        "consumer_confidence": 0.79,
+        "geopolitical_confidence": 0.65,
+        "overall_confidence": 0.77
+      },
+      "timestamp": "2025-08-04T08:35:45.226987"
+    },
+    "data_provenance": {
+      "last_update": "2025-08-04T08:35:40.587147",
+      "datasets_available": [],
+      "data_quality_metrics": {},
+      "model_metadata": {
+        "data_sources": [],
+        "data_quality": {},
+        "training_countries": [
+          "840",
+          "156",
+          "276",
+          "392"
+        ],
+        "training_hs_codes": [
+          "7208",
+          "7210"
+        ],
+        "training_years": [
+          2023
+        ],
+        "last_trained": "2025-08-04T08:35:45.200330"
+      },
+      "configuration": {
+        "cache_directory": "real_data_cache",
+        "fallback_enabled": true,
+        "quality_thresholds": {
+          "min_data_points": 10,
+          "min_trade_coverage": 0.7,
+          "max_missing_data_ratio": 0.3
+        }
+      }
+    },
+    "processing_time": "2025-08-04T08:35:45.226991"
+  }
+}

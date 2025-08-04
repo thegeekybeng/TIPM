@@ -1,0 +1,8 @@
+{
+  "model_version": "0.1.0",
+  "policy_model": "distilbert-base-uncased",
+  "max_text_length": 512,
+  "graph_embedding_dim": 128,
+  "num_sectors": 20,
+  "response_time_horizon": 12
+}
