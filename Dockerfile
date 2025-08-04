@@ -18,15 +18,18 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy application code
 COPY . .
 
-# Install the package
-RUN pip install -e .
-
 # Create non-root user
-RUN useradd --create-home --shell /bin/bash tipm
-USER tipm
+RUN useradd --create-home --shell /bin/bash user
+USER user
 
-# Expose port for Streamlit/web interfaces
-EXPOSE 8501
+# Set environment variables for Streamlit
+ENV STREAMLIT_SERVER_PORT=7860
+ENV STREAMLIT_SERVER_ADDRESS=0.0.0.0
+ENV STREAMLIT_SERVER_HEADLESS=true
+ENV STREAMLIT_BROWSER_GATHER_USAGE_STATS=false
 
-# Default command
-CMD ["python", "-m", "tipm.cli", "--help"]
+# Expose port for HF Spaces (must be 7860)
+EXPOSE 7860
+
+# Default command to run the Streamlit app
+CMD ["streamlit", "run", "app.py", "--server.port=7860", "--server.address=0.0.0.0"]
