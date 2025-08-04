@@ -12,9 +12,11 @@ import numpy as np
 from typing import Dict, List, Optional, Tuple
 from dataclasses import dataclass
 import json
+import time
+from functools import lru_cache
 
 
-# Data structures and sample data (same as Streamlit version)
+# Data structures and sample data (same asdef run_enhanced_timp_analysis(countries: List[str], sectors: List[str]) -> Dict:ersion)
 @dataclass
 class CountryTariffData:
     country: str
@@ -409,7 +411,18 @@ def get_preset_selection(preset: str) -> Tuple[List[str], List[str]]:
         )
 
 
-def run_analysis(preset, custom_countries, custom_sectors):
+# Enhanced TIPM Analysis with caching for performance
+@lru_cache(maxsize=128)
+def cached_country_analysis(countries_tuple: tuple, sectors_tuple: tuple) -> Dict:
+    """Cached version of country analysis for better performance"""
+    countries = list(countries_tuple)
+    sectors = list(sectors_tuple)
+
+    # Convert to analysis format
+    return run_enhanced_tipm_analysis(countries, sectors)
+
+
+def run_enhanced_timp_analysis(countries: List[str], sectors: List[str]) -> Dict:
     """Main analysis function for Gradio interface"""
     try:
         # Get selections based on preset
@@ -498,7 +511,6 @@ def create_gradio_app():
 
     with gr.Blocks(
         title="TIPM: Tariff Impact Analysis",
-        theme=gr.themes.Soft(),
         css="""
         .gradio-container {
             max-width: 1200px !important;
@@ -637,4 +649,11 @@ def create_gradio_app():
 # Create and launch the app
 if __name__ == "__main__":
     app = create_gradio_app()
-    app.launch()
+    # Optimized launch configuration for HF Spaces
+    app.launch(
+        server_name="0.0.0.0",
+        server_port=7860,
+        share=False,
+        show_error=True,
+        max_threads=10,
+    )

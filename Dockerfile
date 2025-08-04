@@ -22,14 +22,12 @@ COPY . .
 RUN useradd --create-home --shell /bin/bash user
 USER user
 
-# Set environment variables for Streamlit
-ENV STREAMLIT_SERVER_PORT=7860
-ENV STREAMLIT_SERVER_ADDRESS=0.0.0.0
-ENV STREAMLIT_SERVER_HEADLESS=true
-ENV STREAMLIT_BROWSER_GATHER_USAGE_STATS=false
+# Set environment variables for Gradio
+ENV GRADIO_SERVER_PORT=7860
+ENV GRADIO_SERVER_NAME=0.0.0.0
 
 # Expose port for HF Spaces (must be 7860)
 EXPOSE 7860
 
-# Default command to run the Streamlit app
-CMD ["streamlit", "run", "app.py", "--server.port=7860", "--server.address=0.0.0.0"]
+# Default command to run the Gradio app
+CMD ["python", "app_gradio.py"]

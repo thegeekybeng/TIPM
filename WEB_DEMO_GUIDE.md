@@ -1,229 +1,241 @@
-# TIPM Web Demo Guide
+# TIPM Web Application Guide
 
 ## 🌟 Overview
 
-This guide provides instructions for running the TIMP (Tariff Impact Propagation Model) web demonstrations. Two demo options are available:
+This guide provides instructions for running the TIPM (Tariff Impact Propagation Model) web application. The TIPM system offers a production-ready web interface for comprehensive tariff impact analysis using a 6-layer ML architecture.
 
-1. **Interactive Streamlit App** (`tipm_web_demo.py`) - Full-featured web interface
-2. **Simple HTML Demo** (`simple_web_demo.py`) - Lightweight standalone demo
+**Production Web Application**: `app_gradio.py` - Interactive Gradio interface deployed on Hugging Face Spaces
 
 ## 🚀 Quick Start
 
-### Option 1: Interactive Streamlit Demo
+### Production Gradio Application
 
 #### Prerequisites
+
 ```bash
-# Install web dependencies
-pip install streamlit plotly
-# or
-pip install -r requirements_web.txt
+# Install dependencies (already available in production environment)
+pip install gradio plotly pandas numpy
+# or use the complete requirements file
+pip install -r requirements.txt
 ```
 
-#### Launch the App
-```bash
-# Start the Streamlit server
-streamlit run tipm_web_demo.py
+#### Launch the Application
 
-# Or specify custom port
-streamlit run tipm_web_demo.py --server.port 8501
+```bash
+# Start the Gradio application locally
+python app_gradio.py
+
+# Or run with custom host/port  
+python app_gradio.py --host 0.0.0.0 --port 7860
 ```
+
+#### Production Deployment
+
+The TIPM application is deployed on Hugging Face Spaces at:
+**https://huggingface.co/spaces/thegeekybeng/timp-demo**
 
 #### Features
-- **Interactive Interface**: Select scenarios, configure parameters, view results
-- **Real-time Analysis**: Run TIPM predictions with live progress tracking
-- **Rich Visualizations**: Confidence scores, impact charts, trade flow analysis
-- **Data Quality Monitoring**: Real-time data source quality assessment
-- **Export Capabilities**: Download results in JSON format
-- **Multiple Scenarios**: US-China Tech, EU-US Auto, Global Steel, Custom
 
-### Option 2: Simple HTML Demo
+- **Interactive Interface**: Select countries and sectors, configure analysis parameters
+- **Real-time Analysis**: Run TIPM predictions using enhanced tariff data for 186 countries  
+- **Advanced Visualizations**: Confidence scores, impact charts, sectoral analysis
+- **Risk Assessment**: Comprehensive risk scoring with GDP impact estimates
+- **Export Capabilities**: Download detailed analysis results in CSV format
+- **Economic Intelligence**: Multi-sectoral analysis covering 12 economic sectors
 
-#### Run the Demo
-```bash
-# Generate standalone HTML demo
-python simple_web_demo.py
-```
+## 📊 TIPM Analysis Scenarios
 
-#### Output
-- **`tipm_demo_results.html`**: Interactive web page with results
-- **`tipm_demo_results.json`**: Raw prediction data
-- **Open the HTML file in any web browser**
+### 1. US-China Technology Trade Analysis
 
-## 📊 Demo Scenarios
+- **Countries**: United States (840), China (156)  
+- **Sectors**: Technology, Electronics, Telecommunications
+- **Focus**: High-tech trade disruption and supply chain impact analysis
+- **Key Metrics**: Semiconductor trade flows, technology transfer effects
 
-### 1. US-China Technology Trade
-- **Countries**: United States (840), China (156)
-- **Products**: Telecommunications (8517), Computers (8471), Semiconductors (8542)
-- **Focus**: High-tech trade disruption analysis
+### 2. EU-US Automotive Trade Analysis
 
-### 2. EU-US Automotive Trade
 - **Countries**: Germany (276), United States (840)
-- **Products**: Motor Cars (8703), Auto Parts (8708)
-- **Focus**: Automotive sector impact analysis
+- **Sectors**: Automotive, Machinery, Transport Equipment  
+- **Focus**: Automotive sector impact and manufacturing realignment
+- **Key Metrics**: Vehicle exports, parts supply chain disruption
 
-### 3. Global Steel Trade
-- **Countries**: US (840), China (156), Germany (276), Japan (392)
-- **Products**: Flat Steel (7208), Coated Steel (7210)
-- **Focus**: Multi-country steel tariff impacts
+### 3. Global Multi-Country Analysis
 
-### 4. Custom Scenario
-- **Configure**: Your own countries, products, and parameters
-- **Flexible**: Test any trade relationship
+- **Countries**: US (840), China (156), Germany (276), Japan (392), Singapore (702)
+- **Sectors**: All 12 economic sectors available in TIPM
+- **Focus**: Comprehensive multi-country trade relationship analysis
+- **Key Metrics**: Cross-sector impacts, geopolitical risk assessment
+
+### 4. Custom Analysis Configuration
+
+- **Configure**: Select from 186 available countries
+- **Flexible**: Choose from 12 economic sectors
+- **Comprehensive**: Full 6-layer ML architecture analysis
 
 ## 🔧 Configuration Options
 
-### Streamlit App Settings
-- **Real Data Integration**: Toggle between real and synthetic data
-- **Analysis Years**: Select historical years for analysis
-- **Tariff Rates**: Adjust tariff rate changes (0-100%)
-- **Data Refresh**: Force refresh of cached data
+### TIPM Application Settings
+
+- **Country Selection**: Choose from 186 available countries with comprehensive tariff data
+- **Sector Analysis**: Select from 12 economic sectors for detailed impact analysis  
+- **Risk Assessment**: Configure confidence thresholds and impact scoring parameters
+- **Export Options**: Download analysis results in CSV format for further processing
 
 ### Analysis Parameters
-- **Countries**: UN country codes (840=US, 156=China, 276=Germany, etc.)
-- **HS Codes**: Harmonized System product codes
-- **Years**: Historical years for data analysis
-- **Tariff Rate**: Percentage change in tariff rates
+
+- **Countries**: ISO 3166 country codes (840=US, 156=China, 276=Germany, etc.)
+- **Sectors**: Economic sectors including Technology, Automotive, Agriculture, etc.
+- **Tariff Data**: Enhanced Trump tariff data covering bilateral trade relationships
+- **Impact Metrics**: GDP impact factors, trade volumes, sectoral vulnerabilities
 
 ## 📈 Results Interpretation
 
 ### Confidence Scores
-- **Overall Confidence**: Weighted average of all layer confidences
-- **Layer-Specific**: Individual confidence for each TIPM layer
-- **Quality Indicators**: 
-  - 🟢 >70% = High confidence
-  - 🟡 40-70% = Medium confidence  
-  - 🔴 <40% = Low confidence
+
+- **Overall Confidence**: Weighted average of all 6-layer architecture confidences
+- **Layer-Specific**: Individual confidence for each TIPM layer (Policy→Geopolitical)
+- **Quality Indicators**:
+  - 🟢 >70% = High confidence prediction
+  - 🟡 40-70% = Medium confidence prediction
+  - 🔴 <40% = Low confidence prediction
 
 ### Impact Analysis
-- **Trade Flow Impact**: Changes in bilateral trade routes and volumes
-- **Industry Response**: Sector-specific adaptation strategies
-- **Firm Impact**: Employment effects and business survival rates
-- **Consumer Impact**: Price changes and welfare effects
-- **Geopolitical Impact**: Social tension and political stability
 
-### Data Quality Metrics
-- **Completeness**: Percentage of non-missing data
-- **Temporal Coverage**: Historical data availability
-- **Source Reliability**: API response success rates
-- **Fallback Status**: When synthetic data is used
+- **Trade Flow Impact**: Changes in bilateral trade routes and volumes across supply chains
+- **Industry Response**: Sector-specific adaptation strategies and economic resilience
+- **Firm Impact**: Employment effects and business survival rates across industries
+- **Consumer Impact**: Price changes and welfare effects on end consumers
+- **Geopolitical Impact**: Social tension indicators and political stability assessment
+
+### Enhanced Economic Metrics
+
+- **GDP Impact**: Estimated percentage impact on national GDP
+- **Trade at Risk**: Total trade volume potentially affected by tariff changes
+- **Sectoral Vulnerability**: Industry-specific risk scores and adaptation capacity
+- **Cross-Border Effects**: Multi-country impact propagation analysis
 
 ## 🌍 Data Sources
 
 ### Real Data Integration
-When "Use Real Data Integration" is enabled, the system attempts to fetch from:
+## 🌍 TIPM Data Sources
 
-- **UN Comtrade**: Global trade statistics
-- **WITS (World Bank)**: Tariff and trade policy data
-- **OECD TiVA**: Global value chain indicators
-- **World Bank**: Economic indicators (GDP, CPI, unemployment)
-- **GDELT**: News sentiment and geopolitical events
-- **ACLED**: Political conflict and event data
+### Enhanced Tariff Data
 
-### Fallback System
-- **Intelligent Fallback**: Automatically switches to synthetic data when real data unavailable
-- **Quality Thresholds**: Uses real data only when quality standards are met
-- **Transparent Reporting**: Clearly indicates data source for each prediction
+The TIPM system uses comprehensive Trump tariff data covering:
+
+- **186 Countries**: Complete global coverage with bilateral tariff relationships
+- **12 Economic Sectors**: From Agriculture to Technology, covering all major industries
+- **Real Trade Data**: Historical tariff rates and reciprocal trade policies
+- **GDP Impact Factors**: Country-specific economic dependency metrics
+- **Sectoral Weights**: Industry importance scoring for accurate impact modeling
+
+### Economic Intelligence Sources
+
+- **UN Comtrade**: Referenced for trade flow validation
+- **World Bank**: Economic indicators for GDP impact calculations
+- **OECD TiVA**: Supply chain complexity modeling
+- **Enhanced Configuration**: Real Trump tariff data with sectoral breakdown
 
 ## 🔍 Troubleshooting
 
 ### Common Issues
 
-#### Port Already in Use
-```bash
-# Kill existing Streamlit processes
-pkill -f streamlit
+#### Application Startup
 
-# Or use different port
-streamlit run timp_web_demo.py --server.port 8502
+```bash
+# If Gradio fails to start
+python -m pip install --upgrade gradio
+python app_gradio.py
+
+# Check dependencies
+pip install -r requirements.txt
 ```
 
 #### Missing Dependencies
-```bash
-# Install missing packages
-pip install streamlit plotly pandas numpy
 
-# Or install from requirements
-pip install -r requirements_web.txt
+```bash
+# Install core TIMP dependencies
+pip install pandas numpy plotly gradio
+
+# Verify installation
+python -c "import tipm; print('TIPM ready')"
 ```
 
-#### Data Fetch Errors
-- **Expected Behavior**: Some APIs may return 404s or require authentication
-- **Fallback System**: System automatically uses synthetic data
-- **Check Logs**: Review console output for specific error details
+#### Performance Issues
 
-### API Limitations
-- **Rate Limiting**: Public APIs have usage restrictions
-- **Authentication**: Some sources require API keys
-- **Data Availability**: Recent years may have limited data
-- **Geographic Coverage**: Not all countries/products available
+- **Expected Behavior**: Analysis of 186 countries may take 10-30 seconds
+- **Progress Tracking**: Use the Gradio interface progress indicators
+- **Memory Usage**: Large country selections require more system memory
 
 ## 📁 File Structure
 
-```
-tipm_web_demo.py          # Interactive Streamlit application
-simple_web_demo.py        # Standalone HTML demo generator
-requirements_web.txt      # Web demo dependencies
-timp_demo_results.html    # Generated demo results (after running)
-timp_demo_results.json    # Raw prediction data (JSON)
-real_data_cache/          # Cached real datasets
+```text
+app_gradio.py                 # Production Gradio application
+requirements.txt              # Complete dependency list
+tipm/                        # Core TIPM 6-layer architecture
+├── core.py                  # Main TIPMModel orchestrator
+├── enhanced_config.py       # Enhanced configuration system
+└── layers/                  # Individual layer implementations
+data/                        # Real Trump tariff data
+├── trump_tariffs_by_country.csv
+notebooks/                   # Jupyter analysis notebooks
+└── tipm_demo.ipynb         # Interactive analysis notebook
 ```
 
 ## 🎯 Usage Examples
 
-### Streamlit Demo
-1. **Launch**: `streamlit run tipm_web_demo.py`
-2. **Select**: Choose scenario from sidebar
-3. **Configure**: Set parameters (years, tariff rates)
-4. **Run**: Click "🚀 Run Analysis"
-5. **Explore**: View results in interactive tabs
-6. **Export**: Download JSON results
+### Production Application
 
-### HTML Demo
-1. **Generate**: `python simple_web_demo.py`
-2. **Open**: `tipm_demo_results.html` in browser
-3. **Navigate**: Use tabs to explore results
-4. **Share**: Send HTML file to stakeholders
+1. **Launch**: `python app_gradio.py`
+2. **Select**: Choose countries and sectors from dropdowns
+3. **Configure**: Set analysis parameters
+4. **Analyze**: Click "Run TIPM Analysis"  
+5. **Explore**: View confidence scores, risk assessment, and detailed impacts
+6. **Export**: Download CSV results for further analysis
 
-## 🚀 Advanced Usage
+### Programmatic Access
 
-### Custom Scenarios
 ```python
-# In Streamlit app: Select "Custom Scenario"
-# Configure:
-countries = "840,156,276"  # US, China, Germany
-hs_codes = "8517,8471"     # Telecom, Computers
+# Direct TIPM model usage
+from tipm.enhanced_config import EnhancedTariffDataManager
+
+manager = EnhancedTariffDataManager()
+countries = ['China', 'Germany', 'Japan']
+sectors = ['technology', 'automotive']
+analysis = manager.get_sector_analysis(countries, sectors)
+print(f"Risk Level: {analysis['risk_assessment']['overall_risk']}")
 ```
 
-### API Integration
-```python
-# Programmatic access to demo results
-import json
+## 🚀 Production Deployment
 
-with open('tipm_demo_results.json', 'r') as f:
-    results = json.load(f)
-    
-confidence = results['overall_confidence']
-print(f"Prediction confidence: {confidence:.1%}")
-```
+### Hugging Face Spaces
 
-### Production Deployment
+The TIPM application is deployed on Hugging Face Spaces for global access:
+
+**Live Application**: [https://huggingface.co/spaces/thegeekybeng/tipm-demo](https://huggingface.co/spaces/thegeekybeng/tipm-demo)
+
+### Local Production Setup
+
 ```bash
-# Run in production mode
-streamlit run tipm_web_demo.py \
-  --server.port 80 \
-  --server.headless true \
-  --server.enableCORS false
+# Production environment setup
+pip install -r requirements.txt
+python app_gradio.py --host 0.0.0.0 --port 7860
+
+# Docker deployment (if needed)
+docker build -t tipm-app .
+docker run -p 7860:7860 tipm-app
 ```
 
 ## 📞 Support
 
-For issues or questions:
-1. **Check Logs**: Review console output for error details
-2. **Verify Setup**: Ensure all dependencies installed
-3. **Test Simple Demo**: Try `simple_web_demo.py` first
-4. **Check Network**: Verify internet connectivity for real data fetching
+For TIPM system support:
+
+1. **Check Application Logs**: Review console output for specific error details
+2. **Verify Configuration**: Ensure all 186 countries and 12 sectors load correctly
+3. **Test Core Functions**: Verify TIPM 6-layer architecture initialization
+4. **Performance Monitoring**: Monitor analysis times for large country selections
 
 ---
 
-*Last Updated: August 4, 2025*  
-*TIMP Real Data Integration Demo v2.0*
+*Last Updated: August 5, 2025*  
+*TIPM Production System v1.0*
