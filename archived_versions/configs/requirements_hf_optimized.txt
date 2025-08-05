@@ -1,14 +1,14 @@
 # Optimized requirements for Hugging Face Spaces
-# Core dependencies for TIPM Gradio app
+# Lightweight versions for deployment
 
 # Web framework
-gradio==4.44.0
+gradio==4.44.1
 
 # Data processing
 pandas==2.2.3
 numpy==1.26.4
 
-# Visualization
+# Visualization (essential only)
 plotly==5.24.1
 
 # ML/AI libraries (lightweight versions)
@@ -17,10 +17,8 @@ transformers==4.44.2
 
 # Text processing
 nltk==3.9.1
-spacy==3.7.6
 
-# Async and HTTP
-aiohttp==3.12.15
+# HTTP requests
 requests==2.32.3
 
 # Utilities

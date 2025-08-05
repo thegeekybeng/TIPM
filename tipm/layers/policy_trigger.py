@@ -158,7 +158,7 @@ class PolicyTriggerLayer:
         # Initialize TF-IDF vectorizer if sklearn available
         if HAS_SKLEARN:
             self.tfidf_vectorizer = TfidfVectorizer(
-                max_features=self.config.get("tfidf_max_features", 1000),
+                max_features=getattr(self.config, "tfidf_max_features", 1000),
                 stop_words="english",
                 ngram_range=(1, 3),
                 lowercase=True,
@@ -336,12 +336,21 @@ class PolicyTriggerLayer:
             hs_codes, tariff_rates, countries, urgency_score
         )
 
+        # Create country_tariff_map from available information
+        country_tariff_map = {}
+        if countries and tariff_rates:
+            # Map each country to the first available tariff rate
+            for country in countries:
+                country_tariff_map[country] = tariff_rates[0] if tariff_rates else 0.0
+        elif tariff_shock.origin_country and tariff_shock.rate_change is not None:
+            country_tariff_map[tariff_shock.origin_country] = tariff_shock.rate_change
+
         return TariffPolicyFeatures(
             policy_id=tariff_shock.tariff_id,
             hs_codes=hs_codes,
             tariff_rates=tariff_rates,
             affected_countries=countries,
-            country_tariff_map=tariff_shock.country_tariff_map or {},
+            country_tariff_map=country_tariff_map,
             policy_type=policy_type,
             urgency_score=urgency_score,
             policy_embedding=policy_embedding,
@@ -467,7 +476,7 @@ class PolicyTriggerLayer:
     def _generate_policy_embedding(self, policy_text: str) -> np.ndarray:
         """Generate semantic embedding for policy text with fallbacks"""
         if not policy_text:
-            return np.zeros(self.config.get("embedding_dim", 768))
+            return np.zeros(getattr(self.config, "embedding_dim", 768))
 
         # Try transformer embedding first
         if self.tokenizer and self.policy_model:
@@ -477,7 +486,7 @@ class PolicyTriggerLayer:
                     return_tensors="pt",
                     truncation=True,
                     padding=True,
-                    max_length=self.config.get("max_text_length", 512),
+                    max_length=getattr(self.config, "max_text_length", 512),
                 )
 
                 with torch.no_grad():
@@ -494,10 +503,11 @@ class PolicyTriggerLayer:
         ):
             try:
                 tfidf_vec = self.tfidf_vectorizer.transform([policy_text])
-                embedding = tfidf_vec.toarray().flatten()
+                # tfidf_vec is a scipy sparse matrix with toarray() method
+                embedding = tfidf_vec.toarray().flatten()  # type: ignore
 
                 # Pad or truncate to standard size
-                target_dim = self.config.get("embedding_dim", 768)
+                target_dim = getattr(self.config, "embedding_dim", 768)
                 if len(embedding) < target_dim:
                     embedding = np.pad(embedding, (0, target_dim - len(embedding)))
                 elif len(embedding) > target_dim:
@@ -506,7 +516,7 @@ class PolicyTriggerLayer:
                 return embedding
             except ValueError as e:
                 self.logger.warning("TF-IDF transform failed: %s", e)
-                return np.zeros(self.config.get("embedding_dim", 768))
+                return np.zeros(getattr(self.config, "embedding_dim", 768))
 
         # Final fallback to simple text statistics
         return self._simple_text_embedding(policy_text)
@@ -525,7 +535,7 @@ class PolicyTriggerLayer:
         ]
 
         # Pad to standard dimension
-        target_dim = self.config.get("embedding_dim", 768)
+        target_dim = getattr(self.config, "embedding_dim", 768)
         while len(features) < target_dim:
             features.extend([0.0] * min(len(features), target_dim - len(features)))
 

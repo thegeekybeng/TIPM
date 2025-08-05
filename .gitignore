@@ -24,6 +24,7 @@ MANIFEST
 
 # Virtual Environment
 .venv/
+.tipm_venv/
 venv/
 env/
 ENV/
@@ -50,5 +51,5 @@ real_data_cache/
 
 # Don't ignore essential files for HF deployment
 !app.py
-!requirements_hf.txt
+!requirements_hf_optimized.txt
 !HF_README.md

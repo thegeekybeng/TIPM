@@ -20,6 +20,7 @@ from .config.settings import TIPMConfig
 
 
 @dataclass
+@dataclass
 class TariffShock:
     """Represents a tariff policy change"""
 
