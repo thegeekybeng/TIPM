@@ -8,7 +8,7 @@ sdk_version: 4.44.0
 app_file: app.py
 pinned: false
 license: mit
-short_description: AI-powered analysis of tariff impacts on global markets, supply chains, and populations with standardized economic formula
+short_description: AI-powered tariff impact analysis with standardized formula
 tags:
 - economics
 - tariffs
