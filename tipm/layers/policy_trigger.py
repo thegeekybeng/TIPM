@@ -66,7 +66,9 @@ class TariffShock:
     effective_date: Union[str, datetime]
     rate_change: Optional[float] = None
     hs_codes: Optional[List[str]] = None
-    country_tariff_map: Optional[Dict[str, float]] = None  # Map of country -> tariff rate
+    country_tariff_map: Optional[Dict[str, float]] = (
+        None  # Map of country -> tariff rate
+    )
 
 
 class PolicyTriggerLayer:

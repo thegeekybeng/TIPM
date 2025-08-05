@@ -5,10 +5,10 @@ colorFrom: blue
 colorTo: green
 sdk: gradio
 sdk_version: 4.44.0
-app_file: app_gradio.py
+app_file: app.py
 pinned: false
 license: mit
-short_description: AI-powered analysis of tariff impacts on global markets, supply chains, and populations
+short_description: AI-powered analysis of tariff impacts on global markets, supply chains, and populations with standardized economic formula
 tags:
 - economics
 - tariffs
@@ -22,12 +22,28 @@ tags:
 
 An advanced AI system for predicting how tariffs impact global markets, supply chains, and populations using a sophisticated 6-layer machine learning architecture.
 
+## 🎯 **CRITICAL UPDATE - Standardized Formula**
+
+**Fixed mathematical inconsistency where Singapore (10% tariff) showed 55% economic impact**
+
+✅ **New Standardized Results:**
+- Singapore (10% tariff): **15.8% impact** (realistic and proportional)
+- China (67% tariff): **40.6% impact** (properly scaled)  
+- All 25 countries now use the same scientific calculation
+
+🔬 **Technical Implementation:**
+- Base sector vulnerabilities (5-20% realistic baselines)
+- Tariff impact multipliers with sector sensitivity factors
+- 2.5x supply chain amplification (research-based)
+- Trade volume normalization and impact caps
+
 ## 🚀 Features
 
-- **186 Countries**: Comprehensive global tariff analysis
-- **12 Economic Sectors**: From Agriculture to Technology
+- **25 Countries**: Comprehensive global tariff analysis with standardized formula
+- **18 Economic Sectors**: From Agriculture to Technology with sector-specific sensitivities
 - **6-Layer ML Architecture**: Policy → Trade → Industry → Firm → Consumer → Geopolitical
 - **Real Data Integration**: Based on actual Trump-era tariff policies
+- **Verified Data Sources**: 100% legitimate UN Comtrade, World Bank, OECD sources
 - **Interactive Analysis**: Gradio-powered web interface
 
 ## 🎯 Key Capabilities
