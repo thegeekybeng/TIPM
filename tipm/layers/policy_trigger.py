@@ -47,6 +47,7 @@ class TariffPolicyFeatures:
     hs_codes: List[str]
     tariff_rates: List[float]
     affected_countries: List[str]
+    country_tariff_map: Dict[str, float]  # Map of country -> tariff rate
     policy_type: str  # 'bilateral', 'multilateral', 'unilateral'
     urgency_score: float  # 0-1 scale
     policy_embedding: np.ndarray
@@ -65,6 +66,7 @@ class TariffShock:
     effective_date: Union[str, datetime]
     rate_change: Optional[float] = None
     hs_codes: Optional[List[str]] = None
+    country_tariff_map: Optional[Dict[str, float]] = None  # Map of country -> tariff rate
 
 
 class PolicyTriggerLayer:
@@ -337,6 +339,7 @@ class PolicyTriggerLayer:
             hs_codes=hs_codes,
             tariff_rates=tariff_rates,
             affected_countries=countries,
+            country_tariff_map=tariff_shock.country_tariff_map or {},
             policy_type=policy_type,
             urgency_score=urgency_score,
             policy_embedding=policy_embedding,

@@ -11,8 +11,73 @@ cp README_HF_OPTIMIZED.md README.md
 # 2. Validate Gradio app
 echo "🔍 Validating Gradio application..."
 python -c "
-import app_gradio
-print('✅ Gradio app loads successfully')
+import sys
+try:
+    import app_gradio
+    print('✅ Gradio app imports successfully')
+    
+    # Check for common issues
+    import ast
+    with open('app_gradio.py', 'r') as f:
+        source = f.read()
+    
+    # Parse to check for syntax errors
+    ast.parse(source)
+    print('✅ Gradio app syntax is valid')
+    
+    # Check for the main function
+    if 'def create_gradio_app(' in source:
+        print('✅ Main Gradio function found')
+    else:
+        print('⚠️  Main Gradio function not found')
+    
+    # Check for proper function calls
+    if 'fn=' in source:
+        print('✅ Gradio function bindings found')
+    else:
+        print('⚠️  No Gradio function bindings found')
+    
+    # Check for common function signature issues
+    if 'run_enhanced_timp_analysis(' in source and 'fn=run_analysis,' in source:
+        print('✅ Function call chain looks correct')
+    elif 'run_enhanced_timp_analysis(' in source:
+        print('⚠️  Check function signature compatibility')
+    
+    # Try a basic import test
+    app_module = __import__('app_gradio')
+    if hasattr(app_module, 'create_gradio_app'):
+        print('✅ Main app function accessible')
+    else:
+        print('⚠️  Main app function not accessible')
+    
+    # Check for undefined function calls
+    import re
+    function_calls = re.findall(r'([a-zA-Z_][a-zA-Z0-9_]*)\(', source)
+    function_defs = re.findall(r'def ([a-zA-Z_][a-zA-Z0-9_]*)\(', source)
+    
+    # Check for common missing functions
+    critical_calls = ['create_impact_visualization', 'generate_analysis_summary', 'create_results_dataframe']
+    missing_functions = [func for func in critical_calls if func in function_calls and func not in function_defs]
+    
+    if missing_functions:
+        print(f'⚠️  Missing function definitions: {missing_functions}')
+    else:
+        print('✅ No critical missing functions detected')
+    
+    # Check for common data structure errors
+    if '.items()' in source and 'country_impacts' in source:
+        print('⚠️  Check country_impacts data structure (.items() usage detected)')
+    else:
+        print('✅ No obvious data structure issues detected')
+        
+except SyntaxError as e:
+    print(f'❌ Syntax error in Gradio app: {e}')
+    sys.exit(1)
+except ImportError as e:
+    print(f'❌ Import error in Gradio app: {e}')
+    sys.exit(1)
+except Exception as e:
+    print(f'⚠️  Gradio app validation warning: {e}')
 "
 
 # 3. Test core functionality

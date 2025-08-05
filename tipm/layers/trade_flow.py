@@ -263,6 +263,7 @@ class TradeFlowLayer:
         affected_countries = getattr(policy_features, 'affected_countries', [])
         hs_codes = getattr(policy_features, 'hs_codes', [])
         tariff_rates = getattr(policy_features, 'tariff_rates', [])
+        country_tariff_map = getattr(policy_features, 'country_tariff_map', {})
         
         # Default to demo values if no policy features
         if not affected_countries:
@@ -287,20 +288,25 @@ class TradeFlowLayer:
             )
             
             if len(features) > 0:
+                # Get country-specific tariff rate
+                country = route['origin'] if route['origin'] in affected_countries else route['destination']
+                country_tariff_rate = country_tariff_map.get(country, 0.0)
+                
                 # Scale features
                 features_scaled = self.feature_scaler.transform([features])
                 
-                # Predict impacts
-                flow_change = self.flow_predictor.predict(features_scaled)[0]
-                cost_change = self.cost_predictor.predict(features_scaled)[0]
+                # Predict base impacts (use baseline models)
+                base_flow_change = self.flow_predictor.predict(features_scaled)[0]
+                base_cost_change = self.cost_predictor.predict(features_scaled)[0]
                 
-                # Apply tariff rate adjustment
-                tariff_impact = max(tariff_rates) if tariff_rates else 0.1
-                flow_change *= (1 + tariff_impact)
-                cost_change += tariff_impact
+                # Apply country-specific tariff rate directly
+                # Higher tariff = more flow disruption and cost increase
+                flow_change = base_flow_change * (1 + country_tariff_rate * 2)  # Scale tariff impact
+                cost_change = country_tariff_rate * 0.8  # Direct tariff impact on costs
                 
                 route['flow_change'] = flow_change
                 route['cost_change'] = cost_change
+                route['tariff_rate'] = country_tariff_rate
                 
                 flow_predictions.append(flow_change)
                 cost_predictions.append(cost_change)
@@ -417,7 +423,7 @@ class TradeFlowLayer:
             'average_clustering': nx.average_clustering(self.trade_graph),
             'most_connected_countries': [
                 node for node, degree in sorted(
-                    self.trade_graph.degree(), 
+                    list(self.trade_graph.degree()), 
                     key=lambda x: x[1], 
                     reverse=True
                 )[:5]

@@ -281,13 +281,17 @@ def calculate_country_analysis(countries: List[str], sectors: List[str]) -> Dict
         # Average disruption across selected sectors
         avg_disruption = np.mean(sector_disruptions)
 
-        # GDP impact calculation (simplified)
-        # Uses trade volume as proxy for economic exposure
-        gdp_impact = avg_disruption * data.trade_volume * 0.8
+        # Apply tariff rate multiplier to base disruption
+        # Higher tariff rate = higher actual disruption
+        tariff_adjusted_disruption = avg_disruption * (1 + data.tariff_to_usa)
+
+        # GDP impact calculation with tariff rate consideration
+        # Higher tariff rate should lead to higher economic impact
+        gdp_impact = tariff_adjusted_disruption * data.trade_volume * 0.8
 
         country_result = {
             "country": country,
-            "economic_disruption": avg_disruption,
+            "economic_disruption": tariff_adjusted_disruption,
             "gdp_impact": gdp_impact,
             "trade_volume": data.trade_volume,
             "tariff_rate": data.tariff_to_usa,
@@ -297,7 +301,7 @@ def calculate_country_analysis(countries: List[str], sectors: List[str]) -> Dict
         }
 
         analysis["country_impacts"].append(country_result)
-        total_disruption += avg_disruption
+        total_disruption += tariff_adjusted_disruption
         total_gdp_impact += gdp_impact
         total_trade_volume += data.trade_volume
 
