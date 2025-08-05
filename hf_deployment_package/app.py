@@ -24,20 +24,36 @@ import json
 # ================================
 
 PROFESSIONAL_CSS = """
-/* Professional Theme Overrides */
+/* Professional Theme Overrides with Better Text Contrast */
 .gradio-container {
     font-family: 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif !important;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
     min-height: 100vh;
+    color: #1a202c !important;
 }
 
 .main-content {
-    background: rgba(255, 255, 255, 0.95) !important;
+    background: rgba(255, 255, 255, 0.98) !important;
     backdrop-filter: blur(10px) !important;
     border-radius: 20px !important;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.1) !important;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15) !important;
     margin: 20px !important;
     padding: 30px !important;
+    color: #1a202c !important;
+}
+
+/* Global Text Color Override */
+.gradio-container * {
+    color: #1a202c !important;
+}
+
+.gradio-container label {
+    color: #2d3748 !important;
+    font-weight: 600 !important;
+}
+
+.gradio-container p {
+    color: #4a5568 !important;
 }
 
 /* Header Styling */
@@ -51,19 +67,22 @@ PROFESSIONAL_CSS = """
     box-shadow: 0 10px 30px rgba(30, 60, 114, 0.3) !important;
 }
 
+.header-section * {
+    color: white !important;
+}
+
 .header-section h1 {
     font-size: 2.5rem !important;
     font-weight: 700 !important;
     margin-bottom: 10px !important;
-    background: linear-gradient(45deg, #fff, #e1f5fe) !important;
-    -webkit-background-clip: text !important;
-    -webkit-text-fill-color: transparent !important;
+    color: white !important;
 }
 
 .header-section h3 {
     font-size: 1.2rem !important;
-    opacity: 0.9 !important;
-    font-weight: 300 !important;
+    opacity: 0.95 !important;
+    font-weight: 400 !important;
+    color: white !important;
 }
 
 /* Card Styling */
@@ -72,14 +91,15 @@ PROFESSIONAL_CSS = """
     border-radius: 15px !important;
     padding: 25px !important;
     margin: 20px 0 !important;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.08) !important;
-    border: 1px solid rgba(0,0,0,0.05) !important;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1) !important;
+    border: 1px solid rgba(0,0,0,0.1) !important;
     transition: all 0.3s ease !important;
+    color: #1a202c !important;
 }
 
 .analysis-card:hover {
     transform: translateY(-2px) !important;
-    box-shadow: 0 12px 35px rgba(0,0,0,0.12) !important;
+    box-shadow: 0 12px 35px rgba(0,0,0,0.15) !important;
 }
 
 .metric-card {
@@ -87,8 +107,9 @@ PROFESSIONAL_CSS = """
     border-radius: 12px !important;
     padding: 20px !important;
     text-align: center !important;
-    border: 1px solid rgba(0,0,0,0.05) !important;
+    border: 1px solid rgba(0,0,0,0.1) !important;
     margin: 10px !important;
+    color: #1a202c !important;
 }
 
 .metric-value {
@@ -100,8 +121,8 @@ PROFESSIONAL_CSS = """
 
 .metric-label {
     font-size: 0.9rem !important;
-    color: #64748b !important;
-    font-weight: 500 !important;
+    color: #374151 !important;
+    font-weight: 600 !important;
 }
 
 /* Button Styling */
@@ -130,7 +151,7 @@ PROFESSIONAL_CSS = """
 }
 
 .tab-nav button {
-    color: rgba(255,255,255,0.8) !important;
+    color: rgba(255,255,255,0.9) !important;
     border: none !important;
     border-radius: 10px !important;
     padding: 12px 24px !important;
@@ -139,9 +160,37 @@ PROFESSIONAL_CSS = """
 }
 
 .tab-nav button.selected {
-    background: rgba(255,255,255,0.2) !important;
+    background: rgba(255,255,255,0.25) !important;
     color: white !important;
     backdrop-filter: blur(10px) !important;
+}
+
+/* Form Input Styling */
+.gradio-container .gr-form {
+    color: #1a202c !important;
+}
+
+.gradio-container input, .gradio-container select, .gradio-container textarea {
+    color: #1a202c !important;
+    background: white !important;
+    border: 2px solid #e2e8f0 !important;
+    border-radius: 8px !important;
+}
+
+.gradio-container input:focus, .gradio-container select:focus, .gradio-container textarea:focus {
+    border-color: #1e3c72 !important;
+    box-shadow: 0 0 0 3px rgba(30, 60, 114, 0.1) !important;
+}
+
+/* Checkbox and Radio Styling */
+.gradio-container .gr-checkbox-group label {
+    color: #2d3748 !important;
+    font-weight: 500 !important;
+}
+
+.gradio-container .gr-radio-group label {
+    color: #2d3748 !important;
+    font-weight: 500 !important;
 }
 
 /* Results Table Styling */
@@ -177,12 +226,22 @@ PROFESSIONAL_CSS = """
     padding: 25px !important;
     border-left: 5px solid #1e3c72 !important;
     margin: 20px 0 !important;
+    color: #1a202c !important;
+}
+
+.summary-section * {
+    color: #1a202c !important;
 }
 
 .summary-section h3 {
     color: #1e3c72 !important;
     font-weight: 700 !important;
     margin-bottom: 15px !important;
+}
+
+.summary-section h4 {
+    color: #1e3c72 !important;
+    font-weight: 600 !important;
 }
 
 /* Chart Container */
@@ -192,6 +251,15 @@ PROFESSIONAL_CSS = """
     padding: 20px !important;
     box-shadow: 0 4px 15px rgba(0,0,0,0.08) !important;
     margin: 15px 0 !important;
+    color: #1a202c !important;
+}
+
+.chart-container * {
+    color: #1a202c !important;
+}
+
+.chart-container h3 {
+    color: #1e3c72 !important;
 }
 
 /* Form Styling */
@@ -201,7 +269,12 @@ PROFESSIONAL_CSS = """
     padding: 25px !important;
     margin: 20px 0 !important;
     box-shadow: 0 4px 15px rgba(0,0,0,0.08) !important;
-    border: 1px solid rgba(0,0,0,0.05) !important;
+    border: 1px solid rgba(0,0,0,0.1) !important;
+    color: #1a202c !important;
+}
+
+.form-section * {
+    color: #1a202c !important;
 }
 
 .form-section h4 {
@@ -211,6 +284,11 @@ PROFESSIONAL_CSS = """
     font-size: 1.2rem !important;
 }
 
+.form-section label {
+    color: #2d3748 !important;
+    font-weight: 600 !important;
+}
+
 /* Info Cards */
 .info-card {
     background: linear-gradient(135deg, #e0f2fe 0%, #b3e5fc 100%) !important;
@@ -218,6 +296,16 @@ PROFESSIONAL_CSS = """
     padding: 20px !important;
     margin: 15px 0 !important;
     border-left: 4px solid #0277bd !important;
+    color: #1a202c !important;
+}
+
+.info-card * {
+    color: #1a202c !important;
+}
+
+.info-card h3, .info-card h4 {
+    color: #0277bd !important;
+    font-weight: 700 !important;
 }
 
 .warning-card {
@@ -226,6 +314,16 @@ PROFESSIONAL_CSS = """
     padding: 20px !important;
     margin: 15px 0 !important;
     border-left: 4px solid #f57c00 !important;
+    color: #1a202c !important;
+}
+
+.warning-card * {
+    color: #1a202c !important;
+}
+
+.warning-card h3, .warning-card h4 {
+    color: #f57c00 !important;
+    font-weight: 700 !important;
 }
 
 .success-card {
@@ -234,6 +332,16 @@ PROFESSIONAL_CSS = """
     padding: 20px !important;
     margin: 15px 0 !important;
     border-left: 4px solid #388e3c !important;
+    color: #1a202c !important;
+}
+
+.success-card * {
+    color: #1a202c !important;
+}
+
+.success-card h3, .success-card h4 {
+    color: #388e3c !important;
+    font-weight: 700 !important;
 }
 
 /* Mobile Responsiveness */
@@ -955,39 +1063,39 @@ def create_country_detail_cards(results_df: pd.DataFrame) -> str:
         cards_html += f"""
         <div class="analysis-card">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                <h3 style="color: #1e3c72; margin: 0; font-size: 1.4rem;">{row['Country']}</h3>
+                <h3 style="color: #1e3c72; margin: 0; font-size: 1.4rem; font-weight: 700;">{row['Country']}</h3>
                 <span style="background: {classification.color}; color: white; padding: 5px 12px; border-radius: 20px; font-size: 0.9rem; font-weight: 600;">{row['Severity Level']}</span>
             </div>
             
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
                 <div>
-                    <div style="font-size: 0.9rem; color: #64748b;">Tariff Rate</div>
+                    <div style="font-size: 0.9rem; color: #4a5568; font-weight: 600;">Tariff Rate</div>
                     <div style="font-size: 1.3rem; font-weight: 700; color: #dc2626;">{row['Tariff Rate']}</div>
                 </div>
                 <div>
-                    <div style="font-size: 0.9rem; color: #64748b;">Economic Disruption</div>
+                    <div style="font-size: 0.9rem; color: #4a5568; font-weight: 600;">Economic Disruption</div>
                     <div style="font-size: 1.3rem; font-weight: 700; color: {classification.color};">{row['Economic Disruption']}</div>
                 </div>
                 <div>
-                    <div style="font-size: 0.9rem; color: #64748b;">GDP Impact (5yr)</div>
+                    <div style="font-size: 0.9rem; color: #4a5568; font-weight: 600;">GDP Impact (5yr)</div>
                     <div style="font-size: 1.3rem; font-weight: 700; color: #059669;">{row['5-Year GDP Impact']}</div>
                 </div>
                 <div>
-                    <div style="font-size: 0.9rem; color: #64748b;">Trade Volume</div>
+                    <div style="font-size: 0.9rem; color: #4a5568; font-weight: 600;">Trade Volume</div>
                     <div style="font-size: 1.3rem; font-weight: 700; color: #0284c7;">{row['Trade Volume']}</div>
                 </div>
             </div>
             
             <div style="margin-bottom: 15px;">
-                <div style="font-size: 0.9rem; color: #64748b; margin-bottom: 5px;">Key Export Sectors to USA</div>
+                <div style="font-size: 0.9rem; color: #4a5568; margin-bottom: 5px; font-weight: 600;">Key Export Sectors to USA</div>
                 <div style="display: flex; flex-wrap: wrap; gap: 5px;">
-                    {"".join([f'<span style="background: #e0f2fe; color: #0277bd; padding: 4px 8px; border-radius: 12px; font-size: 0.8rem;">{sector}</span>' for sector in export_sectors[:4]])}
+                    {"".join([f'<span style="background: #e0f2fe; color: #0277bd; padding: 4px 8px; border-radius: 12px; font-size: 0.8rem; font-weight: 500;">{sector}</span>' for sector in export_sectors[:4]])}
                 </div>
             </div>
             
-            <div style="border-top: 1px solid #e2e8f0; padding-top: 15px; font-size: 0.9rem; color: #64748b;">
-                <strong>Region:</strong> {row['Continent']} | <strong>Groups:</strong> {row['Groups']}<br>
-                <strong>Authority:</strong> {classification.source}
+            <div style="border-top: 1px solid #e2e8f0; padding-top: 15px; font-size: 0.9rem; color: #374151;">
+                <strong style="color: #2d3748;">Region:</strong> {row['Continent']} | <strong style="color: #2d3748;">Groups:</strong> {row['Groups']}<br>
+                <strong style="color: #2d3748;">Authority:</strong> {classification.source}
             </div>
         </div>
         """
