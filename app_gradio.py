@@ -159,7 +159,7 @@ SAMPLE_DATA = {
         },
     ),
     "France": CountryTariffData(
-        country="France", 
+        country="France",
         tariff_to_usa=0.39,  # EU rate
         reciprocal_tariff=0.20,
         trade_volume=250.0,
@@ -682,7 +682,7 @@ SAMPLE_DATA = {
 
 SECTORS = [
     "technology",
-    "agriculture", 
+    "agriculture",
     "textiles",
     "chemicals",
     "machinery",
@@ -702,10 +702,85 @@ SECTORS = [
 ]
 
 
-def calculate_country_analysis(countries: List[str], sectors: List[str]) -> Dict:
-    """Calculate tariff impact analysis for selected countries and sectors"""
+def calculate_standardized_economic_impact(
+    tariff_rate: float, sector: str, trade_volume: float
+) -> float:
+    """
+    Standardized formula for calculating economic impact across all countries and sectors
+
+    Formula: Economic Impact = Base Vulnerability × Tariff Multiplier × Trade Factor
+    """
+
+    # Base sector vulnerabilities (realistic economic baselines 5-20%)
+    base_vulnerabilities = {
+        "technology": 0.15,  # 15% - High global integration
+        "electronics": 0.14,  # 14% - Complex supply chains
+        "financial_services": 0.08,  # 8% - Less trade dependent
+        "telecommunications": 0.12,  # 12% - Infrastructure dependent
+        "automotive": 0.14,  # 14% - Complex supply chains
+        "machinery": 0.13,  # 13% - Manufacturing dependent
+        "aerospace": 0.16,  # 16% - High-tech specialization
+        "pharmaceuticals": 0.10,  # 10% - Regulated industry
+        "chemicals": 0.11,  # 11% - Industrial input
+        "metals": 0.09,  # 9% - Commodity-based
+        "energy": 0.09,  # 9% - Strategic commodity
+        "agriculture": 0.08,  # 8% - Geographic factors
+        "food_processing": 0.07,  # 7% - Local production possible
+        "textiles": 0.12,  # 12% - Labor-intensive
+        "furniture": 0.08,  # 8% - Lower complexity
+        "mining": 0.06,  # 6% - Natural resource
+        "construction": 0.05,  # 5% - Local services
+        "retail": 0.06,  # 6% - Distribution focused
+    }
+
+    # Sector sensitivity to tariffs (how responsive each sector is)
+    sector_sensitivities = {
+        "technology": 1.8,  # Very sensitive - global supply chains
+        "electronics": 1.7,  # Very sensitive - components
+        "financial_services": 0.6,  # Less sensitive - services
+        "telecommunications": 1.3,  # Moderately sensitive - equipment
+        "automotive": 1.6,  # Very sensitive - parts integration
+        "machinery": 1.4,  # Moderately sensitive - industrial
+        "aerospace": 1.9,  # Very sensitive - precision parts
+        "pharmaceuticals": 1.1,  # Less sensitive - regulated
+        "chemicals": 1.3,  # Moderately sensitive - inputs
+        "metals": 1.2,  # Moderately sensitive - commodities
+        "energy": 0.8,  # Less sensitive - strategic
+        "agriculture": 1.0,  # Baseline sensitivity
+        "food_processing": 0.9,  # Less sensitive - local alternatives
+        "textiles": 1.5,  # Sensitive - cost competition
+        "furniture": 1.0,  # Baseline sensitivity
+        "mining": 0.7,  # Less sensitive - resources
+        "construction": 0.4,  # Low sensitivity - local
+        "retail": 0.8,  # Less sensitive - distribution
+    }
+
+    # Get base values for this sector
+    base_vulnerability = base_vulnerabilities.get(sector, 0.10)  # Default 10%
+    sector_sensitivity = sector_sensitivities.get(sector, 1.0)  # Default 1.0
+
+    # Trade dependency factor (larger economies have more impact)
+    # Normalize trade volume and cap the effect
+    trade_factor = min(trade_volume / 1000 * 0.1, 0.3)  # Max 30% boost
+
+    # Core tariff impact calculation
+    # Economic research shows tariff impacts are amplified ~2.5x through supply chains
+    tariff_multiplier = 1 + (tariff_rate * sector_sensitivity * 2.5)
+
+    # Final economic impact calculation
+    economic_impact = base_vulnerability * tariff_multiplier * (1 + trade_factor)
+
+    # Cap maximum impact at 80% (even extreme tariffs can't destroy 100% of activity)
+    return min(economic_impact, 0.80)
+
+
+def calculate_country_analysis(
+    countries: List[str], sectors: List[str], custom_tariff_rate: Optional[float] = None
+) -> Dict:
+    """Calculate tariff impact analysis for selected countries and sectors using standardized formula"""
     analysis = {
         "country_impacts": [],
+        "detailed_breakdown": {},
         "summary": {
             "total_countries": len(countries),
             "total_sectors": len(sectors),
@@ -725,49 +800,67 @@ def calculate_country_analysis(countries: List[str], sectors: List[str]) -> Dict
 
         data = SAMPLE_DATA[country]
 
-        # Calculate sector-specific impacts
+        # Use custom tariff rate if provided, otherwise use country's actual rate
+        effective_tariff_rate = (
+            custom_tariff_rate if custom_tariff_rate is not None else data.tariff_to_usa
+        )
+
+        # Calculate sector-specific impacts using STANDARDIZED FORMULA
+        sector_impacts_calculated = {}
         sector_disruptions = []
+
         for sector in sectors:
-            if sector in data.sector_impacts:
-                sector_disruptions.append(data.sector_impacts[sector])
+            # Use the new standardized calculation for ALL sectors
+            sector_impact = calculate_standardized_economic_impact(
+                tariff_rate=effective_tariff_rate,
+                sector=sector,
+                trade_volume=data.trade_volume,
+            )
+
+            sector_impacts_calculated[sector] = sector_impact
+            sector_disruptions.append(sector_impact)
 
         if not sector_disruptions:
             continue
 
-        # Average disruption across selected sectors
+        # Average disruption across selected sectors (now standardized!)
         avg_disruption = np.mean(sector_disruptions)
 
-        # Apply tariff rate multiplier to base disruption
-        # Higher tariff rate = higher actual disruption
-        tariff_adjusted_disruption = avg_disruption * (1 + data.tariff_to_usa)
-
-        # GDP impact calculation with tariff rate consideration
-        # Higher tariff rate should lead to higher economic impact
-        gdp_impact = tariff_adjusted_disruption * data.trade_volume * 0.8
+        # GDP impact calculation - proportional to economic disruption
+        gdp_impact = (
+            avg_disruption * data.trade_volume * 0.8
+        )  # More realistic multiplier
 
         country_result = {
             "country": country,
-            "economic_disruption": tariff_adjusted_disruption,
+            "tariff_rate": effective_tariff_rate,
+            "economic_disruption": avg_disruption,
             "gdp_impact": gdp_impact,
             "trade_volume": data.trade_volume,
-            "tariff_rate": data.tariff_to_usa,
-            "sector_impacts": {
-                k: v for k, v in data.sector_impacts.items() if k in sectors
-            },
+            "base_tariff_rate": data.tariff_to_usa,  # Original rate for reference
+            "sector_impacts": sector_impacts_calculated,  # Now calculated, not pre-set!
+        }
+
+        # Detailed breakdown for individual country analysis
+        analysis["detailed_breakdown"][country] = {
+            "sectors": sector_impacts_calculated,
+            "total_impact": avg_disruption,
+            "gdp_impact": gdp_impact,
+            "tariff_sensitivity": effective_tariff_rate * data.trade_volume * 0.01,
         }
 
         analysis["country_impacts"].append(country_result)
-        total_disruption += tariff_adjusted_disruption
+        total_disruption += avg_disruption
         total_gdp_impact += gdp_impact
         total_trade_volume += data.trade_volume
 
-    # Calculate summary statistics
+    # Calculate summary statistics (now with realistic values)
     if analysis["country_impacts"]:
         analysis["summary"]["avg_disruption"] = total_disruption / len(
             analysis["country_impacts"]
         )
-        analysis["summary"]["total_gdp_impact"] = total_gdp_impact
-        analysis["summary"]["total_trade_volume"] = total_trade_volume
+    analysis["summary"]["total_gdp_impact"] = total_gdp_impact
+    analysis["summary"]["total_trade_volume"] = total_trade_volume
 
     return analysis
 
@@ -851,17 +944,40 @@ def get_preset_selection(preset: str) -> Tuple[List[str], List[str]]:
     """Get country and sector selections based on preset"""
     if preset == "Major Economies":
         return (
-            ["China", "Germany", "Japan", "India", "United Kingdom", "France", "Canada"],
+            [
+                "China",
+                "Germany",
+                "Japan",
+                "India",
+                "United Kingdom",
+                "France",
+                "Canada",
+            ],
             ["technology", "automotive", "machinery", "financial_services"],
         )
     elif preset == "Asian Markets":
         return (
-            ["China", "Japan", "South Korea", "Taiwan", "Vietnam", "Thailand", "Singapore"],
+            [
+                "China",
+                "Japan",
+                "South Korea",
+                "Taiwan",
+                "Vietnam",
+                "Thailand",
+                "Singapore",
+            ],
             ["technology", "textiles", "electronics", "telecommunications"],
         )
     elif preset == "ASEAN Countries":
         return (
-            ["Vietnam", "Thailand", "Singapore", "Malaysia", "Indonesia", "Philippines"],
+            [
+                "Vietnam",
+                "Thailand",
+                "Singapore",
+                "Malaysia",
+                "Indonesia",
+                "Philippines",
+            ],
             ["agriculture", "textiles", "chemicals", "energy"],
         )
     elif preset == "Emerging Markets":
@@ -871,7 +987,15 @@ def get_preset_selection(preset: str) -> Tuple[List[str], List[str]]:
         )
     elif preset == "Manufacturing Hubs":
         return (
-            ["China", "Germany", "Japan", "South Korea", "Taiwan", "Vietnam", "Bangladesh"],
+            [
+                "China",
+                "Germany",
+                "Japan",
+                "South Korea",
+                "Taiwan",
+                "Vietnam",
+                "Bangladesh",
+            ],
             ["automotive", "machinery", "electronics", "textiles", "chemicals"],
         )
     elif preset == "Resource Exporters":
@@ -894,7 +1018,7 @@ def cached_country_analysis(countries_tuple: tuple, sectors_tuple: tuple) -> Dic
     sectors = list(sectors_tuple)
 
     # Convert to analysis format
-    return run_enhanced_tipm_analysis(countries, sectors)
+    return calculate_country_analysis(countries, sectors)
 
 
 def run_analysis(
@@ -933,32 +1057,32 @@ def run_analysis(
         # Create visualizations
         plot = create_impact_plot(analysis_results)
 
-        # Generate summary
-        summary_text = f"""
-## TIPM Analysis Results
+        # Generate enhanced summary using new formatting
+        summary_text = format_analysis_results(analysis_results, "preset")
 
-**Countries Analyzed**: {', '.join(countries)}
-**Sectors Analyzed**: {', '.join(sectors)}
-
-### Key Findings:
-- **Total Countries**: {len(countries)}
-- **Total Sectors**: {len(sectors)}
-- **Analysis Confidence**: 85%
-
-### Economic Impact Overview:
-The analysis shows varying impacts across selected countries and sectors.
-Results include trade flow disruptions, industry responses, and consumer effects.
-        """
-
-        # Create results DataFrame
+        # Create results DataFrame with tariff rate column
         results_data = []
         for impact in analysis_results.get("country_impacts", []):
             results_data.append(
                 {
                     "Country": impact.get("country", "Unknown"),
-                    "Overall Impact": f"{impact.get('economic_disruption', 0.5):.1%}",
-                    "GDP Impact": f"${impact.get('gdp_impact', 10.5):.1f}B",
-                    "Risk Level": "Medium",
+                    "Tariff Rate": f"{impact.get('tariff_rate', 0):.0%}",
+                    "Overall Impact": f"{impact.get('economic_disruption', 0):.1%}",
+                    "GDP Impact": f"${impact.get('gdp_impact', 0):.1f}B",
+                    "Trade Volume": f"${impact.get('trade_volume', 0):.1f}B",
+                    "Risk Level": (
+                        "🔴 Severe"
+                        if impact.get("economic_disruption", 0) > 0.5
+                        else (
+                            "🟠 High"
+                            if impact.get("economic_disruption", 0) > 0.3
+                            else (
+                                "🟡 Moderate"
+                                if impact.get("economic_disruption", 0) > 0.15
+                                else "🟢 Low"
+                            )
+                        )
+                    ),
                 }
             )
 
@@ -969,8 +1093,10 @@ Results include trade flow disruptions, industry responses, and consumer effects
                 [
                     {
                         "Country": "No Data",
+                        "Tariff Rate": "N/A",
                         "Overall Impact": "N/A",
                         "GDP Impact": "N/A",
+                        "Trade Volume": "N/A",
                         "Risk Level": "N/A",
                     }
                 ]
@@ -985,7 +1111,67 @@ Results include trade flow disruptions, industry responses, and consumer effects
         return f"❌ Analysis failed: {str(e)}", None, "", pd.DataFrame()
 
 
-def run_enhanced_timp_analysis(preset, custom_countries, custom_sectors):
+def format_analysis_results(analysis: Dict, analysis_type: str = "preset") -> str:
+    """Format analysis results for display with enhanced detail"""
+    if not analysis["country_impacts"]:
+        return "❌ **No valid countries found for analysis**"
+
+    # Results header with summary
+    results = [
+        f"## 📊 **Tariff Impact Analysis Results** ({analysis_type.title()})",
+        f"**Countries Analyzed:** {analysis['summary']['total_countries']}",
+        f"**Sectors Analyzed:** {analysis['summary']['total_sectors']}",
+        f"**Average Economic Disruption:** {analysis['summary']['avg_disruption']:.1%}",
+        f"**Total GDP Impact:** ${analysis['summary']['total_gdp_impact']:,.0f}B",
+        f"**Total Trade Volume:** ${analysis['summary']['total_trade_volume']:,.0f}B",
+        "",
+    ]
+
+    # Sort countries by economic disruption (highest impact first)
+    sorted_impacts = sorted(
+        analysis["country_impacts"],
+        key=lambda x: x["economic_disruption"],
+        reverse=True,
+    )
+
+    # Enhanced results table with tariff rate column
+    results.append("### 🌍 **Country Impact Breakdown**")
+    results.append(
+        "| Rank | Country | **Tariff Rate** | Economic Disruption | GDP Impact | Trade Volume |"
+    )
+    results.append(
+        "|------|---------|-----------------|-------------------|-------------|--------------|"
+    )
+
+    for idx, impact in enumerate(sorted_impacts, 1):
+        tariff_display = f"{impact['tariff_rate']:.0%}"
+        disruption = f"{impact['economic_disruption']:.1%}"
+        gdp_impact = f"${impact['gdp_impact']:,.0f}B"
+        trade_vol = f"${impact['trade_volume']:,.0f}B"
+
+        # Add warning emoji for high tariff rates
+        tariff_warning = "⚠️ " if impact["tariff_rate"] > 0.5 else ""
+
+        results.append(
+            f"| {idx} | {impact['country']} | **{tariff_warning}{tariff_display}** | {disruption} | {gdp_impact} | {trade_vol} |"
+        )
+
+    # Impact severity legend
+    results.extend(
+        [
+            "",
+            "### 📈 **Impact Severity Guide**",
+            "- 🟢 **Low Impact:** < 15% economic disruption",
+            "- 🟡 **Moderate Impact:** 15-30% economic disruption",
+            "- 🟠 **High Impact:** 30-50% economic disruption",
+            "- 🔴 **Severe Impact:** > 50% economic disruption",
+            "",
+            "⚠️ **High Tariff Alert:** Countries with tariff rates > 50%",
+        ]
+    )
+
+    return "\n".join(results)
+
     """Fixed function signature for Gradio interface"""
     try:
         # Get selections based on preset
@@ -1144,7 +1330,7 @@ def create_gradio_app():
                 preset = gr.Dropdown(
                     choices=[
                         "Major Economies",
-                        "Asian Markets", 
+                        "Asian Markets",
                         "ASEAN Countries",
                         "Emerging Markets",
                         "Manufacturing Hubs",
@@ -1165,7 +1351,12 @@ def create_gradio_app():
                     with gr.Column():
                         custom_sectors = gr.CheckboxGroup(
                             choices=SECTORS,
-                            value=["technology", "automotive", "agriculture", "textiles"],
+                            value=[
+                                "technology",
+                                "automotive",
+                                "agriculture",
+                                "textiles",
+                            ],
                             label="Select Sectors (max 8)",
                         )
 
@@ -1173,6 +1364,17 @@ def create_gradio_app():
                     return gr.update(visible=(preset_value == "Custom Selection"))
 
                 preset.change(toggle_custom, inputs=[preset], outputs=[custom_row])
+
+                # Add tariff rate selector for scenario testing
+                gr.Markdown("### 🎯 **Tariff Rate Testing**")
+                custom_tariff_rate = gr.Slider(
+                    minimum=0.0,
+                    maximum=1.0,
+                    step=0.05,
+                    value=None,
+                    label="Override Tariff Rate (%) - Leave empty to use actual rates",
+                    info="Test different tariff scenarios across all countries",
+                )
 
                 analyze_btn = gr.Button("🚀 Run Analysis", variant="primary", size="lg")
 
