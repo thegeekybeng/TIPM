@@ -1,5 +1,0 @@
-# TIPM Web Demo Requirements
-# Additional packages for the Streamlit web interface
-
-streamlit>=1.28.0
-plotly>=5.17.0

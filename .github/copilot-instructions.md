@@ -1,64 +1,72 @@
-# Use this file to provide workspace-specific custom instructions to Copilot. For more details, visit https://code.visualstudio.com/docs/copilot/copilot-customization#_use-a-githubcopilotinstructionsmd-file
 
-## TIPM Project Context
+# Copilot Instructions for TIPM v1.5
 
-This is a Tariff Impact Propagation Model (TIPM) project - an AI system for predicting how tariffs impact global markets, supply chains, and populations.
+## Project Overview
 
-## Architecture
+TIPM (Tariff Impact Propagation Model) is an AI system for predicting the impact of tariffs on global markets, supply chains, and populations. The architecture is modular, with six distinct ML layers:
 
-The system uses a 6-layer ML architecture:
+- **Policy Trigger Layer**: NLP for tariff announcements
+- **Trade Flow Layer**: Graph neural networks for supply chain analysis
+- **Industry Response Layer**: Multi-output regression for sectoral impacts
+- **Firm Impact Layer**: Survival analysis for employment effects
+- **Consumer Impact Layer**: Bayesian time series for price impacts
+- **Geopolitical Layer**: Transformer NLP for social response prediction
 
-1. **Policy Trigger Layer**: NLP processing of tariff announcements
-2. **Trade Flow Layer**: Graph neural networks for supply chain analysis
-3. **Industry Response Layer**: Multi-output regression for sectoral impacts
-4. **Firm Impact Layer**: Survival analysis for employment effects
-5. **Consumer Impact Layer**: Bayesian time series for price impacts
-6. **Geopolitical Layer**: Transformer NLP for social response prediction
+## Key Files & Structure
 
-## Key Technologies
+- `tipm/core.py`: Orchestrates the full pipeline and data flow
+- `tipm/layers/`: Contains layer modules, each with `.fit()` and `.predict()` methods
+- `tipm/config/`: Configuration classes and settings
+- `tipm/utils/`: Data processing, validation, and visualization utilities
+- `notebooks/`: Jupyter notebooks for analysis and prototyping
+- `scripts/`: Utility scripts for data and workflow automation
+- `tests/`: Unit tests for core and layer logic
 
-- **ML Frameworks**: PyTorch, scikit-learn, XGBoost, transformers
-- **Graph Analysis**: NetworkX, PyTorch Geometric
-- **Time Series**: Prophet, statsmodels, ARIMA
-- **NLP**: HuggingFace transformers, spaCy, NLTK
-- **Data**: pandas, numpy, requests
-- **Visualization**: matplotlib, seaborn, plotly, streamlit
+## Essential Patterns
 
-## Code Structure
+- **Dataclasses**: Used for all structured data (e.g., `EnhancedCountryData`)
+- **Layer Independence**: Each layer is testable and loosely coupled
+- **Configuration-Driven**: All parameters managed via config classes
+- **Type Hints**: Required for all public methods
+- **Error Handling**: Use graceful degradation for missing/unavailable data
+- **Confidence Scores**: All predictions return a confidence metric
+- **Visualization**: Each output should have a visualization method
+- **Logging**: Use comprehensive logging for debugging and data provenance
 
-- `tipm/core.py`: Main TIPMModel orchestrator
-- `tipm/layers/`: Individual layer implementations
-- `tipm/config/`: Configuration management
-- `tipm/utils/`: Data processing and visualization utilities
-- `notebooks/`: Jupyter analysis notebooks
-- `scripts/`: Utility scripts
+## Developer Workflows
 
-## Development Guidelines
+- Build and install dependencies via `requirements.txt`
+- Run tests in `tests/` for all layers and core logic
+- Use Jupyter notebooks in `notebooks/` for exploratory analysis
+- Data flows: Policy Text → Features → Trade Impact → Industry Response → Firm Impact → Consumer Impact → Geopolitical Response
 
-1. **Layer Independence**: Each layer should be independently testable
-2. **Configuration-Driven**: Use config classes for all parameters
-3. **Type Hints**: Always include type annotations
-4. **Documentation**: Comprehensive docstrings for all public methods
-5. **Error Handling**: Graceful degradation when data is unavailable
-6. **Testing**: Unit tests for core functionality
+## Project-Specific Conventions
 
-## Data Flow
-
-Policy Text → Features → Trade Impact → Industry Response → Firm Impact → Consumer Impact → Geopolitical Response
-
-## Common Patterns
-
-- Use dataclasses for structured data
-- Implement `.fit()` and `.predict()` methods for all layers
-- Return confidence scores with all predictions
+- Use meaningful variable names (e.g., `tariff_rate`, `bilateral_trade_usd`)
+- Validate and bound-check all input data
 - Support both real and synthetic data for testing
-- Provide visualization methods for all outputs
+- Document all public methods with comprehensive docstrings
+- Structure code for scalability across multiple countries and scenarios
 
-## When generating code:
+## Integration Points
 
-- Focus on economic modeling accuracy
-- Include proper error handling for missing data
-- Use meaningful variable names (e.g., `tariff_rate` not `rate`)
-- Add comprehensive logging for debugging
-- Consider scalability for multiple countries/scenarios
-- Include data validation and bounds checking
+- External data: World Bank, USTR, UN Comtrade, OECD APIs
+- ML frameworks: PyTorch, scikit-learn, XGBoost, transformers
+- Visualization: matplotlib, seaborn, plotly, streamlit
+
+## Example Pattern
+
+```python
+@dataclass
+class EnhancedCountryData:
+    name: str
+    tariff_rate: float
+    # ...other fields...
+    def fit(self, X, y): ...
+    def predict(self, X): ...
+```
+
+---
+
+**Feedback Request:**  
+If any section is unclear or missing key project-specific details, please specify which workflows, patterns, or integration points need further documentation. I will iterate to ensure this guide is immediately useful for AI agents in your codebase.

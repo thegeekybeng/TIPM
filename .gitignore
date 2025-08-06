@@ -49,6 +49,16 @@ real_data_cache/
 .mypy_cache/
 *.log
 
+# Development files
+*_v*.py
+*_backup.py
+*_old.py
+*_test.py
+PHASE*.md
+*_COMPLETE.md
+reliable_country_database.py
+real_data_results.json
+
 # Don't ignore essential files for HF deployment
 !app.py
 !requirements_hf_optimized.txt

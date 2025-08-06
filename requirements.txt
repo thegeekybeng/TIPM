@@ -1,26 +1,31 @@
-# Optimized requirements for Hugging Face Spaces
-# Lightweight versions for deployment
 
-# Web framework
-gradio==4.44.1
+# TIPM v1.5 Core Dependencies
+numpy>=1.21.0
+pandas>=1.3.0
+scikit-learn>=0.24.0
+transformers>=4.10.0
+torch>=1.9.0
+matplotlib>=3.4.0
+seaborn>=0.11.0
+click>=8.0.0
+networkx>=2.6.0
+pytest>=6.2.0
+requests>=2.31.0
+pycountry>=22.3.1
+pandas-datareader>=0.10.0
+cachetools>=5.3.0
+aiohttp>=3.8.0
 
-# Data processing
-pandas==2.2.3
-numpy==1.26.4
+# Web Interface Dependencies
+gradio>=4.0.0
+plotly>=5.0.0
+dash>=2.0.0
 
-# Visualization (essential only)
-plotly==5.24.1
-
-# ML/AI libraries (lightweight versions)
-scikit-learn==1.5.2
-transformers==4.44.2
-
-# Text processing
-nltk==3.9.1
-
-# HTTP requests
-requests==2.32.3
-
-# Utilities
-python-dateutil==2.9.0
-pytz==2025.1
+# Type stubs and dev tools
+mypy>=1.0.0
+types-pytz
+types-requests
+types-PyYAML
+types-setuptools
+types-python-dateutil
+types-tqdm

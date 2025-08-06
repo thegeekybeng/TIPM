@@ -1,8 +1,0 @@
-{
-  "model_version": "1.1.0-detailed",
-  "policy_model": "bert-base-uncased",
-  "max_text_length": 1024,
-  "graph_embedding_dim": 256,
-  "num_sectors": 50,
-  "response_time_horizon": 18
-}
