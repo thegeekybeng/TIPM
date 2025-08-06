@@ -3168,4 +3168,32 @@ This analysis incorporates:
 # Launch the enhanced interface
 if __name__ == "__main__":
     interface = create_enhanced_interface()
-    interface.launch(server_name="0.0.0.0", server_port=7860, share=False, debug=True)
+    
+    # Try multiple ports for flexibility
+    ports_to_try = [7860, 7861, 7862, 7863, 7864]
+    launched = False
+    
+    for port in ports_to_try:
+        try:
+            print(f"🚀 Attempting to launch TIPM v1.5 on port {port}...")
+            interface.launch(
+                server_name="0.0.0.0", 
+                server_port=port, 
+                share=False, 
+                debug=False,  # Turn off debug for cleaner output
+                show_error=True,
+                quiet=False
+            )
+            launched = True
+            break
+        except OSError as e:
+            if "address already in use" in str(e).lower():
+                print(f"⚠️  Port {port} is busy, trying next port...")
+                continue
+            else:
+                print(f"❌ Error launching on port {port}: {e}")
+                break
+    
+    if not launched:
+        print("❌ Could not find an available port. Please manually stop other Gradio processes or set GRADIO_SERVER_PORT environment variable.")
+        print("💡 Try: export GRADIO_SERVER_PORT=7865 && python app.py")
