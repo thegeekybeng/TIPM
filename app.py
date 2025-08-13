@@ -123,13 +123,6 @@ class EnhancedUICountryData:
             ),
         }
 
-        if self.resource_export_category:
-            tooltip_parts.append(f"⛏️ {self.resource_export_category}")
-
-        # Create enhanced display with tooltip info
-        tooltip_info = " | ".join(tooltip_parts)
-        return f"{base_name} • {tooltip_info}"
-
     def get_detailed_tooltip(self) -> str:
         """Generate detailed tooltip for hover display"""
         tooltip = f"""
@@ -369,6 +362,14 @@ class EnhancedTIPMWebInterface:
             "Laos",
             "Brunei",
         }
+        nato_countries = {
+            "United States", "Canada", "United Kingdom", "Germany", "France", 
+            "Italy", "Spain", "Netherlands", "Belgium", "Poland", "Turkey", 
+            "Norway", "Denmark", "Portugal", "Czech Republic", "Hungary", 
+            "Romania", "Bulgaria", "Croatia", "Slovenia", "Slovakia", 
+            "Estonia", "Latvia", "Lithuania", "Albania", "Montenegro", 
+            "North Macedonia", "Greece", "Iceland", "Luxembourg"
+        }
 
         if country_name in g7_countries:
             groups.append("G7")
@@ -378,6 +379,8 @@ class EnhancedTIPMWebInterface:
             groups.append("BRICS")
         if country_name in asean_countries:
             groups.append("ASEAN")
+        if country_name in nato_countries:
+            groups.append("NATO")
 
         return groups
 
@@ -1616,11 +1619,14 @@ def create_enhanced_confidence_chart(result) -> go.Figure:
     # 3. Country profile indicators
     profile_data = result.enhanced_data
     profile_metrics = ["GDP Rank", "Trade Volume Rank", "Tech Rank", "Global Groups"]
+    
+    # Safe GDP normalization with division by zero protection
+    gdp_normalized = 100 - (profile_data.gdp_usd_billions / 100 if profile_data.gdp_usd_billions > 0 else 0)
+    trade_normalized = 100 - (profile_data.bilateral_trade_usd_millions / 10000 if profile_data.bilateral_trade_usd_millions > 0 else 0)
+    
     profile_values = [
-        min(100 - profile_data.gdp_usd_billions / 100, 100),  # Normalized GDP rank
-        min(
-            100 - profile_data.bilateral_trade_usd_millions / 10000, 100
-        ),  # Normalized trade rank
+        min(gdp_normalized, 100),  # Normalized GDP rank
+        min(trade_normalized, 100),  # Normalized trade rank
         100 - (profile_data.tech_manufacturing_rank or 50),  # Tech rank (inverted)
         len(profile_data.global_groups) * 25,  # Global group count
     ]
