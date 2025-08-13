@@ -1,25 +1,28 @@
 """
-Tariff Impact Propagation Model (TIPM)
-=====================================
-
-A comprehensive AI system for predicting how tariffs impact global markets,
-supply chains, and populations through a multi-layered machine learning architecture.
+TIPM - Tariff Impact Propagation Model
+Real Data Integration Package
 """
 
-__version__ = "0.1.0"
-__author__ = "TIPM Development Team"
-__email__ = "tipm@example.com"
+from .real_data_connectors import (
+    RealDataManager,
+    TariffData,
+    TradeData,
+    USITCConnector,
+    UNComtradeConnector,
+    WTOConnector,
+    WorldBankConnector,
+)
 
-from .core import TIPMModel
-from .layers import *
-from .utils import *
+__version__ = "2.0.0"
+__author__ = "TIPM Development Team"
+__description__ = "Real Data Integration for US Tariff Analysis"
 
 __all__ = [
-    "TIPMModel",
-    "PolicyTriggerLayer",
-    "TradeFlowLayer",
-    "IndustryResponseLayer",
-    "FirmImpactLayer",
-    "ConsumerImpactLayer",
-    "GeopoliticalLayer",
+    "RealDataManager",
+    "TariffData",
+    "TradeData",
+    "USITCConnector",
+    "UNComtradeConnector",
+    "WTOConnector",
+    "WorldBankConnector",
 ]
