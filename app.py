@@ -1491,15 +1491,14 @@ class EnhancedTIPMWebInterface:
             tariff_rate=tariff_rate,
             overall_confidence=np.random.uniform(75, 95),
             economic_impact={
-                "trade_disruption_usd": tariff_rate
+                "trade_disruption_usd": (tariff_rate / 100)
                 * country_data.bilateral_trade_usd_millions
-                / 1000
-                * 0.15,
-                "price_increase_pct": tariff_rate * 0.3,
+                * 0.25,  # Realistic trade elasticity factor
+                "price_increase_pct": (tariff_rate / 100) * 0.15,  # Realistic pass-through rate
                 "employment_effect_jobs": int(
-                    tariff_rate * country_data.gdp_usd_billions * 100
-                ),
-                "gdp_impact_pct": tariff_rate * 0.02,
+                    (tariff_rate / 100) * country_data.bilateral_trade_usd_millions * 0.8
+                ),  # Jobs per million USD of trade affected
+                "gdp_impact_pct": (tariff_rate / 100) * 0.08,  # Realistic GDP impact multiplier
                 "industry_severity": (
                     "High"
                     if tariff_rate > 50
