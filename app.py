@@ -694,7 +694,11 @@ class EnhancedTIPMWebInterface:
                 {"country": "Mexico", "export_value": 26700, "market_share": 14.6},
                 {"country": "South Korea", "export_value": 18400, "market_share": 10.1},
                 {"country": "Canada", "export_value": 16200, "market_share": 8.9},
-                {"country": "United Kingdom", "export_value": 12800, "market_share": 7.0},
+                {
+                    "country": "United Kingdom",
+                    "export_value": 12800,
+                    "market_share": 7.0,
+                },
                 {"country": "Italy", "export_value": 9300, "market_share": 5.1},
                 {"country": "France", "export_value": 8700, "market_share": 4.8},
                 {"country": "Sweden", "export_value": 7100, "market_share": 3.9},
@@ -705,7 +709,11 @@ class EnhancedTIPMWebInterface:
                 {"country": "China", "export_value": 26700, "market_share": 15.0},
                 {"country": "Japan", "export_value": 22400, "market_share": 12.6},
                 {"country": "Italy", "export_value": 14600, "market_share": 8.2},
-                {"country": "United Kingdom", "export_value": 12300, "market_share": 6.9},
+                {
+                    "country": "United Kingdom",
+                    "export_value": 12300,
+                    "market_share": 6.9,
+                },
                 {"country": "Switzerland", "export_value": 11100, "market_share": 6.2},
                 {"country": "Austria", "export_value": 8900, "market_share": 5.0},
                 {"country": "Netherlands", "export_value": 8200, "market_share": 4.6},
@@ -715,7 +723,11 @@ class EnhancedTIPMWebInterface:
             "Chemicals & Pharmaceuticals": [
                 {"country": "Germany", "export_value": 19800, "market_share": 14.3},
                 {"country": "Switzerland", "export_value": 17600, "market_share": 12.7},
-                {"country": "United Kingdom", "export_value": 14200, "market_share": 10.3},
+                {
+                    "country": "United Kingdom",
+                    "export_value": 14200,
+                    "market_share": 10.3,
+                },
                 {"country": "Belgium", "export_value": 12800, "market_share": 9.3},
                 {"country": "Netherlands", "export_value": 11900, "market_share": 8.6},
                 {"country": "France", "export_value": 10700, "market_share": 7.7},
@@ -797,7 +809,7 @@ class EnhancedTIPMWebInterface:
                 {"country": "Brazil", "export_value": 3400, "market_share": 1.7},
             ],
         }
-        
+
         return sector_exporters.get(sector, [])
 
     def get_country_export_sectors(self, country_name: str) -> List[str]:
@@ -1393,44 +1405,76 @@ class EnhancedTIPMWebInterface:
 
             # Handle pre-defined groups
             elif sort_method == "G7 Nations":
-                g7_countries = [c for c in self.countries_data if "G7" in c.global_groups]
+                g7_countries = [
+                    c for c in self.countries_data if "G7" in c.global_groups
+                ]
                 return sorted(g7_countries, key=lambda c: c.name.lower())
 
             elif sort_method == "G20 Major Economies":
-                g20_countries = [c for c in self.countries_data if "G20" in c.global_groups]
+                g20_countries = [
+                    c for c in self.countries_data if "G20" in c.global_groups
+                ]
                 return sorted(g20_countries, key=lambda c: c.name.lower())
 
             elif sort_method == "BRICS Countries":
-                brics_countries = [c for c in self.countries_data if "BRICS" in c.global_groups]
+                brics_countries = [
+                    c for c in self.countries_data if "BRICS" in c.global_groups
+                ]
                 return sorted(brics_countries, key=lambda c: c.name.lower())
 
             elif sort_method == "ASEAN Members":
-                asean_countries = [c for c in self.countries_data if "ASEAN" in c.global_groups]
+                asean_countries = [
+                    c for c in self.countries_data if "ASEAN" in c.global_groups
+                ]
                 return sorted(asean_countries, key=lambda c: c.name.lower())
 
             elif sort_method == "NATO Alliance":
-                nato_countries = [c for c in self.countries_data if "NATO" in c.global_groups]
+                nato_countries = [
+                    c for c in self.countries_data if "NATO" in c.global_groups
+                ]
                 return sorted(nato_countries, key=lambda c: c.name.lower())
 
             # Handle top categories
             elif sort_method == "Top 10 Emerging Markets":
-                emerging_countries = [c for c in self.countries_data if c.emerging_market_status]
-                sorted_emerging = sorted(emerging_countries, key=lambda c: c.gdp_usd_billions, reverse=True)
+                emerging_countries = [
+                    c for c in self.countries_data if c.emerging_market_status
+                ]
+                sorted_emerging = sorted(
+                    emerging_countries, key=lambda c: c.gdp_usd_billions, reverse=True
+                )
                 return sorted_emerging[:10]
 
             elif sort_method == "Top 10 Tech Manufacturing Exporters":
-                tech_countries = [c for c in self.countries_data if c.tech_manufacturing_rank and c.tech_manufacturing_rank <= 50]
-                sorted_tech = sorted(tech_countries, key=lambda c: c.tech_manufacturing_rank or 999)
+                tech_countries = [
+                    c
+                    for c in self.countries_data
+                    if c.tech_manufacturing_rank and c.tech_manufacturing_rank <= 50
+                ]
+                sorted_tech = sorted(
+                    tech_countries, key=lambda c: c.tech_manufacturing_rank or 999
+                )
                 return sorted_tech[:10]
 
             elif sort_method == "Top 10 Mining Resource Exporters":
-                mining_countries = [c for c in self.countries_data if c.resource_export_category == "Mining"]
-                sorted_mining = sorted(mining_countries, key=lambda c: c.gdp_usd_billions, reverse=True)
+                mining_countries = [
+                    c
+                    for c in self.countries_data
+                    if c.resource_export_category == "Mining"
+                ]
+                sorted_mining = sorted(
+                    mining_countries, key=lambda c: c.gdp_usd_billions, reverse=True
+                )
                 return sorted_mining[:10]
 
             elif sort_method == "Top 10 Agricultural Exporters":
-                agri_countries = [c for c in self.countries_data if c.resource_export_category == "Agriculture"]
-                sorted_agri = sorted(agri_countries, key=lambda c: c.gdp_usd_billions, reverse=True)
+                agri_countries = [
+                    c
+                    for c in self.countries_data
+                    if c.resource_export_category == "Agriculture"
+                ]
+                sorted_agri = sorted(
+                    agri_countries, key=lambda c: c.gdp_usd_billions, reverse=True
+                )
                 return sorted_agri[:10]
 
             else:
@@ -1482,26 +1526,70 @@ class EnhancedTIPMWebInterface:
             timestamp: str
             enhanced_data: EnhancedUICountryData
 
-        # Simulate analysis (in real implementation, this would use the ML model)
+        # Use economic models for analysis (not random!)
+        from tipm.utils.data_utils import EconomicModel
+
+        economic_model = EconomicModel()
+
+        # Calculate real economic impacts
+        tariff_decimal = tariff_rate / 100.0
+        trade_volume_usd = country_data.bilateral_trade_usd_millions * 1_000_000
+
+        impact_analysis = economic_model.calculate_tariff_impact(
+            tariff_rate=tariff_decimal, trade_volume=trade_volume_usd
+        )
+
+        # Calculate employment impact
+        gdp_per_capita = (
+            country_data.gdp_usd_billions * 1_000_000_000
+        ) / 100_000_000  # Simplified
+        employment_impact = economic_model.estimate_employment_impact(
+            trade_volume_impact=impact_analysis["trade_volume_impact_usd"],
+            gdp_per_capita=gdp_per_capita,
+        )
+
+        # Determine confidence based on data quality and model reliability
+        data_confidence = self._assess_data_confidence(actual_country)
+        base_confidence = (
+            85
+            if data_confidence == "High"
+            else 75 if data_confidence == "Medium" else 65
+        )
+
+        # Layer-specific confidence adjustments based on data availability
+        layer_confidences = {
+            "policy_trigger": base_confidence + 5,  # Good policy data
+            "trade_flow": base_confidence + 3,  # Trade data available
+            "industry_response": base_confidence,  # Standard model
+            "firm_impact": base_confidence - 2,  # Limited firm data
+            "consumer_impact": base_confidence + 1,  # CPI data available
+            "geopolitical": base_confidence - 5,  # Complex modeling
+        }
+
+        # Ensure confidence is within bounds
+        for layer, confidence in layer_confidences.items():
+            layer_confidences[layer] = max(50, min(95, confidence))
+
         result = EnhancedAnalysisResult(
             country_name=actual_country,
             tariff_rate=tariff_rate,
-            overall_confidence=np.random.uniform(75, 95),
+            overall_confidence=sum(layer_confidences.values()) / len(layer_confidences),
             economic_impact={
-                "trade_disruption_usd": tariff_rate
-                * country_data.bilateral_trade_usd_millions
-                / 1000
-                * 0.15,
-                "price_increase_pct": tariff_rate * 0.3,
-                "employment_effect_jobs": int(
-                    tariff_rate * country_data.gdp_usd_billions * 100
-                ),
-                "gdp_impact_pct": tariff_rate * 0.02,
+                "trade_disruption_usd": abs(impact_analysis["trade_volume_impact_usd"]),
+                "price_increase_pct": impact_analysis["price_increase_pct"],
+                "employment_effect_jobs": employment_impact["total_job_impact"],
+                "gdp_impact_pct": abs(
+                    impact_analysis["welfare_loss_usd"]
+                    / (country_data.gdp_usd_billions * 1000000000)
+                )
+                * 100,
                 "industry_severity": (
                     "High"
                     if tariff_rate > 50
                     else "Medium" if tariff_rate > 25 else "Low"
                 ),
+                "welfare_loss_usd": impact_analysis["welfare_loss_usd"],
+                "revenue_gain_usd": impact_analysis["revenue_gain_usd"],
             },
             country_info={
                 "continent": country_data.continent,
@@ -1514,14 +1602,7 @@ class EnhancedTIPMWebInterface:
                 "gdp_billions": country_data.gdp_usd_billions,
                 "trade_volume_millions": country_data.bilateral_trade_usd_millions,
             },
-            layer_confidences={
-                "policy_trigger": np.random.uniform(80, 95),
-                "trade_flow": np.random.uniform(75, 90),
-                "industry_response": np.random.uniform(78, 88),
-                "firm_impact": np.random.uniform(70, 85),
-                "consumer_impact": np.random.uniform(72, 87),
-                "geopolitical": np.random.uniform(65, 80),
-            },
+            layer_confidences=layer_confidences,
             timestamp=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             enhanced_data=country_data,
         )
@@ -1842,25 +1923,33 @@ def create_enhanced_interface():
             # Add disclaimer for any countries with low/zero tariffs in batch
             low_tariff_countries = [r for r in batch_results if r.tariff_rate <= 5.0]
             zero_tariff_countries = [r for r in batch_results if r.tariff_rate == 0.0]
-            
+
             if zero_tariff_countries or low_tariff_countries:
                 summary += "## ⚠️ Analysis Disclaimers\n\n"
-                
+
                 if zero_tariff_countries:
-                    country_names = ", ".join([r.country_name for r in zero_tariff_countries])
+                    country_names = ", ".join(
+                        [r.country_name for r in zero_tariff_countries]
+                    )
                     summary += f"""**ZERO TARIFF COUNTRIES** ({country_names}): These countries have 0% tariff rates (exempted status). All economic impacts are zero by definition, representing **trade exemption benefits** rather than analytical limitations.
 
 """
-                
+
                 if low_tariff_countries and not zero_tariff_countries:
-                    country_names = ", ".join([r.country_name for r in low_tariff_countries])
+                    country_names = ", ".join(
+                        [r.country_name for r in low_tariff_countries]
+                    )
                     summary += f"""**LOW TARIFF COUNTRIES** ({country_names}): These countries have very low tariff rates (≤5%). Real-world impacts may vary significantly due to market resilience, alternative supply chains, and currency fluctuations. Results should be viewed as **lower-bound estimates**.
 
 """
                 elif low_tariff_countries and zero_tariff_countries:
-                    non_zero_low = [r for r in low_tariff_countries if r.tariff_rate > 0.0]
+                    non_zero_low = [
+                        r for r in low_tariff_countries if r.tariff_rate > 0.0
+                    ]
                     if non_zero_low:
-                        country_names = ", ".join([r.country_name for r in non_zero_low])
+                        country_names = ", ".join(
+                            [r.country_name for r in non_zero_low]
+                        )
                         summary += f"""**LOW TARIFF COUNTRIES** ({country_names}): These countries have very low tariff rates (≤5%). Real-world impacts may vary significantly due to market resilience, alternative supply chains, and currency fluctuations. Results should be viewed as **lower-bound estimates**.
 
 """
@@ -2276,78 +2365,71 @@ This analysis incorporates:
                 choices=[],
                 value=[],
                 info="🎯 Select a sector first to see countries that export it to the USA",
-                visible=False
+                visible=False,
             )
-        
+
         # Get countries for this sector
         sector_countries = enhanced_interface.get_countries_by_sector(sector_selection)
-        
+
         if not sector_countries:
             return gr.CheckboxGroup(
                 choices=[],
                 value=[],
                 info=f"❌ No export data available for {sector_selection}",
-                visible=False
+                visible=False,
             )
-        
+
         # Find actual country data to get tariff rates
         enhanced_choices = []
         auto_selected = []
-        
+
         for country_export in sector_countries:
             country_name = country_export["country"]
             export_value = country_export["export_value"]
             market_share = country_export["market_share"]
-            
+
             # Find country data for tariff rate
             country_data = next(
-                (c for c in enhanced_interface.countries_data if c.name == country_name), 
-                None
+                (
+                    c
+                    for c in enhanced_interface.countries_data
+                    if c.name == country_name
+                ),
+                None,
             )
-            
+
             if country_data:
                 # Create enhanced display with export value and tariff rate
                 display_text = f"{country_name} • ${export_value:,.0f}M ({market_share:.1f}% share) • {country_data.tariff_rate:.1f}% tariff"
                 enhanced_choices.append(display_text)
-                
+
                 # Auto-select top 5 exporters
                 if len(auto_selected) < 5:
                     auto_selected.append(display_text)
-        
+
         info_text = f"🎯 {sector_selection} Exporters to USA • Top {len(auto_selected)} auto-selected • Export values & tariff rates shown"
-        
+
         return gr.CheckboxGroup(
-            choices=enhanced_choices,
-            value=auto_selected,
-            info=info_text,
-            visible=True
+            choices=enhanced_choices, value=auto_selected, info=info_text, visible=True
         )
 
     def run_sector_analysis(sector_selection, country_selection):
         """Run sector-focused analysis with individual country tariff rates"""
         if not sector_selection:
-            return (
-                "❌ Please select a sector first",
-                "",
-                ""
-            )
-        
+            return ("❌ Please select a sector first", "", "")
+
         if not country_selection:
-            return (
-                "❌ Please select countries from the populated list",
-                "",
-                ""
-            )
-        
+            return ("❌ Please select countries from the populated list", "", "")
+
         try:
             # Parse selected countries to extract names and data
             selected_countries = []
             total_sector_value = 0
-            
+
             for country_display in country_selection:
                 # Extract country name from display text
                 country_name = country_display.split(" • ")[0]
-                
+
                 # Extract export value (between $ and M)
                 try:
                     value_part = country_display.split("$")[1].split("M")[0]
@@ -2355,37 +2437,45 @@ This analysis incorporates:
                     total_sector_value += export_value
                 except:
                     export_value = 0
-                
+
                 # Find country data for analysis
                 country_data = next(
-                    (c for c in enhanced_interface.countries_data if c.name == country_name), 
-                    None
+                    (
+                        c
+                        for c in enhanced_interface.countries_data
+                        if c.name == country_name
+                    ),
+                    None,
                 )
-                
+
                 if country_data:
-                    selected_countries.append({
-                        "name": country_name,
-                        "data": country_data,
-                        "export_value": export_value,
-                        "display": country_display
-                    })
-            
+                    selected_countries.append(
+                        {
+                            "name": country_name,
+                            "data": country_data,
+                            "export_value": export_value,
+                            "display": country_display,
+                        }
+                    )
+
             # Run analysis for each country with their individual tariff rates
             analysis_results = []
             for country_info in selected_countries:
                 result = enhanced_interface.run_analysis(
-                    country_info["name"], 
-                    [sector_selection], 
-                    None  # Use actual tariff rate, not custom
+                    country_info["name"],
+                    [sector_selection],
+                    None,  # Use actual tariff rate, not custom
                 )
-                
+
                 # Store export value separately for display
-                analysis_results.append({
-                    "result": result,
-                    "sector_export_value": country_info["export_value"],
-                    "display": country_info["display"]
-                })
-            
+                analysis_results.append(
+                    {
+                        "result": result,
+                        "sector_export_value": country_info["export_value"],
+                        "display": country_info["display"],
+                    }
+                )
+
             # Generate sector-focused summary
             summary = f"""
 # 🎯 TIPM v1.5 Sector Analysis: {sector_selection}
@@ -2399,14 +2489,18 @@ This analysis incorporates:
 ## 🌍 Country-by-Country Impact Analysis
 
 """
-            
+
             # Add each country's analysis
             for i, analysis_item in enumerate(analysis_results, 1):
                 result = analysis_item["result"]
                 sector_export_value = analysis_item["sector_export_value"]
-                country_info = selected_countries[i-1]
-                impact_severity = "🔴 High" if result.tariff_rate > 50 else "🟡 Medium" if result.tariff_rate > 25 else "🟢 Low"
-                
+                country_info = selected_countries[i - 1]
+                impact_severity = (
+                    "🔴 High"
+                    if result.tariff_rate > 50
+                    else "🟡 Medium" if result.tariff_rate > 25 else "🟢 Low"
+                )
+
                 summary += f"""
 ### {i}. {result.country_name}
 - **Current Tariff Rate**: {result.tariff_rate:.1f}%
@@ -2418,256 +2512,345 @@ This analysis incorporates:
 - **Employment Effect**: {result.economic_impact['employment_effect_jobs']:,} jobs
 - **Analysis Confidence**: {result.overall_confidence:.1f}%
 """
-            
+
             # Add sector-specific disclaimer for low/zero tariff countries
-            low_tariff_results = [item["result"] for item in analysis_results if item["result"].tariff_rate <= 5.0]
-            zero_tariff_results = [item["result"] for item in analysis_results if item["result"].tariff_rate == 0.0]
-            
+            low_tariff_results = [
+                item["result"]
+                for item in analysis_results
+                if item["result"].tariff_rate <= 5.0
+            ]
+            zero_tariff_results = [
+                item["result"]
+                for item in analysis_results
+                if item["result"].tariff_rate == 0.0
+            ]
+
             if low_tariff_results or zero_tariff_results:
                 summary += "\n## ⚠️ Sector Analysis Disclaimers\n\n"
-                
+
                 if zero_tariff_results:
-                    country_names = ", ".join([r.country_name for r in zero_tariff_results])
+                    country_names = ", ".join(
+                        [r.country_name for r in zero_tariff_results]
+                    )
                     summary += f"""**ZERO TARIFF EXPORTERS** ({country_names}): These countries have 0% tariff rates for {sector_selection} exports. All economic impacts are zero, indicating **competitive advantage** in US markets and **uninterrupted supply chains** for this sector.
 
 """
-                
+
                 if low_tariff_results and not zero_tariff_results:
-                    country_names = ", ".join([r.country_name for r in low_tariff_results])
+                    country_names = ", ".join(
+                        [r.country_name for r in low_tariff_results]
+                    )
                     summary += f"""**LOW TARIFF EXPORTERS** ({country_names}): These countries have very low tariff rates (≤5%) for {sector_selection}. **Sector-specific factors** such as product differentiation, brand loyalty, and supply chain integration may amplify or dampen actual impacts beyond model predictions.
 
 """
                 elif low_tariff_results and zero_tariff_results:
-                    non_zero_low = [r for r in low_tariff_results if r.tariff_rate > 0.0]
+                    non_zero_low = [
+                        r for r in low_tariff_results if r.tariff_rate > 0.0
+                    ]
                     if non_zero_low:
-                        country_names = ", ".join([r.country_name for r in non_zero_low])
+                        country_names = ", ".join(
+                            [r.country_name for r in non_zero_low]
+                        )
                         summary += f"""**LOW TARIFF EXPORTERS** ({country_names}): These countries have very low tariff rates (≤5%) for {sector_selection}. **Sector-specific factors** such as product differentiation, brand loyalty, and supply chain integration may amplify or dampen actual impacts beyond model predictions.
 
 """
-            
+
             # Create sector-focused visualization
             fig = go.Figure()
-            
+
             # Bubble chart: Tariff Rate vs Export Value vs Impact
             countries = [item["result"].country_name for item in analysis_results]
             tariff_rates = [item["result"].tariff_rate for item in analysis_results]
             export_values = [item["sector_export_value"] for item in analysis_results]
-            trade_impacts = [item["result"].economic_impact['trade_disruption_usd'] for item in analysis_results]
-            confidences = [item["result"].overall_confidence for item in analysis_results]
-            
-            fig.add_trace(go.Scatter(
-                x=export_values,
-                y=tariff_rates,
-                mode='markers+text',
-                marker=dict(
-                    size=[impact*2 for impact in trade_impacts],  # Size by trade impact
-                    color=confidences,
-                    colorscale='RdYlGn',
-                    showscale=True,
-                    colorbar=dict(title="Analysis Confidence %"),
-                    sizemode='diameter',
-                    sizeref=max(trade_impacts)/50
-                ),
-                text=countries,
-                textposition="top center",
-                hovertemplate=
-                "<b>%{text}</b><br>" +
-                f"{sector_selection} Exports: $%{{x:,.0f}}M<br>" +
-                "Tariff Rate: %{y:.1f}%<br>" +
-                "Trade Impact: %{marker.size:.1f}B USD<br>" +
-                "Confidence: %{marker.color:.1f}%" +
-                "<extra></extra>",
-                name="Countries"
-            ))
-            
+            trade_impacts = [
+                item["result"].economic_impact["trade_disruption_usd"]
+                for item in analysis_results
+            ]
+            confidences = [
+                item["result"].overall_confidence for item in analysis_results
+            ]
+
+            fig.add_trace(
+                go.Scatter(
+                    x=export_values,
+                    y=tariff_rates,
+                    mode="markers+text",
+                    marker=dict(
+                        size=[
+                            impact * 2 for impact in trade_impacts
+                        ],  # Size by trade impact
+                        color=confidences,
+                        colorscale="RdYlGn",
+                        showscale=True,
+                        colorbar=dict(title="Analysis Confidence %"),
+                        sizemode="diameter",
+                        sizeref=max(trade_impacts) / 50,
+                    ),
+                    text=countries,
+                    textposition="top center",
+                    hovertemplate="<b>%{text}</b><br>"
+                    + f"{sector_selection} Exports: $%{{x:,.0f}}M<br>"
+                    + "Tariff Rate: %{y:.1f}%<br>"
+                    + "Trade Impact: %{marker.size:.1f}B USD<br>"
+                    + "Confidence: %{marker.color:.1f}%"
+                    + "<extra></extra>",
+                    name="Countries",
+                )
+            )
+
             fig.update_layout(
                 title=f"Sector Analysis: {sector_selection} - Export Value vs Tariff Impact",
                 xaxis_title=f"{sector_selection} Export Value to USA (Millions USD)",
                 yaxis_title="Current Tariff Rate (%)",
                 height=600,
-                showlegend=False
+                showlegend=False,
             )
-            
+
             sector_viz = fig.to_html(include_plotlyjs="cdn")
-            
+
             return (
                 f"✅ Sector analysis completed for {sector_selection}",
                 summary,
-                sector_viz
-            )
-            
-        except Exception as e:
-            logger.error(f"Sector analysis error: {str(e)}")
-            return (
-                f"❌ Sector analysis failed: {str(e)}",
-                "",
-                ""
+                sector_viz,
             )
 
-    def export_analysis_data(export_format, analysis_content, analysis_type="Single Country"):
+        except Exception as e:
+            logger.error(f"Sector analysis error: {str(e)}")
+            return (f"❌ Sector analysis failed: {str(e)}", "", "")
+
+    def export_analysis_data(
+        export_format, analysis_content, analysis_type="Single Country"
+    ):
         """Export analysis data in specified format and create downloadable file"""
         try:
             import tempfile
             import os
-            
+
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            
+
             if not analysis_content or analysis_content == "":
                 return "❌ No analysis data to export. Run an analysis first.", None
-            
+
             # Generate filename based on analysis type and timestamp
             if analysis_type == "Sector":
                 base_filename = f"TIPM_Sector_Analysis_{timestamp}"
             else:
                 base_filename = f"TIPM_Analysis_{timestamp}"
-            
+
             # Create temporary file for download
             temp_dir = tempfile.gettempdir()
-            
+
             if export_format == "CSV":
                 # Parse markdown content and create CSV
                 filename = f"{base_filename}.csv"
                 temp_path = os.path.join(temp_dir, filename)
-                
+
                 # Extract data from markdown and create CSV
                 import re
-                
+
                 # Simple CSV creation from markdown analysis
                 csv_content = "Metric,Value\n"
-                
+
                 # Extract key metrics from markdown
                 if "Tariff Rate" in analysis_content:
-                    tariff_match = re.search(r"Tariff Rate\*\*:\s*([^\n]+)", analysis_content)
+                    tariff_match = re.search(
+                        r"Tariff Rate\*\*:\s*([^\n]+)", analysis_content
+                    )
                     if tariff_match:
                         csv_content += f"Tariff Rate,{tariff_match.group(1)}\n"
-                
+
                 if "Overall Confidence" in analysis_content:
-                    confidence_match = re.search(r"Overall Confidence\*\*:\s*([^\n]+)", analysis_content)
+                    confidence_match = re.search(
+                        r"Overall Confidence\*\*:\s*([^\n]+)", analysis_content
+                    )
                     if confidence_match:
-                        csv_content += f"Overall Confidence,{confidence_match.group(1)}\n"
-                
+                        csv_content += (
+                            f"Overall Confidence,{confidence_match.group(1)}\n"
+                        )
+
                 if "Trade Disruption" in analysis_content:
-                    trade_match = re.search(r"Trade Disruption\*\*:\s*([^\n]+)", analysis_content)
+                    trade_match = re.search(
+                        r"Trade Disruption\*\*:\s*([^\n]+)", analysis_content
+                    )
                     if trade_match:
                         csv_content += f"Trade Disruption,{trade_match.group(1)}\n"
-                
+
                 if "Consumer Price Increase" in analysis_content:
-                    price_match = re.search(r"Consumer Price Increase\*\*:\s*([^\n]+)", analysis_content)
+                    price_match = re.search(
+                        r"Consumer Price Increase\*\*:\s*([^\n]+)", analysis_content
+                    )
                     if price_match:
-                        csv_content += f"Consumer Price Increase,{price_match.group(1)}\n"
-                
+                        csv_content += (
+                            f"Consumer Price Increase,{price_match.group(1)}\n"
+                        )
+
                 if "Employment Impact" in analysis_content:
-                    employment_match = re.search(r"Employment Impact\*\*:\s*([^\n]+)", analysis_content)
+                    employment_match = re.search(
+                        r"Employment Impact\*\*:\s*([^\n]+)", analysis_content
+                    )
                     if employment_match:
-                        csv_content += f"Employment Impact,{employment_match.group(1)}\n"
-                
+                        csv_content += (
+                            f"Employment Impact,{employment_match.group(1)}\n"
+                        )
+
                 # Add raw content as last row
-                csv_content += f"Full Analysis,\"{analysis_content.replace('\"', '\"\"')}\"\n"
-                
-                with open(temp_path, 'w', encoding='utf-8') as f:
+                escaped_content = analysis_content.replace('"', '""')
+                csv_content += f'Full Analysis,"{escaped_content}"\n'
+
+                with open(temp_path, "w", encoding="utf-8") as f:
                     f.write(csv_content)
-                    
+
                 return f"✅ Analysis exported as CSV file", temp_path
-                
+
             elif export_format == "JSON":
                 filename = f"{base_filename}.json"
                 temp_path = os.path.join(temp_dir, filename)
-                
+
                 # Create JSON structure
                 import re
+
                 json_data = {
                     "analysis_type": analysis_type,
                     "timestamp": timestamp,
-                    "raw_content": analysis_content
+                    "raw_content": analysis_content,
                 }
-                
+
                 # Extract structured data
                 if "Tariff Rate" in analysis_content:
-                    tariff_match = re.search(r"Tariff Rate\*\*:\s*([^\n]+)", analysis_content)
+                    tariff_match = re.search(
+                        r"Tariff Rate\*\*:\s*([^\n]+)", analysis_content
+                    )
                     if tariff_match:
                         json_data["tariff_rate"] = tariff_match.group(1)
-                
+
                 if "Overall Confidence" in analysis_content:
-                    confidence_match = re.search(r"Overall Confidence\*\*:\s*([^\n]+)", analysis_content)
+                    confidence_match = re.search(
+                        r"Overall Confidence\*\*:\s*([^\n]+)", analysis_content
+                    )
                     if confidence_match:
                         json_data["overall_confidence"] = confidence_match.group(1)
-                
+
                 # Extract economic impacts
                 economic_impacts = {}
                 if "Trade Disruption" in analysis_content:
-                    trade_match = re.search(r"Trade Disruption\*\*:\s*([^\n]+)", analysis_content)
+                    trade_match = re.search(
+                        r"Trade Disruption\*\*:\s*([^\n]+)", analysis_content
+                    )
                     if trade_match:
                         economic_impacts["trade_disruption"] = trade_match.group(1)
-                
+
                 if "Consumer Price Increase" in analysis_content:
-                    price_match = re.search(r"Consumer Price Increase\*\*:\s*([^\n]+)", analysis_content)
+                    price_match = re.search(
+                        r"Consumer Price Increase\*\*:\s*([^\n]+)", analysis_content
+                    )
                     if price_match:
                         economic_impacts["price_increase"] = price_match.group(1)
-                
+
                 if economic_impacts:
                     json_data["economic_impacts"] = economic_impacts
-                
-                with open(temp_path, 'w', encoding='utf-8') as f:
+
+                with open(temp_path, "w", encoding="utf-8") as f:
                     json.dump(json_data, f, indent=2, ensure_ascii=False)
-                    
+
                 return f"✅ Analysis exported as JSON file", temp_path
-                
+
             elif export_format == "Excel":
                 filename = f"{base_filename}.xlsx"
                 temp_path = os.path.join(temp_dir, filename)
-                
+
                 # Create Excel file with pandas
                 try:
                     import pandas as pd
-                    
+
                     # Create data for Excel
                     data = []
-                    
+
                     # Extract key metrics
                     import re
+
                     if "Tariff Rate" in analysis_content:
-                        tariff_match = re.search(r"Tariff Rate\*\*:\s*([^\n]+)", analysis_content)
+                        tariff_match = re.search(
+                            r"Tariff Rate\*\*:\s*([^\n]+)", analysis_content
+                        )
                         if tariff_match:
-                            data.append({"Metric": "Tariff Rate", "Value": tariff_match.group(1)})
-                    
+                            data.append(
+                                {
+                                    "Metric": "Tariff Rate",
+                                    "Value": tariff_match.group(1),
+                                }
+                            )
+
                     if "Overall Confidence" in analysis_content:
-                        confidence_match = re.search(r"Overall Confidence\*\*:\s*([^\n]+)", analysis_content)
+                        confidence_match = re.search(
+                            r"Overall Confidence\*\*:\s*([^\n]+)", analysis_content
+                        )
                         if confidence_match:
-                            data.append({"Metric": "Overall Confidence", "Value": confidence_match.group(1)})
-                    
+                            data.append(
+                                {
+                                    "Metric": "Overall Confidence",
+                                    "Value": confidence_match.group(1),
+                                }
+                            )
+
                     if "Trade Disruption" in analysis_content:
-                        trade_match = re.search(r"Trade Disruption\*\*:\s*([^\n]+)", analysis_content)
+                        trade_match = re.search(
+                            r"Trade Disruption\*\*:\s*([^\n]+)", analysis_content
+                        )
                         if trade_match:
-                            data.append({"Metric": "Trade Disruption", "Value": trade_match.group(1)})
-                    
+                            data.append(
+                                {
+                                    "Metric": "Trade Disruption",
+                                    "Value": trade_match.group(1),
+                                }
+                            )
+
                     if "Consumer Price Increase" in analysis_content:
-                        price_match = re.search(r"Consumer Price Increase\*\*:\s*([^\n]+)", analysis_content)
+                        price_match = re.search(
+                            r"Consumer Price Increase\*\*:\s*([^\n]+)", analysis_content
+                        )
                         if price_match:
-                            data.append({"Metric": "Consumer Price Increase", "Value": price_match.group(1)})
-                    
+                            data.append(
+                                {
+                                    "Metric": "Consumer Price Increase",
+                                    "Value": price_match.group(1),
+                                }
+                            )
+
                     if "Employment Impact" in analysis_content:
-                        employment_match = re.search(r"Employment Impact\*\*:\s*([^\n]+)", analysis_content)
+                        employment_match = re.search(
+                            r"Employment Impact\*\*:\s*([^\n]+)", analysis_content
+                        )
                         if employment_match:
-                            data.append({"Metric": "Employment Impact", "Value": employment_match.group(1)})
-                    
+                            data.append(
+                                {
+                                    "Metric": "Employment Impact",
+                                    "Value": employment_match.group(1),
+                                }
+                            )
+
                     # Create DataFrame and save to Excel
                     df = pd.DataFrame(data)
-                    
-                    with pd.ExcelWriter(temp_path, engine='openpyxl') as writer:
-                        df.to_excel(writer, sheet_name='Analysis Summary', index=False)
-                        
+
+                    with pd.ExcelWriter(temp_path, engine="openpyxl") as writer:
+                        df.to_excel(writer, sheet_name="Analysis Summary", index=False)
+
                         # Create a second sheet with full content
                         full_data = pd.DataFrame([{"Full Analysis": analysis_content}])
-                        full_data.to_excel(writer, sheet_name='Full Analysis', index=False)
-                    
+                        full_data.to_excel(
+                            writer, sheet_name="Full Analysis", index=False
+                        )
+
                     return f"✅ Analysis exported as Excel file", temp_path
-                    
+
                 except ImportError:
                     # Fallback if pandas/openpyxl not available
-                    return f"❌ Excel export requires pandas and openpyxl packages", None
+                    return (
+                        f"❌ Excel export requires pandas and openpyxl packages",
+                        None,
+                    )
             else:
                 return f"❌ Unsupported export format: {export_format}", None
-                
+
         except Exception as e:
             return f"❌ Export failed: {str(e)}", None
 
@@ -2692,7 +2875,7 @@ This analysis incorporates:
             gr.update(value=None),  # Clear sector dropdown
             gr.update(choices=[], value=[], visible=False),  # Clear and hide countries
             "",  # Clear results
-            "",  # Clear visualization  
+            "",  # Clear visualization
             "🔄 Sector analysis cleared. Select a new sector to start over.",  # Status message
             "",  # Clear export status
             gr.update(visible=False),  # Hide download file
@@ -2786,7 +2969,8 @@ This analysis incorporates:
     """
 
     with gr.Blocks(
-        title="Tariff Impact Propagation Model - Enhanced Analysis Platform", css=custom_css
+        title="Tariff Impact Propagation Model - Enhanced Analysis Platform",
+        css=custom_css,
     ) as interface:
 
         gr.Markdown(
@@ -2871,7 +3055,7 @@ This analysis incorporates:
                         # Permanent Export Section (initially disabled)
                         gr.Markdown("---")
                         gr.Markdown("## 💾 Export & Actions")
-                        
+
                         with gr.Column() as export_section_tab1:
                             export_format_tab1 = gr.Radio(
                                 choices=["CSV", "JSON", "Excel"],
@@ -2880,36 +3064,37 @@ This analysis incorporates:
                                 info="Choose format for exporting analysis results",
                                 interactive=False,  # Initially disabled
                             )
-                            
+
                             with gr.Row():
                                 export_btn_tab1 = gr.Button(
-                                    "💾 Export Analysis", 
+                                    "💾 Export Analysis",
                                     variant="secondary",
                                     size="sm",
                                     interactive=False,  # Initially disabled
                                 )
                                 clear_btn_tab1 = gr.Button(
-                                    "🔄 Clear Analysis", 
+                                    "🔄 Clear Analysis",
                                     variant="stop",
                                     size="sm",
                                     interactive=False,  # Initially disabled
                                 )
-                            
+
                             export_status_tab1 = gr.Textbox(
-                                label="📋 Export Status", 
+                                label="📋 Export Status",
                                 interactive=False,
-                                visible=False
+                                visible=False,
                             )
-                            
+
                             download_file_tab1 = gr.File(
-                                label="📥 Download Analysis",
-                                visible=False
+                                label="📥 Download Analysis", visible=False
                             )
 
                     with gr.Column(scale=2):
                         # Welcome section (always visible)
                         with gr.Column(visible=True) as welcome_section:
-                            gr.Markdown("## 🎯 Welcome to Tariff Impact Propagation Model")
+                            gr.Markdown(
+                                "## 🎯 Welcome to Tariff Impact Propagation Model"
+                            )
                             gr.Markdown(
                                 """
                             **Advanced Economic Intelligence Platform with Enhanced Features:**
@@ -2975,7 +3160,7 @@ This analysis incorporates:
                             choices=[],
                             label="🌍 Step 2: Countries Exporting This Sector",
                             info="Countries automatically populated based on sector selection",
-                            visible=False
+                            visible=False,
                         )
 
                         # Analysis button
@@ -3027,29 +3212,26 @@ This analysis incorporates:
                                     label="📄 Export Format",
                                     info="Choose format for exporting sector analysis",
                                 )
-                                
+
                             with gr.Column(scale=1):
                                 with gr.Row():
                                     export_btn_tab2 = gr.Button(
-                                        "💾 Export Sector Analysis", 
+                                        "💾 Export Sector Analysis",
                                         variant="secondary",
-                                        size="sm"
+                                        size="sm",
                                     )
                                     clear_btn_tab2 = gr.Button(
-                                        "🔄 Clear Analysis", 
-                                        variant="stop",
-                                        size="sm"
+                                        "🔄 Clear Analysis", variant="stop", size="sm"
                                     )
-                                
+
                                 export_status_tab2 = gr.Textbox(
-                                    label="📋 Export Status", 
+                                    label="📋 Export Status",
                                     interactive=False,
-                                    visible=False
+                                    visible=False,
                                 )
-                                
+
                                 download_file_tab2 = gr.File(
-                                    label="📥 Download Analysis",
-                                    visible=False
+                                    label="📥 Download Analysis", visible=False
                                 )
 
         # Enhanced event handlers
@@ -3099,7 +3281,7 @@ This analysis incorporates:
             outputs=[export_status_tab1, download_file_tab1],
         ).then(
             fn=lambda: (gr.update(visible=True), gr.update(visible=True)),
-            outputs=[export_status_tab1, download_file_tab1]
+            outputs=[export_status_tab1, download_file_tab1],
         )
 
         clear_btn_tab1.click(
@@ -3126,7 +3308,7 @@ This analysis incorporates:
             outputs=[export_status_tab2, download_file_tab2],
         ).then(
             fn=lambda: (gr.update(visible=True), gr.update(visible=True)),
-            outputs=[export_status_tab2, download_file_tab2]
+            outputs=[export_status_tab2, download_file_tab2],
         )
 
         clear_btn_tab2.click(
@@ -3139,7 +3321,7 @@ This analysis incorporates:
                 sector_viz,
                 sector_status,
                 export_status_tab2,
-                download_file_tab2
+                download_file_tab2,
             ],
         )
 
@@ -3168,21 +3350,21 @@ This analysis incorporates:
 # Launch the enhanced interface
 if __name__ == "__main__":
     interface = create_enhanced_interface()
-    
+
     # Try multiple ports for flexibility
     ports_to_try = [7860, 7861, 7862, 7863, 7864]
     launched = False
-    
+
     for port in ports_to_try:
         try:
             print(f"🚀 Attempting to launch TIPM v1.5 on port {port}...")
             interface.launch(
-                server_name="0.0.0.0", 
-                server_port=port, 
-                share=False, 
+                server_name="0.0.0.0",
+                server_port=port,
+                share=False,
                 debug=False,  # Turn off debug for cleaner output
                 show_error=True,
-                quiet=False
+                quiet=False,
             )
             launched = True
             break
@@ -3193,7 +3375,9 @@ if __name__ == "__main__":
             else:
                 print(f"❌ Error launching on port {port}: {e}")
                 break
-    
+
     if not launched:
-        print("❌ Could not find an available port. Please manually stop other Gradio processes or set GRADIO_SERVER_PORT environment variable.")
+        print(
+            "❌ Could not find an available port. Please manually stop other Gradio processes or set GRADIO_SERVER_PORT environment variable."
+        )
         print("💡 Try: export GRADIO_SERVER_PORT=7865 && python app.py")

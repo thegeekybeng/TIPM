@@ -6,7 +6,7 @@ Models disruption to global trade networks using graph neural networks
 and trade flow reallocation predictions.
 """
 
-from typing import Dict, List, Any, Optional, Tuple
+from typing import Dict, List, Any, Optional, Tuple, Union
 import numpy as np
 import pandas as pd
 from dataclasses import dataclass
@@ -37,9 +37,14 @@ class TradeFlowLayer:
     using graph-based representation of global trade networks.
     """
 
-    def __init__(self, config: TradeFlowConfig):
+    def __init__(self, config: Union[TradeFlowConfig, Dict[str, Any]]):
         """Initialize trade flow layer"""
-        self.config = config
+        # Handle both TradeFlowConfig and dict types
+        if hasattr(config, "__dict__") and not isinstance(config, dict):
+            # Convert TradeFlowConfig or similar object to dict
+            self.config: Dict[str, Any] = config.__dict__
+        else:
+            self.config: Dict[str, Any] = config
 
         # Trade network graph
         self.trade_graph = nx.DiGraph()

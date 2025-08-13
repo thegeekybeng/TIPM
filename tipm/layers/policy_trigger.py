@@ -136,9 +136,15 @@ class PolicyTriggerLayer:
     for downstream impact modeling.
     """
 
-    def __init__(self, config: Optional[Dict[str, Any]] = None):
+    def __init__(self, config: Optional[Union[Dict[str, Any], Any]] = None):
         """Initialize policy trigger layer with configuration"""
-        self.config = config or self._get_default_config()
+        # Handle both Dict and PolicyLayerConfig types
+        if hasattr(config, "__dict__") and not isinstance(config, dict):
+            # Convert PolicyLayerConfig or similar object to dict
+            self.config = config.__dict__
+        else:
+            self.config = config or self._get_default_config()
+
         self.logger = self._setup_logging()
 
         # Initialize components with error handling

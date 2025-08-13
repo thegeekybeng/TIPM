@@ -1,31 +1,56 @@
 
-# TIPM v1.5 Core Dependencies
-numpy>=1.21.0
-pandas>=1.3.0
-scikit-learn>=0.24.0
-transformers>=4.10.0
-torch>=1.9.0
-matplotlib>=3.4.0
-seaborn>=0.11.0
-click>=8.0.0
-networkx>=2.6.0
-pytest>=6.2.0
+# TIPM v1.5 Core Dependencies - Updated for 2025
+numpy>=1.24.0
+pandas>=2.0.0
+scikit-learn>=1.3.0
+transformers>=4.35.0
+torch>=2.1.0
+matplotlib>=3.7.0
+seaborn>=0.12.0
+click>=8.1.0
+networkx>=3.1.0
+pytest>=7.4.0
 requests>=2.31.0
-pycountry>=22.3.1
+pycountry>=23.12.0
 pandas-datareader>=0.10.0
 cachetools>=5.3.0
-aiohttp>=3.8.0
+aiohttp>=3.9.0
 
-# Web Interface Dependencies
-gradio>=4.0.0
-plotly>=5.0.0
-dash>=2.0.0
+# Web Interface Dependencies - Modern versions
+gradio>=4.15.0
+plotly>=5.17.0
+dash>=2.14.0
+
+# ML and Data Science - Enhanced stack
+scipy>=1.11.0
+statsmodels>=0.14.0
+optuna>=3.4.0
+shap>=0.44.0
+lightgbm>=4.1.0
+xgboost>=2.0.0
+catboost>=1.2.0
+
+# Data Validation and Quality
+pydantic>=2.5.0
+great-expectations>=0.18.0
+cerberus>=1.3.0
+
+# API and Data Sources
+fredapi>=0.5.0
+yfinance>=0.2.0
+alpha-vantage>=2.3.0
 
 # Type stubs and dev tools
-mypy>=1.0.0
+mypy>=1.7.0
 types-pytz
 types-requests
 types-PyYAML
 types-setuptools
 types-python-dateutil
 types-tqdm
+
+# Development and Testing
+black>=23.12.0
+flake8>=6.1.0
+ruff>=0.1.0
+pre-commit>=3.5.0

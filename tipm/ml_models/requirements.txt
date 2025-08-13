@@ -1,0 +1,62 @@
+# TIPM ML Models Requirements
+# ===========================
+# Core ML and data science libraries
+
+# Core ML Framework
+scikit-learn>=1.3.0
+numpy>=1.24.0
+pandas>=2.0.0
+scipy>=1.10.0
+
+# Deep Learning (PyTorch)
+torch>=2.1.0
+torchvision>=0.16.0
+torchaudio>=2.1.0
+
+# Gradient Boosting
+xgboost>=1.7.0
+lightgbm>=4.0.0
+
+# Explainability
+shap>=0.44.0
+lime>=0.2.0
+
+# Hyperparameter Optimization
+optuna>=3.4.0
+
+# Time Series
+statsmodels>=0.14.0
+prophet>=1.1.0
+arch>=6.2.0
+
+# Visualization
+matplotlib>=3.7.0
+seaborn>=0.12.0
+plotly>=5.17.0
+
+# Jupyter Support
+jupyter>=1.0.0
+ipykernel>=6.25.0
+
+# Development and Testing
+pytest>=7.4.0
+pytest-cov>=4.1.0
+pytest-mock>=3.11.0
+black>=23.0.0
+flake8>=6.0.0
+mypy>=1.7.0
+
+# Documentation
+sphinx>=7.0.0
+sphinx-rtd-theme>=1.3.0
+
+# Optional: GPU Support
+# cuda-python>=12.0.0  # Uncomment for CUDA support
+# cupy-cuda12x>=12.0.0  # Uncomment for CUDA support
+
+# Optional: Advanced Features
+# tensorflow>=2.13.0  # Alternative to PyTorch
+# keras>=2.13.0  # High-level API for TensorFlow
+# catboost>=1.2.0  # Additional gradient boosting
+# mlflow>=2.7.0  # ML lifecycle management
+# wandb>=0.15.0  # Experiment tracking

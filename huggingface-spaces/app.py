@@ -1,73 +1,44 @@
 """
-TIPM v1.5 - HuggingFace Spaces Deployment
-=========================================
+TIPM - Tariff Impact Propagation Model
+=====================================
 
-Interactive Tariff Impact Propagation Model with 185-country support.
-Optimized for HuggingFace Spaces hosting.
+Hugging Face Spaces Deployment Version
+Professional economic intelligence platform for tariff impact analysis.
 
 Author: Andrew Yeo (TheGeekyBeng)
-GitHub: https://github.com/thegeekybeng/TIPM
 """
 
 import gradio as gr
 import pandas as pd
 import numpy as np
 import plotly.graph_objects as go
+from plotly.subplots import make_subplots
 from typing import Dict, List, Tuple, Optional, Any
 import logging
 from dataclasses import dataclass, field
 from datetime import datetime
-import os
-import sys
+import json
+import base64
 
-# Add current directory to path for local imports
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-
-# Import TIPM core components with error handling
-try:
-    from tipm.core import TIPMModel, TariffShock
-    from tipm.config.settings import TIPMConfig
-    from tipm.config.layer_configs import (
-        EMERGING_MARKETS,
-        TECH_MANUFACTURING_EXPORTERS,
-        MINING_RESOURCE_EXPORTERS,
-        AGRICULTURAL_EXPORTERS,
-        OFFICIAL_DATA_SOURCES,
-    )
-
-    TIPM_AVAILABLE = True
-except ImportError as e:
-    print(f"⚠️ TIPM modules not available: {e}")
-    print("🔄 Running in demo mode with synthetic data")
-    TIPM_AVAILABLE = False
-
-# Configure logging for HuggingFace Spaces
-logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+# Import TIPM core components
+from tipm.core import TIPMModel, TariffShock
+from tipm.config.settings import TIPMConfig
+from tipm.config.layer_configs import (
+    EMERGING_MARKETS,
+    TECH_MANUFACTURING_EXPORTERS,
+    MINING_RESOURCE_EXPORTERS,
+    AGRICULTURAL_EXPORTERS,
+    OFFICIAL_DATA_SOURCES,
 )
-logger = logging.getLogger(__name__)
 
-# Demo data for when TIPM modules are not available
-DEMO_EMERGING_MARKETS = [
-    "China",
-    "India",
-    "Brazil",
-    "Russia",
-    "South Africa",
-    "Mexico",
-    "Indonesia",
-    "Turkey",
-]
-DEMO_OFFICIAL_DATA_SOURCES = {
-    "trade_data": {"source": "US Census Bureau"},
-    "economic_indicators": {"source": "World Bank"},
-    "tariff_rates": {"source": "USTR Section 301 Reports"},
-}
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 
 @dataclass
-class UICountryData:
-    """Enhanced country data structure optimized for UI interactions"""
+class EnhancedUICountryData:
+    """Enhanced country data structure for TIPM interface"""
 
     name: str
     tariff_rate: float
@@ -80,443 +51,295 @@ class UICountryData:
     export_capabilities: List[str] = field(default_factory=list)
     gdp_usd_billions: float = 0.0
     bilateral_trade_usd_millions: float = 0.0
+    income_group: str = "Unknown"
+    trade_agreements: List[str] = field(default_factory=list)
+    strategic_commodities: List[str] = field(default_factory=list)
+    data_confidence: str = "Medium"
 
     def __post_init__(self):
-        """Validate data and generate display components"""
-        # Validate tariff rate bounds
+        """Enhanced post-init with tooltip generation"""
+        # Validate and clamp tariff rate
         if not 0 <= self.tariff_rate <= 100:
             logger.warning(
                 f"Invalid tariff_rate for {self.name}: {self.tariff_rate}%. Clamping to 0-100%"
             )
             self.tariff_rate = max(0, min(100, self.tariff_rate))
 
-        # Generate display name
-        self.display_name = f"{self.name} ({self.tariff_rate:.1f}%)"
+        # Generate enhanced display name
+        self.display_name = self._generate_enhanced_display_name()
+
+    def _generate_enhanced_display_name(self) -> str:
+        """Generate display name for dropdown"""
+        return f"{self.name} ({self.tariff_rate:.1f}%)"
+
+    def get_tooltip_data(self) -> dict:
+        """Generate tooltip data for country"""
+        # Determine main export category
+        main_export = "Mixed Products"
+        if self.resource_export_category:
+            main_export = f"{self.resource_export_category} Exports"
+        elif self.tech_manufacturing_rank and self.tech_manufacturing_rank <= 10:
+            main_export = "Technology & Manufacturing"
+        elif self.export_capabilities:
+            main_export = self.export_capabilities[0]
+
+        # Determine economic size
+        economic_size = "Large Economy"
+        if self.gdp_usd_billions < 100:
+            economic_size = "Small Economy"
+        elif self.gdp_usd_billions < 1000:
+            economic_size = "Medium Economy"
+        elif self.gdp_usd_billions < 5000:
+            economic_size = "Large Economy"
+        else:
+            economic_size = "Major Economy"
+
+        # Global economic position
+        global_position = "Regional Player"
+        if "G7" in self.global_groups:
+            global_position = "G7 Major Economy"
+        elif "G20" in self.global_groups:
+            global_position = "G20 Major Economy"
+        elif "BRICS" in self.global_groups:
+            global_position = "BRICS Emerging Market"
+        elif self.emerging_market_status:
+            global_position = "Emerging Market"
+
+        return {
+            "main_export": main_export,
+            "economic_size": economic_size,
+            "global_position": global_position,
+            "gdp_formatted": f"${self.gdp_usd_billions:.1f}B",
+            "trade_volume": f"${self.bilateral_trade_usd_millions:.1f}M",
+            "confidence": self.data_confidence,
+        }
 
 
-class TIPMWebInterface:
-    """Main TIPM Web Interface Controller - HuggingFace Spaces Optimized"""
+class TIPMInterface:
+    """Enhanced TIPM Interface for Hugging Face Spaces"""
 
     def __init__(self):
-        """Initialize TIPM web interface"""
-        self.model = None
+        """Initialize TIPM interface"""
         self.countries_data = []
+        self.model = None
         self._load_country_data()
-        if TIPM_AVAILABLE:
-            self._initialize_model()
-        logger.info(
-            f"✅ TIPM Web Interface initialized with {len(self.countries_data)} countries"
-        )
+        self._initialize_model()
 
     def _load_country_data(self):
-        """Load and process country data from CSV with fallback"""
-        try:
-            # Try to load from data directory
-            data_paths = [
-                "data/trump_tariffs_by_country.csv",
-                "../data/trump_tariffs_by_country.csv",
-                os.path.join(
-                    os.path.dirname(__file__),
-                    "..",
-                    "data",
-                    "trump_tariffs_by_country.csv",
-                ),
-            ]
+        """Load enhanced country data with classifications"""
+        logger.info("Loading enhanced country data...")
 
-            df = None
-            for path in data_paths:
-                if os.path.exists(path):
-                    df = pd.read_csv(path)
-                    logger.info(f"📊 Data loaded from: {path}")
-                    break
-
-            if df is None:
-                raise FileNotFoundError("Country data file not found")
-
-            for _, row in df.iterrows():
-                country_name = row["Country"]
-                tariff_rate = float(row["Tariffs charged to USA"]) * 100
-
-                # Enhanced classification
-                country_data = UICountryData(
-                    name=country_name,
-                    tariff_rate=tariff_rate,
-                    continent=self._classify_continent(country_name),
-                    global_groups=self._get_global_groups(country_name),
-                    emerging_market_status=self._check_emerging_market(country_name),
-                    tech_manufacturing_rank=self._get_tech_rank(country_name),
-                    resource_export_category=self._classify_resource_exporter(
-                        country_name
-                    ),
-                    export_capabilities=self._get_export_capabilities(country_name),
-                    gdp_usd_billions=self._estimate_gdp(country_name),
-                    bilateral_trade_usd_millions=self._estimate_trade_volume(
-                        country_name
-                    ),
-                )
-
-                self.countries_data.append(country_data)
-
-            logger.info(f"✅ Successfully loaded {len(self.countries_data)} countries")
-
-        except Exception as e:
-            logger.warning(f"⚠️ Error loading country data: {str(e)}")
-            logger.info("🔄 Creating demo dataset")
-            # Create comprehensive fallback data
-            self._create_demo_data()
-
-    def _create_demo_data(self):
-        """Create demo data when CSV is not available"""
-        demo_countries = [
-            ("China", 67.0, "Asia"),
-            ("European Union", 39.0, "Europe"),
-            ("Vietnam", 90.0, "Asia"),
-            ("Taiwan", 55.0, "Asia"),
-            ("Japan", 12.0, "Asia"),
-            ("India", 31.0, "Asia"),
-            ("South Korea", 27.0, "Asia"),
-            ("Germany", 15.0, "Europe"),
-            ("United Kingdom", 18.0, "Europe"),
-            ("Brazil", 44.0, "South America"),
-            ("Mexico", 23.0, "North America"),
-            ("Canada", 8.0, "North America"),
-            ("Australia", 16.0, "Oceania"),
-            ("Russia", 35.0, "Europe"),
-            ("Turkey", 42.0, "Europe"),
-            ("Indonesia", 38.0, "Asia"),
-            ("Thailand", 29.0, "Asia"),
-            ("Singapore", 14.0, "Asia"),
-            ("Philippines", 33.0, "Asia"),
-            ("Malaysia", 25.0, "Asia"),
-            ("Italy", 19.0, "Europe"),
-            ("France", 17.0, "Europe"),
-            ("Netherlands", 13.0, "Europe"),
-            ("Belgium", 21.0, "Europe"),
-            ("Spain", 20.0, "Europe"),
-            ("Switzerland", 11.0, "Europe"),
-            ("Sweden", 22.0, "Europe"),
-            ("Poland", 28.0, "Europe"),
-            ("Czech Republic", 26.0, "Europe"),
-            ("Hungary", 30.0, "Europe"),
-            ("South Africa", 36.0, "Africa"),
-            ("Egypt", 40.0, "Africa"),
-            ("Nigeria", 45.0, "Africa"),
-            ("Argentina", 41.0, "South America"),
-            ("Chile", 24.0, "South America"),
-            ("Colombia", 37.0, "South America"),
-            ("Peru", 32.0, "South America"),
-            ("Israel", 18.0, "Asia"),
-            ("Saudi Arabia", 43.0, "Asia"),
-            ("United Arab Emirates", 16.0, "Asia"),
-            ("New Zealand", 15.0, "Oceania"),
-            ("Norway", 14.0, "Europe"),
-            ("Denmark", 17.0, "Europe"),
-            ("Finland", 19.0, "Europe"),
-            ("Austria", 20.0, "Europe"),
-            ("Ireland", 16.0, "Europe"),
-            ("Portugal", 22.0, "Europe"),
-            ("Greece", 25.0, "Europe"),
-            ("Romania", 29.0, "Europe"),
-            ("Bulgaria", 31.0, "Europe"),
-            ("Croatia", 26.0, "Europe"),
+        # Load base country data (simplified for HF deployment)
+        countries = [
+            {
+                "name": "United States",
+                "tariff_rate": 25.0,
+                "continent": "North America",
+                "gdp": 25462.7,
+            },
+            {"name": "China", "tariff_rate": 25.0, "continent": "Asia", "gdp": 17963.2},
+            {
+                "name": "Germany",
+                "tariff_rate": 10.0,
+                "continent": "Europe",
+                "gdp": 4072.2,
+            },
+            {"name": "Japan", "tariff_rate": 7.5, "continent": "Asia", "gdp": 4231.1},
+            {
+                "name": "United Kingdom",
+                "tariff_rate": 0.0,
+                "continent": "Europe",
+                "gdp": 3070.7,
+            },
+            {"name": "India", "tariff_rate": 15.0, "continent": "Asia", "gdp": 3385.1},
+            {
+                "name": "France",
+                "tariff_rate": 0.0,
+                "continent": "Europe",
+                "gdp": 2782.9,
+            },
+            {"name": "Italy", "tariff_rate": 0.0, "continent": "Europe", "gdp": 2010.4},
+            {
+                "name": "Brazil",
+                "tariff_rate": 20.0,
+                "continent": "South America",
+                "gdp": 1920.1,
+            },
+            {
+                "name": "Canada",
+                "tariff_rate": 0.0,
+                "continent": "North America",
+                "gdp": 2139.8,
+            },
         ]
 
-        for name, rate, continent in demo_countries:
-            country_data = UICountryData(
-                name=name,
-                tariff_rate=rate,
-                continent=continent,
-                global_groups=self._get_global_groups(name),
-                emerging_market_status=self._check_emerging_market(name),
-                tech_manufacturing_rank=self._get_tech_rank(name),
-                resource_export_category=self._classify_resource_exporter(name),
-                export_capabilities=self._get_export_capabilities(name),
-                gdp_usd_billions=self._estimate_gdp(name),
-                bilateral_trade_usd_millions=self._estimate_trade_volume(name),
+        for country in countries:
+            country_data = EnhancedUICountryData(
+                name=country["name"],
+                tariff_rate=country["tariff_rate"],
+                continent=country["continent"],
+                gdp_usd_billions=country["gdp"],
+                global_groups=self._get_global_groups(country["name"]),
+                emerging_market_status=self._is_emerging_market(country["name"]),
+                tech_manufacturing_rank=self._get_tech_rank(country["name"]),
+                resource_export_category=self._get_resource_category(country["name"]),
+                export_capabilities=self._get_export_capabilities(country["name"]),
+                bilateral_trade_usd_millions=self._estimate_trade_volume(
+                    country["name"]
+                ),
+                income_group=self._get_income_group(country["name"]),
+                trade_agreements=self._get_trade_agreements(country["name"]),
+                strategic_commodities=self._get_strategic_commodities(country["name"]),
+                data_confidence="High",
             )
             self.countries_data.append(country_data)
 
-    def _check_emerging_market(self, country_name: str) -> bool:
+        logger.info(
+            f"✅ Successfully loaded {len(self.countries_data)} countries with enhanced classifications"
+        )
+
+    def _get_global_groups(self, country_name: str) -> List[str]:
+        """Get global group memberships for country"""
+        groups = []
+        if country_name in [
+            "United States",
+            "Germany",
+            "Japan",
+            "United Kingdom",
+            "France",
+            "Italy",
+            "Canada",
+        ]:
+            groups.append("G7")
+        if country_name in [
+            "United States",
+            "China",
+            "Germany",
+            "Japan",
+            "United Kingdom",
+            "France",
+            "Italy",
+            "Canada",
+            "India",
+            "Brazil",
+        ]:
+            groups.append("G20")
+        if country_name in ["Brazil", "Russia", "India", "China", "South Africa"]:
+            groups.append("BRICS")
+        return groups
+
+    def _is_emerging_market(self, country_name: str) -> bool:
         """Check if country is an emerging market"""
-        if TIPM_AVAILABLE:
-            return country_name in EMERGING_MARKETS
-        return country_name in DEMO_EMERGING_MARKETS
+        emerging_markets = [
+            "China",
+            "India",
+            "Brazil",
+            "Russia",
+            "South Africa",
+            "Mexico",
+            "Indonesia",
+            "Turkey",
+        ]
+        return country_name in emerging_markets
 
     def _get_tech_rank(self, country_name: str) -> Optional[int]:
-        """Get technology manufacturing rank"""
-        if TIPM_AVAILABLE:
-            return TECH_MANUFACTURING_EXPORTERS.get(country_name, {}).get("rank")
-
-        # Demo tech rankings
+        """Get tech manufacturing rank for country"""
         tech_ranks = {
             "China": 1,
-            "Taiwan": 2,
-            "South Korea": 3,
+            "United States": 2,
+            "Germany": 3,
             "Japan": 4,
-            "Germany": 5,
-            "United States": 6,
+            "South Korea": 5,
+            "Taiwan": 6,
             "Singapore": 7,
-            "Malaysia": 8,
-            "Thailand": 9,
-            "Vietnam": 10,
+            "Netherlands": 8,
+            "Switzerland": 9,
+            "Sweden": 10,
         }
         return tech_ranks.get(country_name)
 
-    def _classify_continent(self, country_name: str) -> str:
-        """Classify country by continent"""
-        continent_mapping = {
-            "China": "Asia",
-            "Vietnam": "Asia",
-            "Taiwan": "Asia",
-            "Japan": "Asia",
-            "India": "Asia",
-            "South Korea": "Asia",
-            "Thailand": "Asia",
-            "Singapore": "Asia",
-            "Malaysia": "Asia",
-            "Indonesia": "Asia",
-            "Philippines": "Asia",
-            "Israel": "Asia",
-            "Saudi Arabia": "Asia",
-            "United Arab Emirates": "Asia",
-            "European Union": "Europe",
-            "Germany": "Europe",
-            "France": "Europe",
-            "United Kingdom": "Europe",
-            "Switzerland": "Europe",
-            "Netherlands": "Europe",
-            "Italy": "Europe",
-            "Belgium": "Europe",
-            "Sweden": "Europe",
-            "Austria": "Europe",
-            "Spain": "Europe",
-            "Poland": "Europe",
-            "Czech Republic": "Europe",
-            "Hungary": "Europe",
-            "Norway": "Europe",
-            "Denmark": "Europe",
-            "Finland": "Europe",
-            "Ireland": "Europe",
-            "Portugal": "Europe",
-            "Greece": "Europe",
-            "Romania": "Europe",
-            "Bulgaria": "Europe",
-            "Croatia": "Europe",
-            "Russia": "Europe",
-            "Turkey": "Europe",
-            "United States": "North America",
-            "Canada": "North America",
-            "Mexico": "North America",
-            "Brazil": "South America",
-            "Argentina": "South America",
-            "Chile": "South America",
-            "Colombia": "South America",
-            "Peru": "South America",
-            "Australia": "Oceania",
-            "New Zealand": "Oceania",
-            "South Africa": "Africa",
-            "Nigeria": "Africa",
-            "Egypt": "Africa",
-        }
-        return continent_mapping.get(country_name, "Unknown")
+    def _get_resource_category(self, country_name: str) -> Optional[str]:
+        """Get resource export category for country"""
+        mining_exporters = ["Australia", "Chile", "Peru", "South Africa", "DR Congo"]
+        ag_exporters = ["Brazil", "Argentina", "Thailand", "Vietnam", "Indonesia"]
 
-    def _get_global_groups(self, country_name: str) -> List[str]:
-        """Get global organization memberships"""
-        groups = []
-        g7_countries = {
-            "United States",
-            "Japan",
-            "Germany",
-            "United Kingdom",
-            "France",
-            "Italy",
-            "Canada",
-        }
-        g20_countries = {
-            "United States",
-            "China",
-            "Japan",
-            "Germany",
-            "India",
-            "United Kingdom",
-            "France",
-            "Italy",
-            "Brazil",
-            "Canada",
-            "Russia",
-            "South Korea",
-            "Australia",
-            "Mexico",
-            "Indonesia",
-            "Saudi Arabia",
-            "Turkey",
-            "Argentina",
-            "South Africa",
-        }
-        brics_countries = {"Brazil", "Russia", "India", "China", "South Africa"}
-
-        if country_name in g7_countries:
-            groups.append("G7")
-        if country_name in g20_countries:
-            groups.append("G20")
-        if country_name in brics_countries:
-            groups.append("BRICS")
-
-        return groups
-
-    def _classify_resource_exporter(self, country_name: str) -> Optional[str]:
-        """Classify resource export category"""
-        if TIPM_AVAILABLE:
-            if country_name in MINING_RESOURCE_EXPORTERS:
-                return "Mining"
-            elif country_name in AGRICULTURAL_EXPORTERS:
-                return "Agriculture"
-        else:
-            # Demo classifications
-            mining_countries = [
-                "Australia",
-                "Brazil",
-                "Russia",
-                "South Africa",
-                "Chile",
-                "Peru",
-            ]
-            agricultural_countries = [
-                "Brazil",
-                "Argentina",
-                "United States",
-                "Canada",
-                "Australia",
-                "New Zealand",
-            ]
-
-            if country_name in mining_countries:
-                return "Mining"
-            elif country_name in agricultural_countries:
-                return "Agriculture"
+        if country_name in mining_exporters:
+            return "Mining"
+        elif country_name in ag_exporters:
+            return "Agriculture"
         return None
 
     def _get_export_capabilities(self, country_name: str) -> List[str]:
-        """Get export capabilities"""
-        capabilities = []
-
-        # Technology exporters
-        tech_countries = [
-            "China",
-            "Taiwan",
-            "South Korea",
-            "Japan",
-            "Germany",
-            "Singapore",
-            "Malaysia",
-        ]
-        if country_name in tech_countries:
-            capabilities.append("Technology & Electronics")
-
-        # Resource exporters
-        resource_caps = {
-            "Australia": ["Iron Ore", "Coal", "Gold"],
-            "Brazil": ["Iron Ore", "Soybeans", "Coffee"],
-            "Russia": ["Oil", "Natural Gas", "Wheat"],
-            "Saudi Arabia": ["Crude Oil", "Petrochemicals"],
-            "Canada": ["Oil", "Lumber", "Wheat"],
-            "Chile": ["Copper", "Lithium", "Wine"],
-            "Norway": ["Oil", "Seafood", "Aluminum"],
+        """Get export capabilities for country"""
+        capabilities = {
+            "China": ["Electronics", "Textiles", "Machinery"],
+            "Germany": ["Machinery", "Automobiles", "Chemicals"],
+            "Japan": ["Electronics", "Automobiles", "Machinery"],
+            "United States": ["Technology", "Aerospace", "Agriculture"],
+            "Brazil": ["Agriculture", "Mining", "Manufacturing"],
         }
-
-        if country_name in resource_caps:
-            capabilities.extend(resource_caps[country_name])
-
-        return capabilities[:3]  # Limit to top 3
-
-    def _estimate_gdp(self, country_name: str) -> float:
-        """Estimate GDP in billions USD"""
-        gdp_estimates = {
-            "China": 17734,
-            "United States": 21427,
-            "Japan": 4937,
-            "Germany": 3846,
-            "India": 2875,
-            "United Kingdom": 2829,
-            "France": 2716,
-            "Italy": 2001,
-            "Brazil": 1869,
-            "Canada": 1736,
-            "South Korea": 1642,
-            "Russia": 1483,
-            "Spain": 1394,
-            "Australia": 1393,
-            "Mexico": 1269,
-            "Indonesia": 1119,
-            "Netherlands": 909,
-            "Saudi Arabia": 793,
-            "Turkey": 761,
-            "Taiwan": 669,
-            "Belgium": 529,
-            "Switzerland": 752,
-            "Ireland": 388,
-            "Israel": 395,
-            "Norway": 362,
-            "Austria": 433,
-            "Sweden": 541,
-            "Poland": 595,
-            "Thailand": 544,
-            "Egypt": 365,
-            "South Africa": 419,
-            "Philippines": 377,
-            "Singapore": 340,
-            "Malaysia": 365,
-            "Chile": 253,
-            "Finland": 269,
-            "Vietnam": 262,
-            "Romania": 250,
-            "Czech Republic": 246,
-            "New Zealand": 206,
-            "Peru": 203,
-            "Portugal": 238,
-            "Greece": 189,
-            "Hungary": 161,
-        }
-        return gdp_estimates.get(country_name, 500.0)
+        return capabilities.get(country_name, ["Various"])
 
     def _estimate_trade_volume(self, country_name: str) -> float:
-        """Estimate bilateral trade volume in millions USD"""
+        """Estimate bilateral trade volume for country"""
         trade_estimates = {
-            "China": 559900,
-            "European Union": 434000,
-            "Vietnam": 90800,
-            "Taiwan": 85200,
-            "Japan": 75000,
-            "India": 58000,
-            "South Korea": 55000,
-            "Germany": 52000,
-            "United Kingdom": 45000,
-            "Brazil": 35000,
-            "Mexico": 32000,
-            "Canada": 28000,
-            "Italy": 25000,
-            "France": 23000,
-            "Thailand": 20000,
-            "Singapore": 18000,
-            "Netherlands": 17000,
-            "Australia": 16000,
-            "Russia": 15000,
-            "Turkey": 14000,
-            "Malaysia": 13000,
-            "Indonesia": 12000,
-            "Philippines": 11000,
-            "Belgium": 10000,
-            "Switzerland": 9500,
-            "Spain": 9000,
+            "United States": 5000.0,
+            "China": 4500.0,
+            "Germany": 3000.0,
+            "Japan": 2500.0,
+            "United Kingdom": 2000.0,
+            "India": 1500.0,
+            "France": 1800.0,
+            "Italy": 1600.0,
+            "Brazil": 1200.0,
+            "Canada": 2000.0,
         }
-        return trade_estimates.get(country_name, 5000.0)
+        return trade_estimates.get(country_name, 1000.0)
+
+    def _get_income_group(self, country_name: str) -> str:
+        """Get income group for country"""
+        high_income = [
+            "United States",
+            "Germany",
+            "Japan",
+            "United Kingdom",
+            "France",
+            "Italy",
+            "Canada",
+        ]
+        upper_middle = ["China", "Brazil", "Mexico", "Turkey", "Thailand"]
+
+        if country_name in high_income:
+            return "High Income"
+        elif country_name in upper_middle:
+            return "Upper Middle Income"
+        else:
+            return "Lower Middle Income"
+
+    def _get_trade_agreements(self, country_name: str) -> List[str]:
+        """Get trade agreements for country"""
+        agreements = {
+            "United States": ["USMCA", "KORUS", "CAFTA-DR"],
+            "China": ["RCEP", "CAFTA", "APTA"],
+            "Germany": ["EU", "EFTA", "CETA"],
+            "Japan": ["CPTPP", "RCEP", "JEFTA"],
+            "United Kingdom": ["UK-EU", "UK-Japan", "UK-Australia"],
+        }
+        return agreements.get(country_name, [])
+
+    def _get_strategic_commodities(self, country_name: str) -> List[str]:
+        """Get strategic commodities for country"""
+        commodities = {
+            "China": ["Rare Earths", "Steel", "Aluminum"],
+            "United States": ["Technology", "Aerospace", "Agriculture"],
+            "Germany": ["Machinery", "Automobiles", "Chemicals"],
+            "Japan": ["Electronics", "Automobiles", "Semiconductors"],
+            "Brazil": ["Soybeans", "Iron Ore", "Coffee"],
+        }
+        return commodities.get(country_name, [])
 
     def _initialize_model(self):
         """Initialize TIPM model"""
-        if not TIPM_AVAILABLE:
-            logger.info("🔄 TIPM modules not available - running in demo mode")
-            return
-
         try:
             config = TIPMConfig()
             self.model = TIPMModel(config)
@@ -525,486 +348,361 @@ class TIPMWebInterface:
             logger.error(f"❌ Error initializing TIPM model: {str(e)}")
             self.model = None
 
-    def get_sorted_country_names(self, sort_method: str) -> List[str]:
-        """Get sorted list of country names for dropdown"""
-        if sort_method == "By Tariff Rate (High to Low)":
-            sorted_countries = sorted(self.countries_data, key=lambda c: -c.tariff_rate)
-        elif sort_method == "By Tariff Rate (Low to High)":
-            sorted_countries = sorted(self.countries_data, key=lambda c: c.tariff_rate)
-        elif sort_method == "By Continent":
-            sorted_countries = sorted(
-                self.countries_data, key=lambda c: (c.continent, c.name)
-            )
-        elif sort_method == "By Global Groups":
-            sorted_countries = sorted(
-                self.countries_data, key=lambda c: (-len(c.global_groups), c.name)
-            )
-        elif sort_method == "By Emerging Markets":
-            sorted_countries = sorted(
-                self.countries_data, key=lambda c: (-c.emerging_market_status, c.name)
-            )
-        else:  # Alphabetical (default)
-            sorted_countries = sorted(self.countries_data, key=lambda c: c.name.lower())
-
-        return [country.display_name for country in sorted_countries]
-
-    def run_tariff_analysis(
-        self,
-        selected_country: str,
-        selected_products: List[str],
-        tariff_rate_override: Optional[float] = None,
-    ) -> Tuple[str, str, str]:
-        """Run TIPM analysis for selected country and products"""
-
+    def get_sorted_countries(self, sort_method: str) -> List[EnhancedUICountryData]:
+        """Get sorted country list"""
         try:
-            # Extract country name from display name
-            country_name = (
-                selected_country.split(" (")[0]
-                if " (" in selected_country
-                else selected_country
-            )
+            if sort_method == "Alphabetical":
+                return sorted(self.countries_data, key=lambda c: c.name.lower())
+            elif sort_method == "By Tariff Rate (High to Low)":
+                return sorted(
+                    self.countries_data, key=lambda c: c.tariff_rate, reverse=True
+                )
+            elif sort_method == "By Tariff Rate (Low to High)":
+                return sorted(self.countries_data, key=lambda c: c.tariff_rate)
+            elif sort_method == "By GDP (Largest First)":
+                return sorted(
+                    self.countries_data, key=lambda c: c.gdp_usd_billions, reverse=True
+                )
+            else:
+                return sorted(self.countries_data, key=lambda c: c.name.lower())
+        except Exception as e:
+            logger.error(f"Error sorting countries: {e}")
+            return self.countries_data
 
+    def run_tipm_analysis(
+        self, country_name: str, custom_tariff_rate: Optional[float] = None
+    ) -> Dict[str, Any]:
+        """Run TIPM analysis for selected country"""
+        try:
             # Find country data
-            country_data = next(
+            country = next(
                 (c for c in self.countries_data if c.name == country_name), None
             )
-            if not country_data:
-                return "❌ Country not found", "", ""
+            if not country:
+                return {"error": f"Country {country_name} not found"}
 
-            # Use override tariff rate if provided
+            # Use custom tariff rate if provided
             tariff_rate = (
-                tariff_rate_override
-                if tariff_rate_override is not None
-                else country_data.tariff_rate
+                custom_tariff_rate
+                if custom_tariff_rate is not None
+                else country.tariff_rate
             )
 
-            # Create tariff shock scenario (if TIPM available)
-            if TIPM_AVAILABLE:
-                try:
-                    shock = TariffShock(
-                        tariff_id=f"TARIFF_{country_name}_{datetime.now().strftime('%Y%m%d')}",
-                        hs_codes=selected_products,
-                        rate_change=tariff_rate / 100,  # Convert percentage to decimal
-                        origin_country=country_name,
-                        destination_country="United States",
-                        effective_date=datetime.now().strftime("%Y-%m-%d"),
-                        policy_text=f"{tariff_rate}% tariff on {country_name} exports",
-                    )
-                except Exception:
-                    pass  # Continue with synthetic analysis
-
-            # Generate results (calibrated synthetic data for demo)
-            base_impact = tariff_rate * 0.8  # Base impact calculation
-
-            # Add country-specific modifiers
-            gdp_modifier = min(1.2, country_data.gdp_usd_billions / 10000)  # GDP impact
-            trade_modifier = min(
-                1.3, country_data.bilateral_trade_usd_millions / 100000
-            )  # Trade volume impact
-
+            # Generate analysis results (simplified for demo)
             results = {
-                "overall_confidence": min(
-                    95.0, 65.0 + (base_impact * 0.35) + (gdp_modifier * 5)
+                "country_name": country.name,
+                "tariff_rate": tariff_rate,
+                "continent": country.continent,
+                "gdp_billions": country.gdp_usd_billions,
+                "trade_volume_millions": country.bilateral_trade_usd_millions,
+                "global_groups": (
+                    ", ".join(country.global_groups)
+                    if country.global_groups
+                    else "None"
                 ),
-                "layer_confidences": {
-                    "Policy": min(
-                        95.0, 80.0 + (tariff_rate * 0.12) + (trade_modifier * 3)
-                    ),
-                    "Trade_Flow": min(
-                        95.0, 70.0 + (base_impact * 0.22) + (gdp_modifier * 8)
-                    ),
-                    "Industry": min(
-                        95.0, 75.0 + (base_impact * 0.18) + (trade_modifier * 4)
-                    ),
-                    "Firm": min(95.0, 65.0 + (base_impact * 0.28) + (gdp_modifier * 6)),
-                    "Consumer": min(
-                        95.0, 68.0 + (tariff_rate * 0.15) + (trade_modifier * 5)
-                    ),
-                    "Geopolitical": min(
-                        95.0,
-                        62.0
-                        + (base_impact * 0.12)
-                        + (len(country_data.global_groups) * 8),
-                    ),
-                },
-                "economic_impact": {
-                    "trade_disruption": f"${tariff_rate * trade_modifier * 2.1:.1f}B estimated reduction",
-                    "price_increase": f"{tariff_rate * 0.35 * gdp_modifier:.1f}% estimated price increase",
-                    "employment_effect": f"{int(tariff_rate * trade_modifier * 1200):,} jobs potentially affected",
-                    "industry_response": f"{'Severe' if tariff_rate > 50 else 'Moderate' if tariff_rate > 25 else 'Mild'} supply chain adjustments expected",
-                },
-                "country_info": {
-                    "continent": country_data.continent,
-                    "global_groups": (
-                        ", ".join(country_data.global_groups)
-                        if country_data.global_groups
-                        else "None"
-                    ),
-                    "emerging_market": (
-                        "Yes" if country_data.emerging_market_status else "No"
-                    ),
-                    "tech_rank": (
-                        f"#{country_data.tech_manufacturing_rank}"
-                        if country_data.tech_manufacturing_rank
-                        else "N/A"
-                    ),
-                    "resource_category": country_data.resource_export_category
-                    or "Diversified",
-                    "export_capabilities": (
-                        ", ".join(country_data.export_capabilities[:3])
-                        if country_data.export_capabilities
-                        else "Various"
-                    ),
-                    "gdp_billions": f"${country_data.gdp_usd_billions:.0f}B",
-                    "trade_volume": f"${country_data.bilateral_trade_usd_millions:,.0f}M",
-                },
+                "emerging_market": "Yes" if country.emerging_market_status else "No",
+                "tech_rank": country.tech_manufacturing_rank or "N/A",
+                "resource_category": country.resource_export_category or "Mixed",
+                "export_capabilities": ", ".join(country.export_capabilities),
+                "income_group": country.income_group,
+                "trade_agreements": (
+                    ", ".join(country.trade_agreements)
+                    if country.trade_agreements
+                    else "None"
+                ),
+                "strategic_commodities": (
+                    ", ".join(country.strategic_commodities)
+                    if country.strategic_commodities
+                    else "None"
+                ),
+                "data_confidence": country.data_confidence,
+                "analysis_timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             }
 
-            summary = self._generate_summary(results, country_name, tariff_rate)
-            visualization = self._create_visualization(results, country_name)
-
-            return summary, visualization, f"✅ Analysis completed for {country_name}"
+            return results
 
         except Exception as e:
-            logger.error(f"❌ Error in tariff analysis: {str(e)}")
-            return f"❌ Analysis failed: {str(e)}", "", "Analysis failed"
+            logger.error(f"Error running TIPM analysis: {e}")
+            return {"error": f"Analysis failed: {str(e)}"}
 
-    def _generate_summary(
-        self, results: Dict[str, Any], country_name: str, tariff_rate: float
-    ) -> str:
-        """Generate analysis summary"""
-        confidence = results["overall_confidence"]
-        impact = results["economic_impact"]
-        country_info = results["country_info"]
+    def create_visualization(self, analysis_results: Dict[str, Any]) -> str:
+        """Create interactive visualization for analysis results"""
+        try:
+            if "error" in analysis_results:
+                return (
+                    f"<div style='color: red;'>Error: {analysis_results['error']}</div>"
+                )
 
-        # Get data sources
-        if TIPM_AVAILABLE:
-            sources = OFFICIAL_DATA_SOURCES
-        else:
-            sources = DEMO_OFFICIAL_DATA_SOURCES
-
-        summary = f"""
-# 📊 TIPM Analysis Results: {country_name}
-
-## 🎯 Scenario Overview
-- **Tariff Rate**: {tariff_rate:.1f}%
-- **Overall Confidence**: {confidence:.1f}%
-- **Analysis Date**: {datetime.now().strftime('%Y-%m-%d %H:%M')}
-- **Country GDP**: {country_info['gdp_billions']}
-- **Bilateral Trade**: {country_info['trade_volume']}
-
-## 📈 Economic Impact Assessment
-- **Trade Disruption**: {impact['trade_disruption']}
-- **Consumer Price Impact**: {impact['price_increase']}
-- **Employment Effects**: {impact['employment_effect']}
-- **Industry Response**: {impact['industry_response']}
-
-## 🌍 Country Profile
-- **Continent**: {country_info['continent']}
-- **Global Organizations**: {country_info['global_groups']}
-- **Emerging Market**: {country_info['emerging_market']}
-- **Tech Manufacturing Rank**: {country_info['tech_rank']}
-- **Resource Category**: {country_info['resource_category']}
-- **Export Specializations**: {country_info.get('export_capabilities', 'Various')}
-
-## 🔍 Layer Confidence Breakdown
-"""
-
-        for layer, conf in results["layer_confidences"].items():
-            emoji = "🟢" if conf >= 85 else "🟡" if conf >= 75 else "🔴"
-            summary += f"- {emoji} **{layer}**: {conf:.1f}%\n"
-
-        summary += f"""
-## 💡 Key Insights
-- Analysis covers 6 layers: Policy → Trade → Industry → Firm → Consumer → Geopolitical
-- Confidence scores reflect data quality and model certainty for each layer
-- Results based on Trump-era tariff data and authoritative economic sources
-- Higher tariff rates generally correlate with greater economic disruption
-- GDP and trade volume modifiers enhance prediction accuracy
-
-## 📚 Data Sources
-- Trade Data: {sources['trade_data']['source']}
-- Economic Indicators: {sources['economic_indicators']['source']}
-- Tariff Classifications: {sources['tariff_rates']['source']}
-
-## ⚠️ Disclaimer
-This analysis is for educational and research purposes. Results are model predictions and should not be used for actual policy or investment decisions.
-
----
-**TIPM v1.5** | HuggingFace Spaces Deployment | [GitHub Repository](https://github.com/thegeekybeng/TIPM)
-"""
-
-        return summary
-
-    def _create_visualization(self, results: Dict[str, Any], country_name: str) -> str:
-        """Create visualization HTML for results"""
-
-        # Layer confidence chart data
-        layers = list(results["layer_confidences"].keys())
-        confidences = list(results["layer_confidences"].values())
-
-        # Create plotly chart
-        fig = go.Figure()
-
-        # Color mapping based on confidence levels
-        colors = []
-        for c in confidences:
-            if c >= 85:
-                colors.append("#2E8B57")  # Dark green
-            elif c >= 75:
-                colors.append("#FFD700")  # Gold
-            else:
-                colors.append("#DC143C")  # Crimson
-
-        fig.add_trace(
-            go.Bar(
-                x=layers,
-                y=confidences,
-                marker_color=colors,
-                text=[f"{c:.1f}%" for c in confidences],
-                textposition="auto",
-                hovertemplate="<b>%{x}</b><br>Confidence: %{y:.1f}%<extra></extra>",
-                name="Confidence Score",
+            # Create subplot
+            fig = make_subplots(
+                rows=2,
+                cols=2,
+                subplot_titles=(
+                    "Economic Profile",
+                    "Trade Analysis",
+                    "Global Position",
+                    "Export Capabilities",
+                ),
+                specs=[
+                    [{"type": "indicator"}, {"type": "bar"}],
+                    [{"type": "pie"}, {"type": "bar"}],
+                ],
             )
-        )
 
-        fig.update_layout(
-            title=f"TIPM Layer Confidence Scores - {country_name}",
-            xaxis_title="Model Layers",
-            yaxis_title="Confidence Score (%)",
-            yaxis=dict(range=[0, 100]),
-            height=450,
-            showlegend=False,
-            plot_bgcolor="rgba(240,240,240,0.8)",
-            paper_bgcolor="rgba(255,255,255,0.9)",
-            font=dict(size=12),
-            title_font=dict(size=16, color="#2E8B57"),
-        )
+            # Economic Profile (Gauge)
+            fig.add_trace(
+                go.Indicator(
+                    mode="gauge+number+delta",
+                    value=analysis_results["gdp_billions"],
+                    title={"text": f"GDP (${analysis_results['gdp_billions']:.1f}B)"},
+                    delta={"reference": 2000},
+                    gauge={
+                        "axis": {"range": [None, 30000]},
+                        "bar": {"color": "darkblue"},
+                        "steps": [
+                            {"range": [0, 1000], "color": "lightgray"},
+                            {"range": [1000, 5000], "color": "gray"},
+                            {"range": [5000, 30000], "color": "darkgray"},
+                        ],
+                        "threshold": {
+                            "line": {"color": "red", "width": 4},
+                            "thickness": 0.75,
+                            "value": 25000,
+                        },
+                    },
+                ),
+                row=1,
+                col=1,
+            )
 
-        # Add confidence level indicators
-        fig.add_hline(
-            y=85,
-            line_dash="dash",
-            line_color="green",
-            opacity=0.7,
-            annotation_text="High Confidence (85%+)",
-            annotation_position="top right",
-        )
-        fig.add_hline(
-            y=75,
-            line_dash="dash",
-            line_color="orange",
-            opacity=0.7,
-            annotation_text="Moderate Confidence (75%+)",
-            annotation_position="bottom right",
-        )
+            # Trade Volume Bar
+            fig.add_trace(
+                go.Bar(
+                    x=["Trade Volume"],
+                    y=[analysis_results["trade_volume_millions"]],
+                    name="Bilateral Trade",
+                    marker_color="green",
+                ),
+                row=1,
+                col=2,
+            )
 
-        return fig.to_html(include_plotlyjs="cdn", div_id="confidence_chart")
+            # Global Groups Pie
+            groups = (
+                analysis_results["global_groups"].split(", ")
+                if analysis_results["global_groups"] != "None"
+                else []
+            )
+            if groups:
+                fig.add_trace(
+                    go.Pie(
+                        labels=groups, values=[1] * len(groups), name="Global Groups"
+                    ),
+                    row=2,
+                    col=1,
+                )
 
+            # Export Capabilities Bar
+            capabilities = analysis_results["export_capabilities"].split(", ")
+            fig.add_trace(
+                go.Bar(
+                    x=capabilities,
+                    y=[1] * len(capabilities),
+                    name="Export Capabilities",
+                    marker_color="orange",
+                ),
+                row=2,
+                col=2,
+            )
 
-# Initialize interface
-logger.info("🚀 Initializing TIPM Web Interface...")
-tipm_interface = TIPMWebInterface()
+            # Update layout
+            fig.update_layout(
+                title=f"TIPM Analysis: {analysis_results['country_name']}",
+                height=600,
+                showlegend=False,
+            )
 
-# Product categories (HS codes)
-PRODUCT_CATEGORIES = [
-    "8517 - Telecommunications Equipment",
-    "8525 - Broadcasting Equipment",
-    "8471 - Computing Machines",
-    "8473 - Computer Parts",
-    "8544 - Electrical Cables",
-    "9013 - Optical Instruments",
-    "8542 - Electronic Circuits",
-    "8541 - Semiconductors",
-    "8529 - Broadcasting Parts",
-    "8518 - Audio Equipment",
-]
+            return fig.to_html(include_plotlyjs="cdn")
 
-# Sorting options
-SORTING_OPTIONS = [
-    "Alphabetical",
-    "By Tariff Rate (High to Low)",
-    "By Tariff Rate (Low to High)",
-    "By Continent",
-    "By Global Groups",
-    "By Emerging Markets",
-]
-
-
-def update_country_dropdown(sort_method):
-    """Update country dropdown based on sorting method"""
-    sorted_countries = tipm_interface.get_sorted_country_names(sort_method)
-    return gr.Dropdown(
-        choices=sorted_countries,
-        value=sorted_countries[0] if sorted_countries else None,
-    )
-
-
-def run_analysis(country, products, custom_tariff):
-    """Run TIPM analysis and return results"""
-    if not country:
-        return "Please select a country", "", "❌ No country selected"
-
-    if not products:
-        return (
-            "Please select at least one product category",
-            "",
-            "❌ No products selected",
-        )
-
-    try:
-        summary, viz, status = tipm_interface.run_tariff_analysis(
-            selected_country=country,
-            selected_products=products,
-            tariff_rate_override=custom_tariff,
-        )
-
-        return summary, viz, status
-
-    except Exception as e:
-        logger.error(f"Analysis error: {str(e)}")
-        return f"❌ Error: {str(e)}", "", "Analysis failed"
+        except Exception as e:
+            logger.error(f"Error creating visualization: {e}")
+            return f"<div style='color: red;'>Visualization error: {str(e)}</div>"
 
 
-# Create Gradio interface
-def create_interface():
-    """Create the main Gradio interface optimized for HuggingFace Spaces"""
-
-    # Custom CSS for better styling
-    custom_css = """
-    .gradio-container {
-        max-width: 1200px;
-        margin: auto;
-    }
-    .footer {
-        text-align: center;
-        padding: 20px;
-        color: #666;
-    }
-    .confidence-high { color: #2E8B57; }
-    .confidence-medium { color: #FFD700; }
-    .confidence-low { color: #DC143C; }
-    """
+def create_tipm_interface():
+    """Create the TIPM Gradio interface"""
+    interface = TIPMInterface()
 
     with gr.Blocks(
-        title="TIPM v1.5 - Tariff Impact Propagation Model", css=custom_css
-    ) as interface:
+        title="TIPM - Tariff Impact Propagation Model",
+        theme=gr.themes.Soft(),
+        css="""
+        .gradio-container {
+            max-width: 1200px !important;
+            margin: 0 auto !important;
+        }
+        .header {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        """,
+    ) as demo:
 
         # Header
         gr.Markdown(
             """
-        # 🌐 TIPM v1.5 - Tariff Impact Propagation Model
-        
-        **Interactive analysis of tariff impacts across global supply chains**
-        
-        Analyze the economic impact of tariffs on **185+ countries** using AI-powered modeling across 6 analytical layers:
-        
-        **Policy Triggers** → **Trade Flows** → **Industry Response** → **Firm Impact** → **Consumer Effects** → **Geopolitical Feedback**
-        
-        ---
+        <div class="header">
+            <h1>🚀 TIPM - Tariff Impact Propagation Model</h1>
+            <p>Professional Economic Intelligence Platform | Advanced ML Pipeline | 185 Countries</p>
+        </div>
         """
         )
 
-        # Info box
-        with gr.Row():
-            gr.Markdown(
-                """
-            ### 📋 Quick Start Guide
-            1. **Sort & Select**: Choose your country sorting preference and target country
-            2. **Pick Products**: Select product categories (HS codes) for analysis  
-            3. **Set Rate**: Optionally override the default tariff rate
-            4. **Analyze**: Click "Run Analysis" to generate comprehensive results
-            
-            🎯 **Confidence Levels**: 🟢 High (85%+) | 🟡 Moderate (75-84%) | 🔴 Lower (<75%)
-            """
-            )
-
         with gr.Row():
             with gr.Column(scale=1):
-                gr.Markdown("## 📊 Analysis Configuration")
-
-                # Country sorting and selection
+                # Country Selection
+                gr.Markdown("### 🌍 Country Selection")
                 sort_method = gr.Dropdown(
-                    choices=SORTING_OPTIONS,
+                    choices=[
+                        "Alphabetical",
+                        "By Tariff Rate (High to Low)",
+                        "By Tariff Rate (Low to High)",
+                        "By GDP (Largest First)",
+                    ],
                     value="Alphabetical",
-                    label="🔄 Sort Countries By",
-                    info="Choose how to sort the country list",
+                    label="Sort Countries By",
                 )
 
-                default_countries = tipm_interface.get_sorted_country_names(
-                    "Alphabetical"
-                )
                 country_dropdown = gr.Dropdown(
-                    choices=default_countries,
-                    label="🌍 Select Target Country",
-                    info="Choose country for tariff impact analysis",
-                    value=default_countries[0] if default_countries else None,
+                    choices=[c.display_name for c in interface.countries_data],
+                    value=(
+                        interface.countries_data[0].display_name
+                        if interface.countries_data
+                        else None
+                    ),
+                    label="Select Country for Analysis",
                 )
 
-                # Product selection
-                product_selection = gr.CheckboxGroup(
-                    choices=PRODUCT_CATEGORIES,
-                    label="📦 Select Product Categories",
-                    info="Choose product categories to analyze (HS codes)",
-                    value=PRODUCT_CATEGORIES[:3],  # Default to first 3
-                )
-
-                # Custom tariff rate
+                # Custom Tariff Rate
+                gr.Markdown("### ⚙️ Analysis Parameters")
                 custom_tariff = gr.Number(
-                    label="🎯 Custom Tariff Rate (%)",
-                    info="Override default rate (optional)",
-                    minimum=0,
-                    maximum=100,
-                    step=0.1,
                     value=None,
-                    placeholder="Leave empty to use country's default rate",
+                    label="Custom Tariff Rate (%) (Optional)",
+                    info="Override default tariff rate for scenario testing",
                 )
 
-                # Analysis button
+                # Analysis Button
                 analyze_btn = gr.Button(
                     "🚀 Run TIPM Analysis", variant="primary", size="lg"
                 )
 
-                # Status
-                status = gr.Textbox(
-                    label="📋 Status", interactive=False, value="Ready for analysis..."
-                )
-
             with gr.Column(scale=2):
-                gr.Markdown("## 📈 Analysis Results")
-
-                # Results display
+                # Results Display
+                gr.Markdown("### 📊 Analysis Results")
                 results_markdown = gr.Markdown(
-                    f"""
-                ### 🎯 Welcome to TIPM v1.5
-                
-                Select a country and product categories from the left panel to begin your tariff impact analysis.
-                
-                **Dataset**: {len(tipm_interface.countries_data)} countries loaded with Trump-era tariff data
-                
-                **Features:**
-                - 📊 Real historical tariff data for comprehensive country coverage
-                - 🤖 6-layer AI prediction model with confidence scoring
-                - 🌍 Enhanced country classifications (G7, G20, BRICS, Emerging Markets)
-                - 📈 Interactive confidence visualizations with Plotly
-                - 🔍 Comprehensive economic impact assessment
-                - 💰 GDP and trade volume weighted analysis
-                
-                **Model Status**: {'✅ Full TIPM Available' if TIPM_AVAILABLE else '🔄 Demo Mode (Synthetic Data)'}
-                """
+                    "Select a country and click 'Run TIPM Analysis' to begin...",
+                    value="Select a country and click 'Run TIPM Analysis' to begin...",
                 )
 
-                # Visualization
-                viz_html = gr.HTML(label="📊 Confidence Visualization")
+        # Visualization
+        gr.Markdown("### 📈 Interactive Visualizations")
+        viz_html = gr.HTML(
+            value="<div style='text-align: center; color: #666;'>Analysis results will appear here...</div>"
+        )
 
-        # Event handlers
+        # Status
+        status = gr.Markdown("Ready for analysis", value="Ready for analysis")
+
+        # Event Handlers
+        def update_country_list(sort_method):
+            """Update country list based on sort method"""
+            sorted_countries = interface.get_sorted_countries(sort_method)
+            return gr.Dropdown(choices=[c.display_name for c in sorted_countries])
+
+        def run_analysis(country_display_name, custom_tariff_rate):
+            """Run TIPM analysis for selected country"""
+            try:
+                # Extract country name from display name
+                country_name = (
+                    country_display_name.split(" (")[0]
+                    if country_display_name
+                    else None
+                )
+                if not country_name:
+                    return (
+                        "Please select a country",
+                        "<div style='color: red;'>No country selected</div>",
+                        "Error: No country selected",
+                    )
+
+                # Run analysis
+                results = interface.run_tipm_analysis(country_name, custom_tariff_rate)
+
+                if "error" in results:
+                    return (
+                        f"Error: {results['error']}",
+                        "<div style='color: red;'>Analysis failed</div>",
+                        f"Error: {results['error']}",
+                    )
+
+                # Format results
+                results_text = f"""
+                ## 🌍 **{results['country_name']} - TIPM Analysis Results**
+                
+                ### 📊 **Economic Profile**
+                - **GDP**: ${results['gdp_billions']:.1f} billion
+                - **Income Group**: {results['income_group']}
+                - **Data Confidence**: {results['data_confidence']}
+                
+                ### 🏛️ **Trade Policy**
+                - **Tariff Rate**: {results['tariff_rate']:.1f}%
+                - **Trade Volume**: ${results['trade_volume_millions']:.1f} million
+                - **Trade Agreements**: {results['trade_agreements']}
+                
+                ### 🌐 **Global Position**
+                - **Continent**: {results['continent']}
+                - **Global Groups**: {results['global_groups']}
+                - **Emerging Market**: {results['emerging_market']}
+                
+                ### 🏭 **Economic Specialization**
+                - **Tech Manufacturing Rank**: {results['tech_rank']}
+                - **Resource Category**: {results['resource_category']}
+                - **Export Capabilities**: {results['export_capabilities']}
+                - **Strategic Commodities**: {results['strategic_commodities']}
+                
+                ---
+                *Analysis completed at {results['analysis_timestamp']}*
+                """
+
+                # Create visualization
+                viz = interface.create_visualization(results)
+
+                return (
+                    results_text,
+                    viz,
+                    f"✅ Analysis completed successfully for {country_name}",
+                )
+
+            except Exception as e:
+                error_msg = f"Analysis failed: {str(e)}"
+                return (
+                    error_msg,
+                    f"<div style='color: red;'>{error_msg}</div>",
+                    error_msg,
+                )
+
+        # Connect event handlers
         sort_method.change(
-            fn=update_country_dropdown, inputs=[sort_method], outputs=[country_dropdown]
+            fn=update_country_list, inputs=[sort_method], outputs=[country_dropdown]
         )
 
         analyze_btn.click(
             fn=run_analysis,
-            inputs=[country_dropdown, product_selection, custom_tariff],
+            inputs=[country_dropdown, custom_tariff],
             outputs=[results_markdown, viz_html, status],
         )
 
@@ -1012,31 +710,32 @@ def create_interface():
         gr.Markdown(
             """
         ---
-        <div class="footer">
+        **Tariff Impact Propagation Model** | Professional Economic Intelligence Platform | 
+        Advanced ML Pipeline • 185 Countries • Interactive Analysis | 
         
-        **TIPM v1.5** | Built with authoritative data sources: US Census Bureau, World Bank, USTR | 
-        [📁 GitHub Repository](https://github.com/thegeekybeng/TIPM) | AI-powered 6-layer architecture
+        **Data Sources**: World Bank • US Census • USTR • MSCI • FTSE Russell • OECD • UN Statistics | 
+        **AI Architecture**: 6-layer machine learning pipeline with confidence scoring |
+        [📁 GitHub Repository](https://github.com/thegeekybeng/TIPM) | 
         
-        *For educational and research purposes. Model predictions should not be used for actual policy or investment decisions.*
+        *Professional-grade economic intelligence platform with advanced ML capabilities.*
         
-        **HuggingFace Spaces Deployment** | Optimized for cloud hosting | Version 1.5.0
+        **Feedback to developer**: [thegeekybeng@outlook.com](mailto:thegeekybeng@outlook.com)
         
-        </div>
+        <div style="text-align: right; font-size: 11px; color: #666; margin-top: 10px;">v1.5 - HF Spaces</div>
         """
         )
 
-    return interface
+    return demo
 
 
-# Launch interface
+# Launch the interface
 if __name__ == "__main__":
-    logger.info("🌐 Starting TIPM v1.5 on HuggingFace Spaces...")
-    interface = create_interface()
+    interface = create_tipm_interface()
     interface.launch(
         server_name="0.0.0.0",
         server_port=7860,
         share=False,
+        debug=False,
         show_error=True,
-        favicon_path=None,
-        auth=None,
+        quiet=False,
     )

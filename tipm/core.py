@@ -73,7 +73,15 @@ from .layers.industry_response import IndustryResponseLayer
 from .layers.firm_impact import FirmImpactLayer
 from .layers.consumer_impact import ConsumerImpactLayer
 from .layers.geopolitical import GeopoliticalLayer
-from .config.settings import TIPMConfig
+from .config.settings import (
+    TIPMConfig,
+    PolicyLayerConfig,
+    TradeFlowConfig,
+    IndustryConfig,
+    FirmConfig,
+    ConsumerConfig,
+    GeopoliticalConfig,
+)
 
 
 @dataclass
@@ -130,12 +138,20 @@ class TIPMModel:
 
     def _initialize_layers(self):
         """Initialize all 6 model layers"""
-        self.policy_layer = PolicyTriggerLayer(self.config.policy_config)
-        self.trade_flow_layer = TradeFlowLayer(self.config.trade_flow_config)
-        self.industry_layer = IndustryResponseLayer(self.config.industry_config)
-        self.firm_layer = FirmImpactLayer(self.config.firm_config)
-        self.consumer_layer = ConsumerImpactLayer(self.config.consumer_config)
-        self.geopolitical_layer = GeopoliticalLayer(self.config.geopolitical_config)
+        # Use default configs if none provided
+        policy_config = self.config.policy_config or PolicyLayerConfig()
+        trade_flow_config = self.config.trade_flow_config or TradeFlowConfig()
+        industry_config = self.config.industry_config or IndustryConfig()
+        firm_config = self.config.firm_config or FirmConfig()
+        consumer_config = self.config.consumer_config or ConsumerConfig()
+        geopolitical_config = self.config.geopolitical_config or GeopoliticalConfig()
+
+        self.policy_layer = PolicyTriggerLayer(policy_config)
+        self.trade_flow_layer = TradeFlowLayer(trade_flow_config)
+        self.industry_layer = IndustryResponseLayer(industry_config)
+        self.firm_layer = FirmImpactLayer(firm_config)
+        self.consumer_layer = ConsumerImpactLayer(consumer_config)
+        self.geopolitical_layer = GeopoliticalLayer(geopolitical_config)
 
         self.logger.info("TIPM model layers initialized successfully")
 

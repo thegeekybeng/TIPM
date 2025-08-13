@@ -4,88 +4,80 @@ Configuration management for TIPM layers
 
 from dataclasses import dataclass
 from typing import Dict, Any, Optional, List
+from pydantic import BaseModel, Field, validator
 
 
-@dataclass
-class PolicyLayerConfig:
+class PolicyLayerConfig(BaseModel):
     """Configuration for Policy Trigger Layer"""
 
-    model_name: str = "distilbert-base-uncased"
-    max_text_length: int = 512
-    tfidf_max_features: int = 1000
-    urgency_threshold: float = 0.7
-    similarity_threshold: float = 0.8
+    model_name: str = Field(
+        default="distilbert-base-uncased", description="NLP model for policy analysis"
+    )
+    max_text_length: int = Field(default=512, ge=128, le=1024)
+    tfidf_max_features: int = Field(default=1000, ge=100, le=10000)
+    urgency_threshold: float = Field(default=0.7, ge=0.0, le=1.0)
+    similarity_threshold: float = Field(default=0.8, ge=0.0, le=1.0)
 
 
-@dataclass
-class TradeFlowConfig:
+class TradeFlowConfig(BaseModel):
     """Configuration for Trade Flow Layer"""
 
-    graph_embedding_dim: int = 128
-    gnn_hidden_dim: int = 64
-    num_gnn_layers: int = 3
-    trade_volume_threshold: float = 1000000  # USD
-    elasticity_default: float = 0.5
+    graph_embedding_dim: int = Field(default=128, ge=32, le=512)
+    gnn_hidden_dim: int = Field(default=64, ge=16, le=256)
+    num_gnn_layers: int = Field(default=3, ge=1, le=10)
+    trade_volume_threshold: float = Field(
+        default=1000000, ge=1000, description="USD threshold"
+    )
+    elasticity_default: float = Field(default=0.5, ge=0.0, le=2.0)
 
 
-@dataclass
-class IndustryConfig:
+class IndustryConfig(BaseModel):
     """Configuration for Industry Response Layer"""
 
-    num_sectors: int = 20
-    response_time_horizon: int = 12  # months
-    substitution_elasticity: float = 0.3
-    cost_passthrough_rate: float = 0.7
+    num_sectors: int = Field(default=20, ge=5, le=100)
+    response_time_horizon: int = Field(default=12, ge=1, le=60, description="months")
+    substitution_elasticity: float = Field(default=0.3, ge=0.0, le=1.0)
+    cost_passthrough_rate: float = Field(default=0.7, ge=0.0, le=1.0)
 
 
-@dataclass
-class FirmConfig:
+class FirmConfig(BaseModel):
     """Configuration for Firm Impact Layer"""
 
-    firm_size_categories: List[str] = None
-    employment_elasticity: float = 0.4
-    adaptation_time_months: int = 6
-    survival_probability_threshold: float = 0.1
-
-    def __post_init__(self):
-        if self.firm_size_categories is None:
-            self.firm_size_categories = ["micro", "small", "medium", "large"]
+    firm_size_categories: List[str] = Field(
+        default_factory=lambda: ["micro", "small", "medium", "large"]
+    )
+    employment_elasticity: float = Field(default=0.4, ge=0.0, le=1.0)
+    adaptation_time_months: int = Field(default=6, ge=1, le=24)
+    survival_probability_threshold: float = Field(default=0.1, ge=0.0, le=1.0)
 
 
-@dataclass
-class ConsumerConfig:
+class ConsumerConfig(BaseModel):
     """Configuration for Consumer Impact Layer"""
 
-    cpi_basket_items: int = 200
-    demand_elasticity_default: float = -0.8
-    inflation_passthrough_lag: int = 3  # months
-    income_percentiles: List[int] = None
-
-    def __post_init__(self):
-        if self.income_percentiles is None:
-            self.income_percentiles = [10, 25, 50, 75, 90]
+    cpi_basket_items: int = Field(default=200, ge=50, le=1000)
+    demand_elasticity_default: float = Field(default=-0.8, ge=-2.0, le=0.0)
+    inflation_passthrough_lag: int = Field(default=3, ge=1, le=12, description="months")
+    income_percentiles: List[int] = Field(default_factory=lambda: [10, 25, 50, 75, 90])
 
 
-@dataclass
-class GeopoliticalConfig:
+class GeopoliticalConfig(BaseModel):
     """Configuration for Geopolitical Layer"""
 
-    sentiment_model: str = "cardiffnlp/twitter-roberta-base-sentiment-latest"
-    social_media_sources: List[str] = None
-    event_prediction_horizon: int = 6  # months
-    instability_threshold: float = 0.6
+    sentiment_model: str = Field(
+        default="cardiffnlp/twitter-roberta-base-sentiment-latest"
+    )
+    social_media_sources: List[str] = Field(
+        default_factory=lambda: ["twitter", "reddit", "news"]
+    )
+    event_prediction_horizon: int = Field(default=6, ge=1, le=24, description="months")
+    instability_threshold: float = Field(default=0.6, ge=0.0, le=1.0)
 
-    def __post_init__(self):
-        if self.social_media_sources is None:
-            self.social_media_sources = ["twitter", "reddit", "news"]
 
-
-@dataclass
-class TIPMConfig:
+class TIPMConfig(BaseModel):
     """Main TIPM Model Configuration"""
 
     # Layer configurations
-    policy_config: Optional[Dict[str, Any]] = None
+    policy_config: Optional[PolicyLayerConfig] = None
     trade_flow_config: Optional[TradeFlowConfig] = None
     industry_config: Optional[IndustryConfig] = None
     firm_config: Optional[FirmConfig] = None
@@ -93,32 +85,34 @@ class TIPMConfig:
     geopolitical_config: Optional[GeopoliticalConfig] = None
 
     # Global settings
-    random_seed: int = 42
-    model_version: str = "0.1.0"
-    logging_level: str = "INFO"
+    random_seed: int = Field(default=42, ge=0)
+    model_version: str = Field(default="1.5.0", pattern=r"^\d+\.\d+\.\d+$")
+    logging_level: str = Field(
+        default="INFO", pattern=r"^(DEBUG|INFO|WARNING|ERROR|CRITICAL)$"
+    )
 
     # Data sources
-    data_update_frequency: str = "daily"
-    cache_duration_hours: int = 24
+    data_update_frequency: str = Field(
+        default="daily", pattern=r"^(hourly|daily|weekly|monthly)$"
+    )
+    cache_duration_hours: int = Field(default=24, ge=1, le=168)
 
     # Performance settings
-    max_parallel_jobs: int = 4
-    memory_limit_gb: int = 8
+    max_parallel_jobs: int = Field(default=4, ge=1, le=16)
+    memory_limit_gb: int = Field(default=8, ge=2, le=64)
 
     # Output settings
-    confidence_threshold: float = 0.5
-    max_prediction_horizon: int = 24  # months
+    confidence_threshold: float = Field(default=0.5, ge=0.0, le=1.0)
+    max_prediction_horizon: int = Field(default=24, ge=1, le=60, description="months")
 
-    def __post_init__(self):
+    class Config:
+        validate_assignment = True
+
+    def __init__(self, **data):
+        super().__init__(**data)
         # Initialize layer configs if not provided
         if self.policy_config is None:
-            self.policy_config = {
-                "max_text_length": 512,
-                "embedding_dim": 768,
-                "tfidf_max_features": 1000,
-                "urgency_threshold": 0.7,
-                "confidence_threshold": 0.6,
-            }
+            self.policy_config = PolicyLayerConfig()
         if self.trade_flow_config is None:
             self.trade_flow_config = TradeFlowConfig()
         if self.industry_config is None:
@@ -131,9 +125,9 @@ class TIPMConfig:
             self.geopolitical_config = GeopoliticalConfig()
 
 
-# Country-specific configurations
+# Country-specific configurations with validated data
 COUNTRY_CONFIGS = {
-    "SG": {  # Singapore
+    "SG": {  # Singapore - 2024 data
         "trade_dependency": 0.8,
         "import_elasticity": 0.6,
         "cpi_weights": {
@@ -147,7 +141,7 @@ COUNTRY_CONFIGS = {
         "major_trading_partners": ["CHN", "USA", "MYS", "IDN", "JPN"],
         "vulnerable_sectors": ["electronics", "petrochemicals", "food_processing"],
     },
-    "US": {  # United States
+    "US": {  # United States - 2024 data
         "trade_dependency": 0.3,
         "import_elasticity": 0.4,
         "cpi_weights": {
@@ -161,7 +155,7 @@ COUNTRY_CONFIGS = {
         "major_trading_partners": ["CHN", "CAN", "MEX", "JPN", "DEU"],
         "vulnerable_sectors": ["manufacturing", "agriculture", "automotive"],
     },
-    "CN": {  # China
+    "CN": {  # China - 2024 data
         "trade_dependency": 0.4,
         "import_elasticity": 0.5,
         "cpi_weights": {
@@ -178,7 +172,7 @@ COUNTRY_CONFIGS = {
 }
 
 
-# Sector classification mapping
+# Sector classification mapping with validated HS codes
 SECTOR_MAPPING = {
     "agriculture": ["01", "02", "03", "04", "05"],  # HS codes
     "mining": ["25", "26", "27"],
