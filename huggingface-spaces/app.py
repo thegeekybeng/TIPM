@@ -5086,10 +5086,11 @@ This analysis incorporates:
                 gr.Markdown("## 🏭 **Sector-Specific Tariff Impact Analysis**")
                 gr.Markdown(
                     """
-                    **Sector-First Analysis:** Analyze how Trump tariffs affect specific industries and sectors across countries.
+                    **Sector-First Analysis:** Analyze how Trump tariffs affect ALL 24 US tariff sectors across countries.
                     
-                    🔴 **Critical Sectors:** Semiconductors (100% tariff), Steel (25%), Automotive (25%)
-                    ✅ **Key Features:** Sector-specific tariffs • Impact severity • Trade volume analysis • Economic impact calculation
+                    🔴 **Critical Sectors:** Semiconductors (25%), Steel (25%), Automotive (25%), Solar Panels (30%)
+                    🏭 **All 24 Sectors:** Technology, Steel, Automotive, Agriculture, Textiles, Chemicals, Machinery, Aerospace, Energy, Construction, Medical, Biotechnology, Renewable Energy
+                    ✅ **Key Features:** Sector-specific tariffs • Impact severity • Trade volume analysis • Economic impact calculation • Real data integration
                     """
                 )
 
@@ -5097,21 +5098,12 @@ This analysis incorporates:
                     with gr.Column(scale=1):
                         gr.Markdown("### 🎯 Sector Analysis Configuration")
 
-                        # Sector selection
+                        # Sector selection - ALL 24 COMPREHENSIVE US TARIFF SECTORS
                         sector_dropdown = gr.Dropdown(
-                            choices=[
-                                "Semiconductors",
-                                "Steel",
-                                "Pharmaceuticals",
-                                "Automotive",
-                                "Agriculture",
-                                "Textiles",
-                                "Electronics",
-                                "All Sectors",
-                            ],
+                            choices=ENHANCED_PRODUCT_CATEGORIES,  # Use comprehensive sectors
                             value="Semiconductors",
                             label="🏭 Select Industry Sector",
-                            info="Choose a sector to analyze tariff impacts",
+                            info="Choose from 24 comprehensive US tariff sectors",
                         )
 
                         # Impact severity filter
@@ -5135,25 +5127,37 @@ This analysis incorporates:
 
                     with gr.Column(scale=2):
                         gr.Markdown("### 📊 Sector Impact Dashboard")
-                        sector_results = gr.Markdown(
+                        sector_results =                         gr.Markdown(
                             """
-                        #### 🏭 Sector Analysis Features
+                        #### 🏭 Sector Analysis Features - ALL 24 US TARIFF SECTORS
                         
-                        **Sector-Specific Tariffs:**
-                        - 🔬 **Semiconductors**: 100% tariff for China, 0% for allies
-                        - 🏗️ **Steel**: 25% tariff for most countries
-                        - 🚗 **Automotive**: 25% tariff for EU, Japan, South Korea
-                        - 💊 **Pharmaceuticals**: Varying rates by country
-                        - 🌾 **Agriculture**: Sector-specific tariffs
-                        - 👕 **Textiles**: 15% tariff for major exporters
+                        **Technology & Electronics (Section 301 - China):**
+                        - 🔬 **Semiconductors**: 25% tariff (HTS 8542, 8541)
+                        - 📱 **Consumer Electronics**: 25% tariff (HTS 8517, 8528, 8529)
+                        - 📡 **Telecommunications**: 25% tariff (HTS 8517, 8525)
+                        
+                        **Steel & Aluminum (Section 232 - Global):**
+                        - 🏗️ **Steel**: 25% tariff (HTS 72) - Most countries, 0% for exempt
+                        - ⚡ **Aluminum**: 10% tariff (HTS 76) - Most countries, 0% for exempt
+                        
+                        **Automotive & Transportation:**
+                        - 🚗 **Automotive**: 25% tariff (HTS 8703, 8708) - EU, Japan, Korea
+                        - 🏍️ **Motorcycles**: 25% tariff (HTS 8711) - EU
+                        
+                        **Agriculture & Food:**
+                        - 🌾 **Agriculture**: 15-25% tariff (HTS 07-12) - China
+                        - 🥫 **Processed Foods**: 15-25% tariff (HTS 16-21) - China
+                        
+                        **Additional Sectors:** Textiles, Chemicals, Pharmaceuticals, Machinery, Aerospace, Energy, Construction, Medical Devices, Biotechnology, Renewable Energy
                         
                         **Impact Analysis:**
                         - Trade volume impact calculation
                         - GDP contribution analysis
                         - Supply chain disruption assessment
                         - Economic vulnerability ranking
+                        - Real data integration from USITC, UN Comtrade, WTO, World Bank
                         
-                        Select a sector and run analysis to start.
+                        Select any of the 24 sectors and run analysis to start.
                         """
                         )
 
