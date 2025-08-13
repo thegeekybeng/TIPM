@@ -1,0 +1,7 @@
+*.py linguist-language=Python
+*.md linguist-documentation
+*.txt linguist-documentation
+*.json linguist-documentation
+*.csv linguist-documentation
+tipm/ linguist-vendored
+data/ linguist-vendored
