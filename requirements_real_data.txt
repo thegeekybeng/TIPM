@@ -1,0 +1,27 @@
+# Real Data Integration Requirements
+# For TIPM - Tariff Impact Propagation Model
+
+# Core HTTP requests for API calls
+requests>=2.31.0
+
+# Data manipulation and analysis
+pandas>=2.0.0
+numpy>=1.24.0
+
+# Optional: Enhanced data processing
+# openpyxl>=3.1.0  # For Excel export support
+# xlsxwriter>=3.1.0  # For advanced Excel features
+
+# Optional: Rate limiting and caching
+# ratelimit>=2.2.1  # For API rate limiting
+# cachetools>=5.3.0  # For advanced caching
+
+# Optional: Data validation
+# pydantic>=2.0.0  # For data validation (if not already installed)
+
+# Optional: Logging enhancements
+# structlog>=23.1.0  # For structured logging
+
+# Development and testing
+# pytest>=7.0.0  # For testing
+# pytest-mock>=3.10.0  # For mocking in tests

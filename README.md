@@ -1,220 +1,155 @@
-# TIPM - Tariff Impact Propagation Model
+# 🚀 TIPM - Tariff Impact Propagation Model
 
-## 🎯 Project Overview
+## 🌟 **Live Demo: Try TIPM Now!**
 
-TIPM (Tariff Impact Propagation Model) is a comprehensive, AI-powered economic analysis platform that provides intelligent insights into the multi-faceted impacts of trade policies and tariffs. The system combines advanced machine learning models with autonomous data crawling to deliver accurate, real-time economic impact assessments.
+**🚀 [**CLICK HERE TO USE TIPM LIVE APP**](https://huggingface.co/spaces/thegeekybeng/TIPM-app)**
 
-## 🚀 Key Features
+**Professional-grade economic intelligence platform** for analyzing tariff policy impacts across global supply chains.
 
-### **ML Model Excellence** ✅
-- **Hybrid ML Architecture**: Multi-class classification + Neural Networks
-- **Core Models**: XGBoost, LightGBM, Random Forest, LSTM networks
-- **Ensemble Methods**: Voting, Stacking, Dynamic weight optimization
-- **Explainability**: SHAP integration for policy insights
-- **Model Management**: Centralized MLModelManager with lifecycle management
+## 🎯 **What is TIPM?**
 
-### **Data Intelligence & Autonomy** ✅
-- **RAG-Powered Data Crawler**: Autonomous data discovery using Retrieval-Augmented Generation
-- **ML Validation**: Multi-layer data quality assessment with anomaly detection
-- **Vector Database**: ChromaDB integration with semantic embeddings
-- **Specialized Crawlers**: World Bank, US Census, UN Comtrade APIs
-- **Real-time Processing**: Live data crawling and validation
+TIPM is an **advanced 6-layer machine learning pipeline** that predicts how tariff changes propagate through:
 
-### **Platform Modernization** ✅
-- **React Frontend**: Modern web interface with Tailwind CSS
-- **Component Architecture**: Modular, reusable UI components
-- **Responsive Design**: Mobile-first approach with Framer Motion
-- **Professional UI**: Beautiful, intuitive user experience
+1. **🌍 Trade Networks** - Supply chain disruption modeling
+2. **🏭 Industry Sectors** - Economic response prediction
+3. **🏢 Firm-Level Impact** - Employment and adaptation analysis
+4. **🛒 Consumer Markets** - Price and demand forecasting
+5. **⚖️ Geopolitical Feedback** - Social and political response modeling
 
-## 🏗️ Architecture
+## 🚀 **Key Features**
 
-```
-TIPM/
-├── 🧠 ML Models (tipm/ml_models/)
-│   ├── Classifiers (XGBoost, LightGBM, Random Forest)
-│   ├── Neural Networks (LSTM, Attention Mechanisms)
-│   ├── Ensemble Methods (Voting, Stacking)
-│   └── Model Manager (Training, Prediction, Lifecycle)
-├── 🕷️ Data Crawler (data_crawler/)
-│   ├── RAG Engine (Vector Search, Embeddings)
-│   ├── Specialized Crawlers (APIs, Web Scraping)
-│   ├── ML Validator (Quality Assessment, Anomaly Detection)
-│   └── Autonomous Discovery (Source Recommendation)
-├── 🎨 Frontend (src/)
-│   ├── React Components (TypeScript)
-│   ├── Tailwind CSS (Modern Styling)
-│   └── Interactive Dashboards
-└── ⚙️ Configuration & Utils
-    ├── Settings Management
-    ├── Data Processing
-    └── Testing Framework
-```
+### **📊 Multi-Layer Analysis**
 
-## 🚀 Quick Start
+* **Policy Trigger Processing** - NLP analysis of tariff announcements
+* **Trade Flow Modeling** - Graph-based supply chain disruption
+* **Industry Response** - Sector-level economic impact prediction
+* **Firm Impact** - Employment and adaptation modeling
+* **Consumer Impact** - Price and demand forecasting
+* **Geopolitical Feedback** - Social and political response analysis
 
-### Prerequisites
-- Python 3.8+
-- Node.js 16+ (for frontend)
-- Virtual environment recommended
+### **🎯 Advanced Capabilities**
 
-### Installation
+* **185 Countries** with enhanced economic classifications
+* **Real-time Data Crawling** from World Bank, US Census, UN Comtrade
+* **ML-Powered Validation** with anomaly detection
+* **Ensemble Learning** combining multiple prediction models
+* **Interactive Visualizations** with Plotly charts
+* **Professional Export** in multiple formats (CSV, Excel, JSON)
 
-1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd TIPM
-   ```
+### **🔍 Smart Classifications**
 
-2. **Set up Python environment**
-   ```bash
-   python3 -m venv tipm_env
-   source tipm_env/bin/activate  # On Windows: tipm_env\Scripts\activate
-   pip install -r requirements.txt
-   ```
+* **Emerging Markets** identification
+* **Tech Manufacturing** exporter rankings
+* **Resource Export** categorization (Mining, Agriculture)
+* **Strategic Commodities** tracking
+* **Trade Agreement** membership mapping
 
-3. **Set up frontend**
-   ```bash
-   cd src
-   npm install
-   npm run dev
-   ```
+## 🎮 **How to Use**
 
-4. **Run tests**
-   ```bash
-   python test_current_functionality.py
-   ```
+### **🌐 Live Web Application**
 
-5. **Run demo**
-   ```bash
-   python demo_ml_models.py
-   ```
+**🚀 [**ACCESS TIPM LIVE APP**](https://huggingface.co/spaces/thegeekybeng/TIPM-app)**
 
-## 📊 Demo & Testing
+1. **Visit the live app** at the link above
+2. **Select countries** from the dropdown (185 available)
+3. **Choose analysis parameters** or use defaults
+4. **View comprehensive impact predictions** with interactive charts
+5. **Export results** for further analysis
 
-### **Current Functionality Test**
+### **💻 Local Development**
+
+For developers and researchers who want to run TIPM locally:
+
 ```bash
-python test_current_functionality.py
-```
-This script verifies all implemented components and provides a status report.
+# Clone the repository
+git clone https://github.com/thegeekybeng/TIPM.git
+cd TIPM
 
-### **Full ML Demo**
-```bash
-python demo_ml_models.py
-```
-This comprehensive demo showcases:
-- ML model training and prediction
-- Data crawler autonomous operation
-- Real-time data validation
-- Policy insights generation
+# Install dependencies
+pip install -r requirements.txt
 
-## 🔧 Configuration
-
-### **Data Sources**
-Configure data sources in `data_crawler/config/sources.json`:
-```json
-{
-  "sources": [
-    {
-      "id": "world_bank_gdp",
-      "name": "World Bank GDP Data",
-      "url": "https://api.worldbank.org/v2/country",
-      "source_type": "api"
-    }
-  ]
-}
+# Run the web interface
+python app.py
 ```
 
-### **ML Model Settings**
-Adjust model parameters in `tipm/config/settings.py`:
-```python
-@dataclass
-class MLConfig:
-    model_type: str = "ensemble"
-    training_epochs: int = 100
-    batch_size: int = 32
-    learning_rate: float = 0.001
-```
+## 🏗️ **Technical Architecture**
 
-## 📈 Performance Metrics
+### **ML Pipeline**
 
-- **ML Model Accuracy**: Target >90%
-- **Data Freshness**: Real-time crawling (<24 hours)
-- **Validation Quality**: Multi-layer assessment system
-- **System Reliability**: Robust error handling and fallbacks
+* **XGBoost & LightGBM** for classification tasks
+* **LSTM Networks** for time series forecasting
+* **Ensemble Methods** for robust predictions
+* **SHAP Analysis** for explainable AI
 
-## 🔮 Future Roadmap
+### **Data Infrastructure**
 
-See [PROJECT_FUTURE_ROADMAP.md](PROJECT_FUTURE_ROADMAP.md) for comprehensive development plans including:
+* **Autonomous Data Crawling** with RAG capabilities
+* **Vector Database** for intelligent data discovery
+* **Real-time Validation** with quality scoring
+* **Multi-source Integration** from authoritative sources
 
-1. **Advanced ML Capabilities**: Causal inference, reinforcement learning
-2. **Real-Time Streaming**: Live data feeds and instant analysis
-3. **Enterprise Features**: Authentication, collaboration, API endpoints
-4. **Global Expansion**: Multi-language support, regional data sources
-5. **Scalability**: Microservices architecture, cloud deployment
+### **Web Interface**
 
-## 🛠️ Development
+* **Gradio-based** responsive design
+* **Interactive Charts** with Plotly
+* **Professional Export** capabilities
+* **Mobile-friendly** interface
 
-### **Project Structure**
-```
-TIPM/
-├── tipm/                    # Core TIPM functionality
-│   ├── ml_models/          # Machine learning models
-│   ├── config/             # Configuration management
-│   └── utils/              # Utility functions
-├── data_crawler/           # Autonomous data discovery
-│   ├── core/               # RAG engine and crawler logic
-│   ├── crawlers/           # Specialized data crawlers
-│   ├── validators/         # Data quality validation
-│   └── config/             # Data source configuration
-├── src/                    # React frontend
-│   ├── components/         # UI components
-│   └── pages/              # Application pages
-├── tests/                  # Test suite
-├── data/                   # Sample data and datasets
-└── docs/                   # Documentation
-```
+## 📊 **Data Sources**
 
-### **Adding New ML Models**
-1. Create model class in `tipm/ml_models/`
-2. Implement required methods (train, predict, evaluate)
-3. Add to MLModelManager
-4. Update configuration and tests
+* **US Census Bureau** - Trade statistics
+* **World Bank** - GDP and economic indicators
+* **USTR** - Tariff policy data
+* **MSCI & FTSE Russell** - Market classifications
+* **OECD** - Economic indicators
+* **UN Statistics Division** - Global trade data
+* **FAO** - Agricultural trade data
 
-### **Adding New Data Sources**
-1. Create crawler class in `data_crawler/crawlers/`
-2. Add source configuration to `sources.json`
-3. Implement validation rules
-4. Test with sample data
+## 🔬 **Research Applications**
 
-## 🤝 Contributing
+* **Trade Policy Analysis** - Impact assessment
+* **Supply Chain Risk** - Disruption modeling
+* **Economic Forecasting** - GDP and trade prediction
+* **Policy Recommendation** - Evidence-based insights
+* **Academic Research** - Economic modeling studies
 
-1. Fork the repository
-2. Create a feature branch
-3. Implement your changes
-4. Add tests and documentation
-5. Submit a pull request
+## 🚀 **Getting Started**
 
-## 📄 License
+### **Option 1: Use Live App (Recommended)**
+1. **Visit**: [https://huggingface.co/spaces/thegeekybeng/TIPM-app](https://huggingface.co/spaces/thegeekybeng/TIPM-app)
+2. **Start analyzing** immediately - no setup required!
+
+### **Option 2: Local Development**
+1. **Clone**: `git clone https://github.com/thegeekybeng/TIPM.git`
+2. **Install**: `pip install -r requirements.txt`
+3. **Run**: `python app.py`
+
+## 📚 **Documentation**
+
+* **Live App**: [https://huggingface.co/spaces/thegeekybeng/TIPM-app](https://huggingface.co/spaces/thegeekybeng/TIPM-app)
+* **GitHub Repository**: [https://github.com/thegeekybeng/TIPM](https://github.com/thegeekybeng/TIPM)
+* **API Reference**: Project Wiki
+* **Technical Details**: Core Documentation
+
+## 🤝 **Contributing**
+
+We welcome contributions! Please see our Contributing Guidelines.
+
+## 📄 **License**
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-## 🙏 Acknowledgments
+## 📞 **Contact**
 
-- **Economic Data Sources**: World Bank, US Census, UN Comtrade
-- **ML Libraries**: scikit-learn, PyTorch, XGBoost, LightGBM
-- **Frontend**: React, Tailwind CSS, Framer Motion
-- **Data Processing**: Pandas, NumPy, ChromaDB
-
-## 📞 Support
-
-For questions, issues, or contributions:
-- Create an issue in the repository
-- Review the documentation
-- Check the test results
-- Run the demo scripts
+* **Developer**: thegeekybeng@outlook.com
+* **GitHub**: @thegeekybeng
+* **Live App**: [https://huggingface.co/spaces/thegeekybeng/TIPM-app](https://huggingface.co/spaces/thegeekybeng/TIPM-app)
+* **Project**: TIPM Repository
 
 ---
 
-**TIPM**: Transforming economic analysis through intelligent automation and machine learning.
+**🌟 Star this project if you find it useful!**
 
-*Built with ❤️ for economic research and policy analysis.*
+**🚀 Built with advanced ML, deployed on Hugging Face Spaces**
+
+**🌐 [**TRY TIPM LIVE NOW**](https://huggingface.co/spaces/thegeekybeng/TIPM-app)**
