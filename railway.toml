@@ -2,10 +2,14 @@
 builder = "nixpacks"
 
 [deploy]
-startCommand = "pip install -r requirements.txt && cd api && uvicorn main:app --host 0.0.0.0 --port $PORT"
+startCommand = "cd api && uvicorn main:app --host 0.0.0.0 --port $PORT"
 healthcheckPath = "/health"
 healthcheckTimeout = 300
 restartPolicyType = "on_failure"
 
 [[services]]
 name = "tipm-backend"
+
+# Force Python runtime
+[build.environment]
+NIXPACKS_PYTHON_VERSION = "3.10"
