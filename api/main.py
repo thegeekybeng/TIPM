@@ -7,12 +7,13 @@ Modern FastAPI backend serving the React + Tailwind frontend
 with real US-imposed tariff rates and meaningful analysis.
 """
 
-from fastapi import FastAPI, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel, Field
 from typing import Dict, Any, Optional, List
 import logging
 from datetime import datetime
+
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel, Field
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
