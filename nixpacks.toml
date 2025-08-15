@@ -1,8 +1,11 @@
 [phases.setup]
-nixPkgs = ["python310", "python310Packages.pip"]
-
-[phases.install]
-cmds = ["pip install -r requirements.txt"]
+nixPkgs = [
+  "python310", 
+  "python310Packages.fastapi", 
+  "python310Packages.uvicorn", 
+  "python310Packages.pandas", 
+  "python310Packages.openpyxl"
+]
 
 [phases.build]
 cmds = ["echo 'Python build complete'"]
