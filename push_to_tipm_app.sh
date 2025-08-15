@@ -1,75 +1,17 @@
 #!/bin/bash
 
-echo "🚀 Deploying TIPM v3.0 to Hugging Face Spaces..."
+echo "🚀 Pushing TIPM v3.0 to new tipm-app space..."
 
-# Check if we're logged into Hugging Face
-if ! hf auth whoami > /dev/null 2>&1; then
-    echo "❌ Not logged into Hugging Face. Please run: hf auth login"
-    exit 1
-fi
-
-# Get current user
-HF_USER=$(hf auth whoami)
-echo "✅ Logged in as: $HF_USER"
-
-# Create Hugging Face Space directory
-SPACE_DIR="tipm-v3-spaces"
-echo "📁 Creating space directory: $SPACE_DIR"
-
-# Clean up existing directory
+# Create a temporary directory for the space
+SPACE_DIR="tipm-app-temp"
 rm -rf "$SPACE_DIR"
 mkdir -p "$SPACE_DIR"
+cd "$SPACE_DIR"
 
-# Copy necessary files for Hugging Face Spaces
-echo "📋 Copying application files..."
+echo "📋 Creating Gradio app for tipm-app space..."
 
-# Copy source code
-cp -r src/ "$SPACE_DIR/"
-cp -r api/ "$SPACE_DIR/"
-cp -r data/ "$SPACE_DIR/"
-
-# Copy configuration files
-cp package.json "$SPACE_DIR/"
-cp package-lock.json "$SPACE_DIR/"
-cp next.config.js "$SPACE_DIR/"
-cp tailwind.config.js "$SPACE_DIR/"
-cp tsconfig.json "$SPACE_DIR/"
-cp postcss.config.js "$SPACE_DIR/"
-cp requirements.txt "$SPACE_DIR/"
-
-# Create Hugging Face Spaces specific files
-cat > "$SPACE_DIR/README.md" << 'EOF'
-# 🚀 TIPM v3.0 - Tariff Impact Propagation Model
-
-An AI-Powered tool for Economic analysis & insights.
-
-## Features
-
-- **Enhanced Dashboard**: Modern React interface with real-time analysis
-- **Authoritative Data**: US Government Official Tariff Data (EO + HTS + USTR + CBP)
-- **32 Countries**: Comprehensive coverage of countries affected by US trade policies
-- **Advanced Analysis**: Multi-layer tariff impact assessment
-
-## Data Sources
-
-- Executive Orders
-- HTS (Harmonized Tariff Schedule) codes
-- USTR (United States Trade Representative) rulings
-- CBP (Customs and Border Protection) data
-
-## Technology Stack
-
-- **Frontend**: Next.js 14, React, TypeScript, Tailwind CSS
-- **Backend**: FastAPI, Python
-- **Data**: Real US government tariff data
-- **Analysis**: Advanced algorithms for economic impact modeling
-
-## Live Demo
-
-This space provides a live demonstration of the TIPM v3.0 system.
-EOF
-
-cat > "$SPACE_DIR/app.py" << 'EOF'
+# Create the Gradio app
+cat > app.py << 'EOF'
 import gradio as gr
 import pandas as pd
 import os
@@ -230,39 +172,43 @@ if __name__ == "__main__":
     demo.launch()
 EOF
 
-cat > "$SPACE_DIR/requirements.txt" << 'EOF'
+# Create requirements.txt
+cat > requirements.txt << 'EOF'
 gradio>=4.0.0
 pandas>=2.0.0
-openpyxl>=3.1.0
-fastapi>=0.104.0
-uvicorn>=0.24.0
-python-multipart>=0.0.6
 EOF
 
-cat > "$SPACE_DIR/.gitattributes" << 'EOF'
-*.py linguist-language=Python
-*.md linguist-language=Markdown
-*.txt linguist-language=Text
+# Create README
+cat > README.md << 'EOF'
+# 🚀 TIPM v3.0 - Tariff Impact Propagation Model
+
+An AI-Powered tool for Economic analysis & insights.
+
+## Features
+
+- **Enhanced Dashboard**: Modern React interface with real-time analysis
+- **Authoritative Data**: US Government Official Tariff Data (EO + HTS + USTR + CBP)
+- **32 Countries**: Comprehensive coverage of countries affected by US trade policies
+- **Advanced Analysis**: Multi-layer tariff impact assessment
+
+## Live Demo
+
+This space provides a live demonstration of the TIPM v3.0 system.
 EOF
 
-# Navigate to space directory
-cd "$SPACE_DIR"
-
+# Initialize git and push
 echo "🔐 Initializing Git repository..."
 git init
 git add .
-git commit -m "Initial TIPM v3.0 deployment to Hugging Face Spaces"
+git commit -m "TIPM v3.0: Gradio app with authoritative US tariff data"
 
-echo "🚀 Creating Hugging Face Space..."
-hf repo create thegeekybeng/tipm-v3-demo --repo-type space --space_sdk gradio
-
-echo "📤 Pushing to Hugging Face Space..."
-git remote add origin https://huggingface.co/spaces/$HF_USER/tipm-v3-demo
+echo "📤 Pushing to new tipm-app space..."
+git remote add origin https://huggingface.co/spaces/thegeekybeng/tipm-app
 git branch -M main
 git push -u origin main
 
-echo "✅ Deployment complete!"
-echo "🌐 Your TIPM v3.0 space is available at: https://huggingface.co/spaces/$HF_USER/tipm-v3-demo"
+echo "✅ Push complete!"
+echo "🌐 Your TIPM v3.0 space is available at: https://huggingface.co/spaces/thegeekybeng/tipm-app"
 
 cd ..
-rm -rf "$SPACE_DIR" 
+rm -rf "$SPACE_DIR"
