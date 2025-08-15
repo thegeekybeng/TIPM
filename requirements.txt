@@ -3,4 +3,3 @@ uvicorn[standard]
 pandas
 openpyxl
 pydantic
-python-dotenv
