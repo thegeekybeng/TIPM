@@ -110,9 +110,7 @@ This analysis is based on official US government tariff data including:
 
 
 # Create Gradio interface
-with gr.Blocks(
-    title="TIPM v3.0 - Tariff Impact Propagation Model", theme=gr.themes.Soft()
-) as demo:
+with gr.Blocks(title="TIPM v3.0 - Tariff Impact Propagation Model") as demo:
     gr.Markdown("# 🚀 TIPM v3.0 - Tariff Impact Propagation Model")
     gr.Markdown("**An AI-Powered tool for Economic analysis & insights**")
 
@@ -159,11 +157,10 @@ with gr.Blocks(
                     "Estonia",
                 ],
                 label="Select Country",
-                placeholder="Choose a country...",
             )
 
-            analyze_btn = gr.Button("🔍 Analyze Country", variant="primary")
-            analysis_output = gr.Markdown(label="Analysis Results")
+            analyze_btn = gr.Button("🔍 Analyze Country")
+            analysis_output = gr.Markdown()
 
             analyze_btn.click(
                 fn=analyze_country, inputs=country_input, outputs=analysis_output
