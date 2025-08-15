@@ -101,7 +101,7 @@ setup(
             "seaborn>=0.12.0",
             "matplotlib>=3.7.0",
             "streamlit>=1.25.0",
-            "gradio>=4.0.0",
+    
         ],
         "ml": [
             "torch>=2.0.0",
