@@ -30,7 +30,7 @@ import {
   CountryInfo,
   AnalysisResult,
   SectorAnalysisResponse,
-} from "@/lib/api-client";
+} from "../lib/api-client";
 
 const TIPMInterface: React.FC = () => {
   const [selectedCountry, setSelectedCountry] = useState<string>("");
