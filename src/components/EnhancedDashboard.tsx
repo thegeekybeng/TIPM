@@ -6,7 +6,7 @@ import {
   TariffTrendChart,
   ImpactSummaryCards,
 } from "./TariffVisualizations";
-import { apiClient } from "../lib/api-client";
+import { apiClient } from "@/lib/api-client";
 
 interface CountryData {
   name: string;
