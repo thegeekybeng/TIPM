@@ -1,75 +1,98 @@
-#!/bin/bash
+# 🚀 Hugging Face Space Deployment Guide for TIPM v3.0
 
-echo "🚀 Deploying TIPM v3.0 to Hugging Face Spaces..."
+## 📋 **Complete Step-by-Step Process**
 
-# Check if we're logged into Hugging Face
-if ! hf auth whoami > /dev/null 2>&1; then
-    echo "❌ Not logged into Hugging Face. Please run: hf auth login"
-    exit 1
-fi
+### **Step 1: Create the Space**
 
-# Get current user
-HF_USER=$(hf auth whoami)
-echo "✅ Logged in as: $HF_USER"
+```bash
+# Create a new Hugging Face Space with Gradio SDK
+hf repo create thegeekybeng/tipm-app --repo-type space --space_sdk gradio
+```
 
-# Create Hugging Face Space directory
-SPACE_DIR="tipm-v3-spaces"
-echo "📁 Creating space directory: $SPACE_DIR"
+**Expected Output:**
 
-# Clean up existing directory
-rm -rf "$SPACE_DIR"
-mkdir -p "$SPACE_DIR"
+```
+Successfully created thegeekybeng/tipm-app on the Hub.
+Your repo is now available at https://huggingface.co/spaces/thegeekybeng/tipm-app
+```
 
-# Copy necessary files for Hugging Face Spaces
-echo "📋 Copying application files..."
+### **Step 2: Clone the Space Locally**
 
-# Copy source code
-cp -r src/ "$SPACE_DIR/"
-cp -r api/ "$SPACE_DIR/"
-cp -r data/ "$SPACE_DIR/"
+```bash
+# Remove any existing directory with same name
+rm -rf tipm-app
 
-# Copy configuration files
-cp package.json "$SPACE_DIR/"
-cp package-lock.json "$SPACE_DIR/"
-cp next.config.js "$SPACE_DIR/"
-cp tailwind.config.js "$SPACE_DIR/"
-cp tsconfig.json "$SPACE_DIR/"
-cp postcss.config.js "$SPACE_DIR/"
-cp requirements.txt "$SPACE_DIR/"
+# Clone the HF space to your local machine
+git clone https://huggingface.co/spaces/thegeekybeng/tipm-app
 
-# Create Hugging Face Spaces specific files
-cat > "$SPACE_DIR/README.md" << 'EOF'
-# 🚀 TIPM v3.0 - Tariff Impact Propagation Model
+# Navigate into the space directory
+cd tipm-app
+```
 
-An AI-Powered tool for Economic analysis & insights.
+### **Step 3: Add Your Application Files**
 
-## Features
+```bash
+# Copy your app files from the main project
+cp ../app.py .
+cp ../requirements.txt .
 
-- **Enhanced Dashboard**: Modern React interface with real-time analysis
-- **Authoritative Data**: US Government Official Tariff Data (EO + HTS + USTR + CBP)
-- **32 Countries**: Comprehensive coverage of countries affected by US trade policies
-- **Advanced Analysis**: Multi-layer tariff impact assessment
+# Verify files are copied
+ls -la
+```
 
-## Data Sources
+**Expected Files:**
 
-- Executive Orders
-- HTS (Harmonized Tariff Schedule) codes
-- USTR (United States Trade Representative) rulings
-- CBP (Customs and Border Protection) data
+- `app.py` (Gradio application)
+- `requirements.txt` (Python dependencies)
+- `.gitattributes` (HF auto-generated)
+- `README.md` (HF auto-generated)
 
-## Technology Stack
+### **Step 4: Commit and Push**
 
-- **Frontend**: Next.js 14, React, TypeScript, Tailwind CSS
-- **Backend**: FastAPI, Python
-- **Data**: Real US government tariff data
-- **Analysis**: Advanced algorithms for economic impact modeling
+```bash
+# Add all files to git
+git add .
 
-## Live Demo
+# Commit with descriptive message
+git commit -m "TIPM v3.0: Complete Gradio app with authoritative US tariff data"
 
-This space provides a live demonstration of the TIPM v3.0 system.
-EOF
+# Push to Hugging Face Space
+git push
+```
 
-cat > "$SPACE_DIR/app.py" << 'EOF'
+**Expected Output:**
+
+```
+[main a752c83] TIPM v3.0: Complete Gradio app with authoritative US tariff data
+ 2 files changed, 216 insertions(+)
+ create mode 100644 app.py
+ create mode 100644 requirements.txt
+
+Enumerating objects: 5, done.
+Counting objects: 100% (5/5), done.
+Delta compression using up to 8 threads
+Compressing objects: 100% (3/3), done.
+Writing objects: 100% (4/4), 2.66 KiB | 2.66 KiB/s, done.
+Total 4 (delta 0), reused 0 (delta 0), pack-reused 0 (from 0)
+To https://huggingface.co/spaces/thegeekybeng/tipm-app
+   2ee0006..a752c83  main -> main
+```
+
+### **Step 5: Clean Up**
+
+```bash
+# Go back to main project directory
+cd ..
+
+# Remove temporary space directory
+rm -rf tipm-app
+```
+
+## 🔧 **Required Files**
+
+### **app.py** (Gradio Application)
+
+```python
 import gradio as gr
 import pandas as pd
 import os
@@ -77,7 +100,7 @@ import os
 def load_tariff_data():
     """Load and display tariff data information"""
     countries = [
-        "European Union", "China", "Hong Kong", "Macau", "Canada", 
+        "European Union", "China", "Hong Kong", "Macau", "Canada",
         "Mexico", "Japan", "South Korea", "India", "Brazil",
         "United Kingdom", "Germany", "France", "Italy", "Spain",
         "Netherlands", "Belgium", "Switzerland", "Sweden", "Norway",
@@ -85,7 +108,7 @@ def load_tariff_data():
         "Hungary", "Romania", "Bulgaria", "Croatia", "Slovenia",
         "Slovakia", "Estonia"
     ]
-    
+
     return f"""
 ## 🚀 TIPM v3.0 - Tariff Impact Propagation Model
 
@@ -103,7 +126,7 @@ def load_tariff_data():
 Our tariff impact analysis uses sophisticated algorithms that process official US government data through multiple calculation layers:
 
 1. **Reciprocal Tariff Calculation**: Base duty rates + reciprocal add-ons from Executive Orders
-2. **Sector Impact Analysis**: HTS chapter grouping with weighted average tariff rates  
+2. **Sector Impact Analysis**: HTS chapter grouping with weighted average tariff rates
 3. **Economic Impact Modeling**: Trade disruption, price elasticity, and employment effects
 4. **Risk Assessment**: Critical/High/Medium/Low impact classification
 
@@ -121,7 +144,7 @@ def analyze_country(country_name):
     """Simulate country analysis"""
     if not country_name:
         return "Please select a country to analyze."
-    
+
     # Simulate analysis results
     analysis = f"""
 ## 📊 Analysis Results for {country_name}
@@ -157,17 +180,17 @@ This analysis is based on official US government tariff data including:
 with gr.Blocks(title="TIPM v3.0 - Tariff Impact Propagation Model", theme=gr.themes.Soft()) as demo:
     gr.Markdown("# 🚀 TIPM v3.0 - Tariff Impact Propagation Model")
     gr.Markdown("**An AI-Powered tool for Economic analysis & insights**")
-    
+
     with gr.Tabs():
         with gr.TabItem("📊 Overview"):
             gr.Markdown(load_tariff_data())
-            
+
         with gr.TabItem("🔍 Country Analysis"):
             gr.Markdown("### Select a country for detailed tariff impact analysis")
-            
+
             country_input = gr.Dropdown(
                 choices=[
-                    "European Union", "China", "Hong Kong", "Macau", "Canada", 
+                    "European Union", "China", "Hong Kong", "Macau", "Canada",
                     "Mexico", "Japan", "South Korea", "India", "Brazil",
                     "United Kingdom", "Germany", "France", "Italy", "Spain",
                     "Netherlands", "Belgium", "Switzerland", "Sweden", "Norway",
@@ -175,18 +198,19 @@ with gr.Blocks(title="TIPM v3.0 - Tariff Impact Propagation Model", theme=gr.the
                     "Hungary", "Romania", "Bulgaria", "Croatia", "Slovenia",
                     "Slovakia", "Estonia"
                 ],
-                label="Select Country"
+                label="Select Country",
+                placeholder="Choose a country..."
             )
-            
-            analyze_btn = gr.Button("🔍 Analyze Country")
-            analysis_output = gr.Markdown()
-            
+
+            analyze_btn = gr.Button("🔍 Analyze Country", variant="primary")
+            analysis_output = gr.Markdown(label="Analysis Results")
+
             analyze_btn.click(
                 fn=analyze_country,
                 inputs=country_input,
                 outputs=analysis_output
             )
-            
+
         with gr.TabItem("📚 About TIPM"):
             gr.Markdown("""
 ## 🎯 **About TIPM**
@@ -227,41 +251,72 @@ All tariff data is sourced from official US government sources, providing compre
 
 if __name__ == "__main__":
     demo.launch()
-EOF
+```
 
-cat > "$SPACE_DIR/requirements.txt" << 'EOF'
-gradio>=3.50.0,<4.0.0
+### **requirements.txt** (Dependencies)
+
+```
+gradio>=4.0.0
 pandas>=2.0.0
-openpyxl>=3.1.0
-fastapi>=0.104.0
-uvicorn>=0.24.0
-python-multipart>=0.0.6
-EOF
+```
 
-cat > "$SPACE_DIR/.gitattributes" << 'EOF'
-*.py linguist-language=Python
-*.md linguist-language=Markdown
-*.txt linguist-language=Text
-EOF
+## 🎯 **Complete One-Line Commands**
 
-# Navigate to space directory
-cd "$SPACE_DIR"
+### **Full Deployment Script**
 
-echo "🔐 Initializing Git repository..."
-git init
-git add .
-git commit -m "Initial TIPM v3.0 deployment to Hugging Face Spaces"
+```bash
+# Create space, clone, add files, commit, push, and clean up
+hf repo create thegeekybeng/tipm-app --repo-type space --space_sdk gradio && \
+rm -rf tipm-app && \
+git clone https://huggingface.co/spaces/thegeekybeng/tipm-app && \
+cd tipm-app && \
+cp ../app.py . && \
+cp ../requirements.txt . && \
+git add . && \
+git commit -m "TIPM v3.0: Complete Gradio app with authoritative US tariff data" && \
+git push && \
+cd .. && \
+rm -rf tipm-app
+```
 
-echo "🚀 Creating Hugging Face Space..."
-hf repo create thegeekybeng/tipm-v3-demo --repo-type space --space_sdk gradio
+## 🌐 **Result**
 
-echo "📤 Pushing to Hugging Face Space..."
-git remote add origin https://huggingface.co/spaces/$HF_USER/tipm-v3-demo
-git branch -M main
-git push -u origin main
+After successful deployment, your TIPM v3.0 will be available at:
+**https://huggingface.co/spaces/thegeekybeng/tipm-app**
 
-echo "✅ Deployment complete!"
-echo "🌐 Your TIPM v3.0 space is available at: https://huggingface.co/spaces/$HF_USER/tipm-v3-demo"
+## ⚠️ **Important Notes**
 
-cd ..
-rm -rf "$SPACE_DIR" 
+1. **Wait Time**: HF Spaces take 2-3 minutes to build and deploy after push
+2. **Authentication**: Ensure you're logged in with `hf auth login` before starting
+3. **File Names**: Must be exactly `app.py` and `requirements.txt` for Gradio spaces
+4. **Clean Up**: Always remove the temporary `tipm-app` directory after deployment
+5. **Updates**: To update the space, repeat the clone → modify → commit → push process
+
+## 🔍 **Troubleshooting**
+
+### **Common Issues:**
+
+- **"Repository not found"**: Check the space name and your HF username
+- **"Permission denied"**: Ensure you're logged in and have access to the space
+- **Build failures**: Check that `requirements.txt` has valid dependencies
+- **App not loading**: Wait 3-5 minutes for initial build to complete
+
+### **Verification Commands:**
+
+```bash
+# Check if you're logged in
+hf auth whoami
+
+# List your spaces
+# (Use HF web interface - CLI doesn't support listing)
+
+# Check space status
+# Visit the space URL directly
+```
+
+---
+
+**📅 Created**: August 15, 2025  
+**🚀 Version**: TIPM v3.0  
+**👤 Author**: AI Assistant  
+**📁 Location**: Project root directory
