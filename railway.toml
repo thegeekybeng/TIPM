@@ -9,7 +9,3 @@ restartPolicyType = "on_failure"
 
 [[services]]
 name = "tipm-backend"
-
-# Force Python runtime
-[build.environment]
-NIXPACKS_PYTHON_VERSION = "3.10"
