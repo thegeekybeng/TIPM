@@ -41,7 +41,25 @@ export default function HomePage() {
 
       {/* Tab Content */}
       <main>
-        {activeTab === "enhanced" ? <EnhancedDashboard /> : <TIPMInterface />}
+        <div className="p-4">
+          {activeTab === "enhanced" ? (
+            <div className="space-y-4">
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <h2 className="text-lg font-semibold text-blue-900">🚀 TIPM v3.0 - Enhanced Dashboard</h2>
+                <p className="text-blue-700 mt-2">Advanced analytics and visualizations</p>
+              </div>
+              <EnhancedDashboard />
+            </div>
+          ) : (
+            <div className="space-y-4">
+              <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                <h2 className="text-lg font-semibold text-green-900">📊 TIPM 2.0 - Interface</h2>
+                <p className="text-green-700 mt-2">Core tariff analysis functionality</p>
+              </div>
+              <TIPMInterface />
+            </div>
+          )}
+        </div>
       </main>
 
       {/* Footer */}
