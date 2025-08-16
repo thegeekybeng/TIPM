@@ -1,6 +1,6 @@
 {
-  "name": "tipm-frontend",
-  "version": "1.5.0",
+  "name": "tipm-app",
+  "version": "3.0.0",
   "description": "Modern React frontend for TIPM - Tariff Impact Propagation Model",
   "private": true,
   "scripts": {

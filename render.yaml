@@ -19,7 +19,7 @@ services:
     env: node
     plan: free
     region: singapore
-    buildCommand: cd .. && npm install && npm run build && cp -r .next src/ && cd src
+    buildCommand: npm install && npm run build
     startCommand: npm run start
     runtime: node
     rootDir: src     # ⬅️ updated from frontend → src
