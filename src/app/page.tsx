@@ -52,10 +52,7 @@ export default function HomePage() {
                   Advanced analytics and visualizations
                 </p>
               </div>
-              <div className="bg-white border border-gray-200 rounded-lg p-8 text-center">
-                <p className="text-gray-600 mb-4">Testing: Enhanced Dashboard disabled temporarily</p>
-                <p className="text-sm text-gray-500">If you see this, the basic page works</p>
-              </div>
+              <EnhancedDashboard />
             </div>
           ) : (
             <div className="space-y-4">
@@ -67,10 +64,7 @@ export default function HomePage() {
                   Core tariff analysis functionality
                 </p>
               </div>
-              <div className="bg-white border border-gray-200 rounded-lg p-8 text-center">
-                <p className="text-gray-600 mb-4">Testing: TIPM Interface disabled temporarily</p>
-                <p className="text-sm text-gray-500">If you see this, the basic page works</p>
-              </div>
+              <TIPMInterface />
             </div>
           )}
         </div>
