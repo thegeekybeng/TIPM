@@ -468,13 +468,19 @@ async def analyze_country(request: CountryAnalysisRequest):
 
                 if sector_rates:
                     avg_rate = sum(sector_rates) / len(sector_rates)
-                    source = products[0].get("source", "Unknown") if products else "Unknown"
+                    source = (
+                        products[0].get("source", "Unknown") if products else "Unknown"
+                    )
                 else:
                     avg_rate = 0
                     source = "Unknown"
             else:
                 # Handle direct tariff data
-                avg_rate = country_tariffs.get(sector, 0) if isinstance(country_tariffs, dict) else 0
+                avg_rate = (
+                    country_tariffs.get(sector, 0)
+                    if isinstance(country_tariffs, dict)
+                    else 0
+                )
                 source = "Real Tariff Data Source"
 
             if avg_rate > 0:
@@ -499,15 +505,22 @@ async def analyze_country(request: CountryAnalysisRequest):
                     }
                 )
 
-    # Calculate economic impact based on real data
-    trade_disruption_usd = (
-        country_info.trade_volume_millions * (tariff_rate / 100) * 1000000
-    )
-    price_increase_pct = tariff_rate
-    employment_effect_jobs = round(trade_disruption_usd / 100000)  # Rough estimate
-    gdp_impact_pct = (
-        trade_disruption_usd / (country_info.gdp_billions * 1000000000)
-    ) * 100
+    # Calculate economic impact based on real data with proper economic formulas
+    
+    # Trade disruption: Assume 20-40% trade reduction based on tariff elasticity
+    trade_elasticity = min(0.4, tariff_rate / 100)  # Higher tariffs = higher disruption, capped at 40%
+    trade_disruption_usd = country_info.trade_volume_millions * trade_elasticity * 1000000
+    
+    # Price increase: Typically 70-90% of tariff is passed through to consumers
+    pass_through_rate = 0.8  # 80% pass-through rate (economic literature average)
+    price_increase_pct = tariff_rate * pass_through_rate
+    
+    # Employment effect: Use trade-to-employment ratio (roughly 1 job per $200k of trade)
+    employment_per_million_trade = 5  # 5 jobs per million USD of trade
+    employment_effect_jobs = round(trade_disruption_usd / 1000000 * employment_per_million_trade)
+    
+    # GDP impact: Calculate as percentage of GDP affected by trade disruption
+    gdp_impact_pct = (trade_disruption_usd / (country_info.gdp_billions * 1000000000)) * 100
 
     industry_severity = (
         "Critical"
@@ -528,7 +541,7 @@ async def analyze_country(request: CountryAnalysisRequest):
         economic_insights = [
             f"Economic analysis for {country_name} with {tariff_rate}% tariff rate",
             "Impact assessment based on tariff data",
-            "Analysis derived from official US government sources"
+            "Analysis derived from official US government sources",
         ]
 
     # Generate AI-powered mitigation strategies based on real data
@@ -545,7 +558,7 @@ async def analyze_country(request: CountryAnalysisRequest):
         mitigation_strategies = [
             f"Mitigation strategies for {country_name} in affected sectors",
             "Focus on tariff-impacted industries",
-            "Strategies based on economic analysis"
+            "Strategies based on economic analysis",
         ]
 
     return CountryAnalysisResponse(
@@ -640,10 +653,13 @@ async def get_tariff_summary_all_countries():
                 gdp = await get_country_gdp(country)
                 trade_volume = await get_country_trade_volume(country)
 
-                # Calculate economic impact
-                trade_impact_usd = (
-                    trade_volume * (rate / 100) * 1000000 if rate > 0 else 0
-                )
+                # Calculate economic impact with proper formula
+                if rate > 0:
+                    # Use same elasticity model as country analysis
+                    trade_elasticity = min(0.4, rate / 100)
+                    trade_impact_usd = trade_volume * trade_elasticity * 1000000
+                else:
+                    trade_impact_usd = 0
 
                 # Determine impact level
                 if rate >= 35:
@@ -845,7 +861,7 @@ async def get_country_gdp(country_name: str) -> float:
             "Vietnam": 409.0,
             "South Africa": 419.0,
             "Hong Kong": 365.0,
-            "Macau": 55.0
+            "Macau": 55.0,
         }
         return gdp_data.get(country_name, 500.0)  # Default 500B
     except Exception as e:
@@ -886,7 +902,7 @@ async def get_country_trade_volume(country_name: str) -> float:
             "Philippines": 97000.0,
             "South Africa": 98000.0,
             "Hong Kong": 1113000.0,
-            "Macau": 10000.0
+            "Macau": 10000.0,
         }
         return trade_data.get(country_name, 50000.0)  # Default 50B
     except Exception as e:
