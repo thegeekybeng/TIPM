@@ -76,26 +76,32 @@ export const EnhancedDashboard: React.FC = () => {
     try {
       setLoading(true);
       setError(null);
-      
+
       // Try multiple API endpoints to get all countries
       let allCountries: string[] = [];
-      
+
       try {
         // Try the primary countries endpoint
         allCountries = await apiClient.getAllCountries();
-        console.log("Loaded countries from getAllCountries:", allCountries.length);
+        console.log(
+          "Loaded countries from getAllCountries:",
+          allCountries.length
+        );
       } catch (firstErr) {
         console.log("getAllCountries failed, trying alternative endpoint");
         try {
           // Try alternative endpoint
           allCountries = await apiClient.getAvailableCountries();
-          console.log("Loaded countries from getAvailableCountries:", allCountries.length);
+          console.log(
+            "Loaded countries from getAvailableCountries:",
+            allCountries.length
+          );
         } catch (secondErr) {
           console.error("Both country endpoints failed:", firstErr, secondErr);
           throw new Error("All country loading methods failed");
         }
       }
-      
+
       if (allCountries && allCountries.length > 7) {
         setCountries(allCountries);
         console.log("Successfully loaded", allCountries.length, "countries");
@@ -103,26 +109,96 @@ export const EnhancedDashboard: React.FC = () => {
         console.warn("Insufficient countries loaded, using expanded fallback");
         // Expanded fallback with more countries
         setCountries([
-          "China", "European Union", "Japan", "South Korea", "India", "Mexico", "Canada",
-          "Germany", "France", "Italy", "Spain", "Netherlands", "Belgium", "Sweden",
-          "Thailand", "Vietnam", "Malaysia", "Singapore", "Indonesia", "Philippines",
-          "Brazil", "Argentina", "Chile", "Peru", "Colombia", "Venezuela",
-          "South Africa", "Nigeria", "Kenya", "Ethiopia", "Ghana", "Uganda",
-          "Saudi Arabia", "UAE", "Israel", "Turkey", "Iran", "Qatar",
-          "Australia", "New Zealand", "Fiji", "Papua New Guinea"
+          "China",
+          "European Union",
+          "Japan",
+          "South Korea",
+          "India",
+          "Mexico",
+          "Canada",
+          "Germany",
+          "France",
+          "Italy",
+          "Spain",
+          "Netherlands",
+          "Belgium",
+          "Sweden",
+          "Thailand",
+          "Vietnam",
+          "Malaysia",
+          "Singapore",
+          "Indonesia",
+          "Philippines",
+          "Brazil",
+          "Argentina",
+          "Chile",
+          "Peru",
+          "Colombia",
+          "Venezuela",
+          "South Africa",
+          "Nigeria",
+          "Kenya",
+          "Ethiopia",
+          "Ghana",
+          "Uganda",
+          "Saudi Arabia",
+          "UAE",
+          "Israel",
+          "Turkey",
+          "Iran",
+          "Qatar",
+          "Australia",
+          "New Zealand",
+          "Fiji",
+          "Papua New Guinea",
         ]);
       }
     } catch (err) {
       setError("Using fallback countries - API connection issue");
       // Expanded fallback with all countries from backend data
       setCountries([
-        "China", "European Union", "Japan", "South Korea", "India", "Mexico", "Canada",
-        "Germany", "France", "Italy", "Spain", "Netherlands", "Belgium", "Sweden",
-        "Thailand", "Vietnam", "Malaysia", "Singapore", "Indonesia", "Philippines",
-        "Brazil", "Argentina", "Chile", "Peru", "Colombia", "Venezuela",
-        "South Africa", "Nigeria", "Kenya", "Ethiopia", "Ghana", "Uganda",
-        "Saudi Arabia", "UAE", "Israel", "Turkey", "Iran", "Qatar",
-        "Australia", "New Zealand", "Fiji", "Papua New Guinea"
+        "China",
+        "European Union",
+        "Japan",
+        "South Korea",
+        "India",
+        "Mexico",
+        "Canada",
+        "Germany",
+        "France",
+        "Italy",
+        "Spain",
+        "Netherlands",
+        "Belgium",
+        "Sweden",
+        "Thailand",
+        "Vietnam",
+        "Malaysia",
+        "Singapore",
+        "Indonesia",
+        "Philippines",
+        "Brazil",
+        "Argentina",
+        "Chile",
+        "Peru",
+        "Colombia",
+        "Venezuela",
+        "South Africa",
+        "Nigeria",
+        "Kenya",
+        "Ethiopia",
+        "Ghana",
+        "Uganda",
+        "Saudi Arabia",
+        "UAE",
+        "Israel",
+        "Turkey",
+        "Iran",
+        "Qatar",
+        "Australia",
+        "New Zealand",
+        "Fiji",
+        "Papua New Guinea",
       ]);
       console.error("Error loading countries:", err);
     } finally {

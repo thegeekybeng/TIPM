@@ -51,7 +51,7 @@ class AuthoritativeTariffParser:
 
     def __init__(
         self,
-        excel_file_path: str = "data/US_Tariffs_Reciprocal_Country_Sector_2025-08-15.xlsx",
+        excel_file_path: str = "../data/US_Tariffs_Reciprocal_Country_Sector_2025-08-15.xlsx",
     ):
         self.excel_file_path = Path(excel_file_path)
         self.country_rates: Dict[str, CountryTariffRule] = {}
