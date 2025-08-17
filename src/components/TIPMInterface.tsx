@@ -713,7 +713,7 @@ const TIPMInterface: React.FC = () => {
                                       <span className="font-medium">
                                         Tariff Rate:
                                       </span>{" "}
-                                      {sector.tariff_rate}% |
+                                      {Math.round(sector.tariff_rate)}% |
                                       <span className="font-medium ml-2">
                                         Source:
                                       </span>{" "}
@@ -806,7 +806,7 @@ const TIPMInterface: React.FC = () => {
                           <div className="mt-2 text-sm text-blue-600">
                             <Info className="w-4 h-4 inline mr-1" />
                             Analysis includes custom tariff rate of{" "}
-                            {analysisResult.custom_tariff_rate}%
+                            {Math.round(analysisResult.custom_tariff_rate)}%
                           </div>
                         )}
                       </div>

@@ -141,7 +141,7 @@ export const SectorImpactChart: React.FC<SectorAnalysisProps> = ({ sectorData })
               </div>
               <div className="text-right">
                 <div className="font-bold text-lg" style={{ color: IMPACT_COLORS[sector.impact_level as keyof typeof IMPACT_COLORS] || '#6b7280' }}>
-                  {sector.tariff_rate}%
+                  {Math.round(sector.tariff_rate)}%
                 </div>
                 <div className="text-sm text-gray-600 capitalize">{sector.impact_level}</div>
               </div>
@@ -277,7 +277,7 @@ export const ImpactSummaryCards: React.FC<{ countryData: any }> = ({ countryData
           </div>
           <div className="ml-4">
             <p className="text-sm font-medium text-gray-600">Tariff Rate</p>
-            <p className="text-2xl font-bold text-gray-900">{countryData?.tariff_rate || 0}%</p>
+            <p className="text-2xl font-bold text-gray-900">{Math.round(countryData?.tariff_rate || 0)}%</p>
           </div>
         </div>
       </div>
@@ -322,7 +322,7 @@ export const ImpactSummaryCards: React.FC<{ countryData: any }> = ({ countryData
           </div>
           <div className="ml-4">
             <p className="text-sm font-medium text-gray-600">Trade Volume</p>
-            <p className="text-2xl font-bold text-gray-900">${countryData?.trade_volume_millions || 0}M</p>
+            <p className="text-2xl font-bold text-gray-900">${(countryData?.trade_volume_millions || 0).toLocaleString()}M</p>
           </div>
         </div>
       </div>
