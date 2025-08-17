@@ -299,13 +299,13 @@ async def analyze_country(request: CountryAnalysisRequest):
 
     # Get sector analysis from real tariff data
     sector_analysis = []
-    
+
     # Use affected sectors from real tariff data
     if country_info.affected_sectors:
         for sector in country_info.affected_sectors:
             # Use the country's base tariff rate for all sectors
             sector_tariff_rate = tariff_rate
-            
+
             if sector_tariff_rate >= 25:
                 impact_level = "Critical"
             elif sector_tariff_rate >= 15:
@@ -315,15 +315,17 @@ async def analyze_country(request: CountryAnalysisRequest):
             else:
                 impact_level = "Low"
 
-            sector_analysis.append({
-                "sector": sector,
-                "tariff_rate": sector_tariff_rate,
-                "impact_level": impact_level,
-                "source": "Real Tariff Data Source",
-                "trade_volume": 1000000,  # Standard placeholder
-                "notes": f"Sector affected by {sector_tariff_rate}% tariff",
-                "data_source": "Official US Government Data",
-            })
+            sector_analysis.append(
+                {
+                    "sector": sector,
+                    "tariff_rate": sector_tariff_rate,
+                    "impact_level": impact_level,
+                    "source": "Real Tariff Data Source",
+                    "trade_volume": 1000000,  # Standard placeholder
+                    "notes": f"Sector affected by {sector_tariff_rate}% tariff",
+                    "data_source": "Official US Government Data",
+                }
+            )
 
     # Calculate economic impact based on real data with proper economic formulas
 
@@ -347,8 +349,11 @@ async def analyze_country(request: CountryAnalysisRequest):
 
     # GDP impact: Calculate as percentage of GDP affected by trade disruption
     gdp_impact_pct = (
-        trade_disruption_usd / (max(country_info.gdp_billions, 0.001) * 1000000000)
-    ) * 100 if country_info.gdp_billions > 0 else 0.0
+        (trade_disruption_usd / (max(country_info.gdp_billions, 0.001) * 1000000000))
+        * 100
+        if country_info.gdp_billions > 0
+        else 0.0
+    )
 
     industry_severity = (
         "Critical"
@@ -364,7 +369,7 @@ async def analyze_country(request: CountryAnalysisRequest):
         f"Consumer price increase: {price_increase_pct:.1f}%",
         f"Potential employment impact: {employment_effect_jobs:,} jobs",
         f"GDP impact: {gdp_impact_pct:.2f}% of GDP",
-        "Analysis based on economic elasticity models and real tariff data"
+        "Analysis based on economic elasticity models and real tariff data",
     ]
 
     # Generate mitigation strategies based on affected sectors
@@ -372,24 +377,26 @@ async def analyze_country(request: CountryAnalysisRequest):
     if country_info.affected_sectors:
         strategies_map = {
             "Steel and Aluminum": "Diversify supply chains to non-tariff countries",
-            "Electronics": "Develop domestic production capabilities", 
+            "Electronics": "Develop domestic production capabilities",
             "Automotive": "Strengthen regional trade partnerships",
             "Agriculture": "Explore alternative export markets",
             "Textiles": "Enhance trade agreement utilization",
-            "Technology": "Invest in innovation and R&D partnerships"
+            "Technology": "Invest in innovation and R&D partnerships",
         }
-        
+
         for sector in country_info.affected_sectors[:3]:  # Limit to first 3
-            strategy = strategies_map.get(sector, f"Develop sector-specific trade strategies for {sector}")
+            strategy = strategies_map.get(
+                sector, f"Develop sector-specific trade strategies for {sector}"
+            )
             mitigation_strategies.append(strategy)
-        
+
         mitigation_strategies.append("Monitor trade policy developments closely")
         mitigation_strategies.append("Engage in bilateral trade negotiations")
     else:
         mitigation_strategies = [
             f"General trade diversification strategies for {country_name}",
             "Strengthen existing trade relationships",
-            "Monitor potential tariff developments"
+            "Monitor potential tariff developments",
         ]
 
     return CountryAnalysisResponse(
