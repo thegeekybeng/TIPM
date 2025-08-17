@@ -22,7 +22,7 @@ services:
     buildCommand: npm install && npm run build
     startCommand: npm run start -p $PORT
     runtime: node
-    rootDir: src     # ⬅️ updated from frontend → src
+    rootDir: .       # Root directory for Next.js app
     envVars:
       - key: NODE_VERSION
         value: 18.18.2
