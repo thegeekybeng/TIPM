@@ -1,1 +1,8 @@
-<paste-above-content>
+# .vercelignore
+node_modules/
+.next/
+.vscode/
+.env
+.DS_Store
+*.log
+*.tgz
