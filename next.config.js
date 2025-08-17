@@ -1,18 +1,10 @@
+// next.config.js
 /** @type {import('next').NextConfig} */
-const path = require("path");
-
 const nextConfig = {
+  output: 'standalone', // <-- IMPORTANT
   reactStrictMode: true,
-  swcMinify: true,
-  images: {
-    domains: ["localhost"],
-  },
-  env: {
-    CUSTOM_KEY: process.env.CUSTOM_KEY,
-  },
-  webpack: (config) => {
-    config.resolve.alias["@"] = path.resolve(__dirname, "src");
-    return config;
+  experimental: {
+    serverActions: true,
   },
 };
 
