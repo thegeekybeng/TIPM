@@ -45,18 +45,32 @@ export default function HomePage() {
           {activeTab === "enhanced" ? (
             <div className="space-y-4">
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                <h2 className="text-lg font-semibold text-blue-900">🚀 TIPM v3.0 - Enhanced Dashboard</h2>
-                <p className="text-blue-700 mt-2">Advanced analytics and visualizations</p>
+                <h2 className="text-lg font-semibold text-blue-900">
+                  🚀 TIPM v3.0 - Enhanced Dashboard
+                </h2>
+                <p className="text-blue-700 mt-2">
+                  Advanced analytics and visualizations
+                </p>
               </div>
-              <EnhancedDashboard />
+              <div className="bg-white border border-gray-200 rounded-lg p-8 text-center">
+                <p className="text-gray-600 mb-4">Testing: Enhanced Dashboard disabled temporarily</p>
+                <p className="text-sm text-gray-500">If you see this, the basic page works</p>
+              </div>
             </div>
           ) : (
             <div className="space-y-4">
               <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                <h2 className="text-lg font-semibold text-green-900">📊 TIPM 2.0 - Interface</h2>
-                <p className="text-green-700 mt-2">Core tariff analysis functionality</p>
+                <h2 className="text-lg font-semibold text-green-900">
+                  📊 TIPM 2.0 - Interface
+                </h2>
+                <p className="text-green-700 mt-2">
+                  Core tariff analysis functionality
+                </p>
               </div>
-              <TIPMInterface />
+              <div className="bg-white border border-gray-200 rounded-lg p-8 text-center">
+                <p className="text-gray-600 mb-4">Testing: TIPM Interface disabled temporarily</p>
+                <p className="text-sm text-gray-500">If you see this, the basic page works</p>
+              </div>
             </div>
           )}
         </div>
