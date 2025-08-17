@@ -307,8 +307,12 @@ async def get_real_economic_analysis(
                 gdp_billions = gdp_data.value / 1000000000
                 # Assume trade is roughly 20-30% of GDP, and tariffs affect portion of that
                 trade_share_of_gdp = 0.25  # 25% average
-                tariff_trade_impact = min(0.4, tariff_rate / 100)  # Same elasticity as main calculation
-                estimated_gdp_impact = gdp_billions * trade_share_of_gdp * tariff_trade_impact
+                tariff_trade_impact = min(
+                    0.4, tariff_rate / 100
+                )  # Same elasticity as main calculation
+                estimated_gdp_impact = (
+                    gdp_billions * trade_share_of_gdp * tariff_trade_impact
+                )
                 economic_analysis["gdp_impact"] = {
                     "estimated_impact_billions": estimated_gdp_impact,
                     "impact_percentage": tariff_rate,
@@ -323,8 +327,11 @@ async def get_real_economic_analysis(
                 pass_through_rate = 0.8  # 80% pass-through
                 trade_impact = {
                     "sector": "Overall Trade",
-                    "trade_volume_change": -(trade_elasticity * 100),  # Percentage decline
-                    "price_impact": tariff_rate * pass_through_rate,  # Consumer price increase
+                    "trade_volume_change": -(
+                        trade_elasticity * 100
+                    ),  # Percentage decline
+                    "price_impact": tariff_rate
+                    * pass_through_rate,  # Consumer price increase
                     "methodology": "Economic elasticity model with 80% pass-through rate",
                 }
                 economic_analysis["trade_impacts"].append(trade_impact)
@@ -334,13 +341,15 @@ async def get_real_economic_analysis(
                 # Use trade volume to estimate employment impact
                 gdp_billions = gdp_data.value / 1000000000
                 trade_share = trade_data.value / 100  # Trade as % of GDP
-                trade_volume_estimate = gdp_billions * trade_share * 1000  # Convert to millions
-                
+                trade_volume_estimate = (
+                    gdp_billions * trade_share * 1000
+                )  # Convert to millions
+
                 trade_elasticity = min(0.4, tariff_rate / 100)
                 trade_disruption = trade_volume_estimate * trade_elasticity
                 employment_per_million_trade = 5  # 5 jobs per million USD trade
                 employment_estimate = trade_disruption * employment_per_million_trade
-                
+
                 economic_analysis["employment_impact"] = {
                     "estimated_job_impact": round(employment_estimate),
                     "methodology": "Trade elasticity model: 5 jobs per $1M trade disruption",
