@@ -111,8 +111,10 @@ export const EnhancedDashboard: React.FC = () => {
   const loadCountryData = async (countryName: string) => {
     try {
       setLoading(true);
+      setCountryData(null); // Clear previous data first
       const response = await apiClient.getCountryInfo(countryName);
       console.log("Loaded country data for", countryName, ":", response);
+      console.log("Affected sectors:", response?.affected_sectors);
       setCountryData(response);
     } catch (err) {
       setError(`Failed to load data for ${countryName}`);
@@ -258,7 +260,10 @@ export const EnhancedDashboard: React.FC = () => {
         {selectedCountry && countryData && (
           <div className="space-y-8">
             {/* Impact Summary Cards */}
-            <ImpactSummaryCards key={selectedCountry} countryData={countryData} />
+            <ImpactSummaryCards
+              key={selectedCountry}
+              countryData={countryData}
+            />
 
             {/* Country Comparison Chart */}
             <CountryComparisonChart

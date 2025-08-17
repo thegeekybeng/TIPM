@@ -339,8 +339,8 @@ export const ImpactSummaryCards: React.FC<{ countryData: any }> = ({
   countryData,
 }) => {
   // Debug logging
-  console.log('ImpactSummaryCards - countryData:', countryData);
-  console.log('Affected sectors count:', countryData?.affected_sectors?.length);
+  console.log("ImpactSummaryCards - countryData:", countryData);
+  console.log("Affected sectors count:", countryData?.affected_sectors?.length);
 
   const getImpactLevel = (tariffRate: number) => {
     if (tariffRate >= 50)
@@ -437,6 +437,11 @@ export const ImpactSummaryCards: React.FC<{ countryData: any }> = ({
             <p className="text-2xl font-bold text-gray-900">
               {countryData?.affected_sectors?.length || 0}
             </p>
+            {countryData?.affected_sectors?.length > 0 && (
+              <p className="text-xs text-gray-500 mt-1">
+                sectors impacted
+              </p>
+            )}
           </div>
         </div>
       </div>
