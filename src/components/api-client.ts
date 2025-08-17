@@ -90,12 +90,11 @@ class TIPMApiClient {
 
   // Get all countries from dataset
   async getAllCountries(): Promise<string[]> {
-    const response = await fetch(`${this.baseUrl}/api/dataset/countries`);
+    const response = await fetch(`${this.baseUrl}/api/countries`);
     if (!response.ok) {
       throw new Error(`Failed to fetch countries: ${response.statusText}`);
     }
-    const data = await response.json();
-    return data.countries || [];
+    return response.json();
   }
 
   // Get country information
