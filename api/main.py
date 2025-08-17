@@ -634,6 +634,7 @@ def is_emerging_market(country_name: str) -> bool:
     ]
     return country_name in emerging_markets
 
+
 def get_country_gdp(country_name: str) -> float:
     """Get estimated GDP in billions for different countries."""
     gdp_data = {
@@ -681,6 +682,7 @@ def get_country_gdp(country_name: str) -> float:
         "Papua New Guinea": 25.0,
     }
     return gdp_data.get(country_name, 500.0)  # Default for unknown countries
+
 
 def get_country_trade_volume(country_name: str) -> float:
     """Get estimated bilateral trade volume with US in millions."""
