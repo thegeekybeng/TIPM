@@ -1,6 +1,13 @@
   // TIPM API Client - Connects React frontend to FastAPI backend
   // Base URL for the FastAPI backend
   const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE || 'https://tipm-app.onrender.com';
+  
+  // Debug environment variables
+  console.log('Environment variables:', {
+    NEXT_PUBLIC_API_BASE: process.env.NEXT_PUBLIC_API_BASE,
+    API_BASE_URL,
+    NODE_ENV: process.env.NODE_ENV
+  });
 
 // API Response types
 export interface CountryInfo {
@@ -142,15 +149,17 @@ class TIPMApiClient {
   // Test API connectivity
   async testConnectivity(): Promise<{ success: boolean; message: string }> {
     try {
+      console.log('Testing API connectivity to:', this.baseUrl);
       const health = await this.healthCheck();
       return {
         success: true,
         message: `API connected successfully. Real data available: ${health.real_data_available}`,
       };
     } catch (error) {
+      console.error('API connectivity test failed:', error);
       return {
         success: false,
-        message: `API connection failed: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        message: `API connection failed to ${this.baseUrl}: ${error instanceof Error ? error.message : 'Unknown error'}`,
       };
     }
   }
