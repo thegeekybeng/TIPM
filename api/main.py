@@ -100,6 +100,7 @@ from real_tariff_data_source import (
     get_real_affected_sectors,
 )
 from working_analytics import get_real_economic_analysis, get_real_mitigation_analysis
+from authoritative_tariff_parser import get_country_tariffs
 
 
 # Placeholder functions for compatibility
