@@ -36,6 +36,8 @@ app.add_middleware(
         "http://localhost:3002",
         "http://127.0.0.1:3001",
         "http://127.0.0.1:3002",
+        "https://tipm.vercel.app",
+        "https://*.vercel.app",
     ],
     allow_credentials=True,
     allow_methods=["*"],
