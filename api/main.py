@@ -346,7 +346,7 @@ async def health_check():
         "timestamp": datetime.now().isoformat(),
         "real_data_available": True,
         "data_source": "Real Tariff Data Source - Authoritative US Government Data",
-        "total_countries": 29,
+        "total_countries": 30,
         "verification": "Official US tariff data from USTR, Section 301, Section 232, and Executive Orders",
         "workflow_version": "Real Data v2.0",
         "credits": "Official US Government Data - USTR + Commerce Department + Executive Orders",
@@ -698,14 +698,20 @@ async def get_tariff_summary_all_countries():
     """Get average tariff rates for all countries with calculations"""
     try:
         from correct_tariff_calculator import get_correct_country_rate
-        import atlantic_council_fallback
 
         tariff_summary = []
 
-        # Get all unique countries from all sources
-        excel_countries = get_all_countries()
-        ac_countries = atlantic_council_fallback.get_all_countries()
-        all_countries = sorted(list(set(excel_countries + ac_countries)))
+        # Get all countries from current data sources
+        # Use the main API countries list as the definitive source
+        api_countries = await get_available_countries()
+        
+        # Also try to get countries from authoritative parser if available
+        try:
+            excel_countries = get_all_countries()
+            all_countries = sorted(list(set(api_countries + excel_countries)))
+        except Exception as e:
+            logger.warning(f"Excel countries not available: {e}")
+            all_countries = api_countries
 
         for country in all_countries:
             try:
