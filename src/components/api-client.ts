@@ -1,6 +1,6 @@
   // TIPM API Client - Connects React frontend to FastAPI backend
   // Base URL for the FastAPI backend
-  const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE || 'https://tipm-api.onrender.com';
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE || 'https://tipm-app.onrender.com';
 
 // API Response types
 export interface CountryInfo {

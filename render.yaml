@@ -27,6 +27,6 @@ services:
       - key: NODE_VERSION
         value: 18.18.2
       - key: NEXT_PUBLIC_API_BASE
-        value: https://tipm-api.onrender.com
+        value: https://tipm-app.onrender.com
       - key: PORT
         value: 10001
