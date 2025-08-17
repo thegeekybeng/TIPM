@@ -99,210 +99,17 @@ from real_tariff_data_source import (
     get_real_country_average_tariff,
     get_real_affected_sectors,
 )
-# Import working_analytics with fallback
-try:
-    from working_analytics import get_real_economic_analysis, get_real_mitigation_analysis
-    WORKING_ANALYTICS_AVAILABLE = True
-except ImportError as e:
-    logger.warning(f"Working analytics not available: {e}")
-    WORKING_ANALYTICS_AVAILABLE = False
-from authoritative_tariff_parser import get_country_tariffs, get_tariff_summary, get_all_countries
+
+# Use only Real Tariff Data Source - remove unused imports
 
 
-# Fallback functions when working_analytics is not available
-async def fallback_economic_analysis(country_name: str, tariff_rate: float) -> Dict[str, Any]:
-    """Fallback economic analysis when working_analytics is unavailable"""
-    return {
-        "economic_indicators": {},
-        "trade_impacts": [{
-            "sector": "Overall Trade",
-            "trade_volume_change": -(min(0.4, tariff_rate / 100) * 100),
-            "price_impact": tariff_rate * 0.8,
-            "methodology": "Fallback calculation: trade elasticity model"
-        }],
-        "employment_impact": {
-            "estimated_job_impact": round(tariff_rate * 1000),
-            "methodology": "Fallback estimate based on tariff rate"
-        },
-        "gdp_impact": {
-            "estimated_impact_billions": tariff_rate * 0.1,
-            "methodology": "Fallback GDP impact estimate"
-        },
-        "data_sources": ["Fallback Analysis"],
-        "confidence": "Medium - Fallback calculation"
-    }
-
-async def fallback_mitigation_analysis(country_name: str, sector: str) -> List[Dict[str, Any]]:
-    """Fallback mitigation analysis when working_analytics is unavailable"""
-    return [{
-        "strategy": f"Diversify trade relationships for {sector} sector in {country_name}",
-        "success_rate": 70.0,
-        "implementation_cost": 5000000,
-        "case_studies": ["Supply chain diversification", "Trade agreement utilization"],
-        "research_papers": ["Economic resilience research", "Trade policy analysis"]
-    }]
-
-# Placeholder functions for compatibility
-async def get_sector_analysis(country_name: str) -> List[Dict[str, Any]]:
-    """Get sector analysis for a country from real tariff data"""
-    try:
-        country_data = get_real_country_tariff(country_name)
-        if not country_data or "error" in country_data:
-            return []
-
-        affected_sectors = country_data.get("affected_sectors", [])
-        tariff_rate = country_data.get("average_tariff_rate", 0)
-        tariff_details = country_data.get("tariff_details", {})
-
-        sector_analysis = []
-        for sector in affected_sectors:
-            # Get sector-specific tariff rate if available
-            sector_key = sector.lower().replace(" ", "_").replace(" and ", "_")
-            sector_tariff = tariff_details.get(sector_key, tariff_rate)
-
-            sector_analysis.append(
-                {
-                    "sector": sector,
-                    "tariff_rate": sector_tariff,
-                    "impact_level": (
-                        "High"
-                        if sector_tariff > 20
-                        else "Medium" if sector_tariff > 10 else "Low"
-                    ),
-                    "source": country_data.get(
-                        "data_source", "Real Tariff Data Source"
-                    ),
-                    "trade_volume": "Authoritative US Government Data",
-                    "notes": f"Real tariff data from authoritative US government sources",
-                }
-            )
-
-        return sector_analysis
-    except Exception as e:
-        logger.error(f"Error getting sector analysis for {country_name}: {e}")
-        return []
+# Simple built-in analysis functions (no external dependencies)
 
 
-async def get_economic_insights(
-    country_name: str,
-    tariff_rate: float,
-    gdp_billions: float,
-    trade_volume_millions: float,
-) -> List[str]:
-    """
-    Generate real economic insights using live economic databases
-    """
-    try:
-        # Get real-time economic analysis from authoritative sources
-        economic_analysis = await get_real_economic_analysis(country_name, tariff_rate)
-
-        insights = []
-
-        # Add insights from real economic indicators
-        indicators = economic_analysis.get("economic_indicators", {})
-        if "gdp" in indicators:
-            gdp_data = indicators["gdp"]
-            insights.append(
-                f"Real GDP: ${gdp_data.value/1000000000:.1f}B ({gdp_data.period}) - Source: {gdp_data.source}"
-            )
-
-        if "trade_gdp" in indicators:
-            trade_data = indicators["trade_gdp"]
-            insights.append(
-                f"Trade as % of GDP: {trade_data.value:.1f}% ({trade_data.period}) - Source: {trade_data.source}"
-            )
-
-        # Add insights from real trade impact analysis
-        trade_impacts = economic_analysis.get("trade_impacts", [])
-        if trade_impacts:
-            insights.append(
-                f"Trade impact analysis available from {len(trade_impacts)} authoritative sources"
-            )
-            for impact in trade_impacts[:2]:  # Show first 2 impacts
-                insights.append(
-                    f"{impact.sector}: {impact.trade_volume_change:.1f}% volume change, {impact.price_impact:.1f}% price impact"
-                )
-
-        # Add insights from real employment impact
-        employment_data = economic_analysis.get("employment_impact", {})
-        if employment_data:
-            insights.append("Employment impact data available from multiple sources")
-
-        # Add insights from real GDP impact
-        gdp_impact = economic_analysis.get("gdp_impact", {})
-        if gdp_impact:
-            insights.append("GDP impact analysis available from economic databases")
-
-        # Add data source information
-        insights.append(
-            f"Analysis derived from: {', '.join(economic_analysis.get('data_sources', []))}"
-        )
-        insights.append(f"Confidence: {economic_analysis.get('confidence', 'Unknown')}")
-
-        return insights
-
-    except Exception as e:
-        logger.error(f"Error generating real economic insights for {country_name}: {e}")
-        return [
-            f"Unable to generate real-time economic insights for {country_name} at this time"
-        ]
+# Core analysis functions using only Real Tariff Data Source
 
 
-async def get_mitigation_strategies(
-    country_name: str,
-    tariff_rate: float,
-    gdp_billions: float,
-    emerging_market: bool,
-    affected_sectors: List[str],
-) -> List[str]:
-    """
-    Generate real mitigation strategies from research databases
-    """
-    try:
-        strategies = []
-
-        # Get real mitigation strategies from research databases
-        for sector in affected_sectors[:3]:  # Limit to first 3 sectors for performance
-            sector_strategies = await get_real_mitigation_analysis(country_name, sector)
-
-            for strategy in sector_strategies:
-                strategies.append(
-                    f"{strategy.strategy} (Success rate: {strategy.success_rate:.1f}%, Cost: ${strategy.implementation_cost:,.0f})"
-                )
-
-                # Add case studies if available
-                if strategy.case_studies:
-                    strategies.append(
-                        f"  Case studies: {', '.join(strategy.case_studies[:2])}"
-                    )
-
-                # Add research sources if available
-                if strategy.research_papers:
-                    strategies.append(
-                        f"  Research: {', '.join(strategy.research_papers[:2])}"
-                    )
-
-        # If no real strategies found, provide basic guidance
-        if not strategies:
-            strategies.append(
-                f"Researching mitigation strategies for {country_name} in {', '.join(affected_sectors)}"
-            )
-            strategies.append(
-                "Connecting to academic and industry research databases..."
-            )
-            strategies.append(
-                "Analysis in progress - check back for real research-based strategies"
-            )
-
-        return strategies
-
-    except Exception as e:
-        logger.error(
-            f"Error generating real mitigation strategies for {country_name}: {e}"
-        )
-        return [
-            f"Unable to generate real-time mitigation strategies for {country_name} at this time"
-        ]
+# Simple inline analysis (no external dependencies needed)
 
 
 # Initialize real tariff data source on startup
@@ -490,59 +297,33 @@ async def analyze_country(request: CountryAnalysisRequest):
         else country_info.tariff_rate
     )
 
-    # Get sector analysis from verified public data
-    country_tariffs = get_country_tariffs(country_name)
+    # Get sector analysis from real tariff data
     sector_analysis = []
-
-    if country_tariffs:
-        for sector, products in country_tariffs.items():
-            # Handle both product lists and direct tariff data
-            if isinstance(products, list) and products:
-                # Calculate average tariff rate for this sector
-                sector_rates = [
-                    product.get("total_duty", 0)
-                    for product in products
-                    if product.get("total_duty", 0) > 0
-                ]
-
-                if sector_rates:
-                    avg_rate = sum(sector_rates) / len(sector_rates)
-                    source = (
-                        products[0].get("source", "Unknown") if products else "Unknown"
-                    )
-                else:
-                    avg_rate = 0
-                    source = "Unknown"
+    
+    # Use affected sectors from real tariff data
+    if country_info.affected_sectors:
+        for sector in country_info.affected_sectors:
+            # Use the country's base tariff rate for all sectors
+            sector_tariff_rate = tariff_rate
+            
+            if sector_tariff_rate >= 25:
+                impact_level = "Critical"
+            elif sector_tariff_rate >= 15:
+                impact_level = "High"
+            elif sector_tariff_rate >= 5:
+                impact_level = "Medium"
             else:
-                # Handle direct tariff data
-                avg_rate = (
-                    country_tariffs.get(sector, 0)
-                    if isinstance(country_tariffs, dict)
-                    else 0
-                )
-                source = "Real Tariff Data Source"
+                impact_level = "Low"
 
-            if avg_rate > 0:
-                if avg_rate >= 25:
-                    impact_level = "Critical"
-                elif avg_rate >= 15:
-                    impact_level = "High"
-                elif avg_rate >= 5:
-                    impact_level = "Medium"
-                else:
-                    impact_level = "Low"
-
-                sector_analysis.append(
-                    {
-                        "sector": sector,
-                        "tariff_rate": avg_rate,
-                        "impact_level": impact_level,
-                        "source": source,
-                        "trade_volume": 1000000,  # Placeholder
-                        "notes": f"Based on tariff data analysis",
-                        "data_source": "Official US Government Data",
-                    }
-                )
+            sector_analysis.append({
+                "sector": sector,
+                "tariff_rate": sector_tariff_rate,
+                "impact_level": impact_level,
+                "source": "Real Tariff Data Source",
+                "trade_volume": 1000000,  # Standard placeholder
+                "notes": f"Sector affected by {sector_tariff_rate}% tariff",
+                "data_source": "Official US Government Data",
+            })
 
     # Calculate economic impact based on real data with proper economic formulas
 
@@ -575,54 +356,40 @@ async def analyze_country(request: CountryAnalysisRequest):
         else "High" if tariff_rate > 15 else "Medium" if tariff_rate > 5 else "Low"
     )
 
-    # Generate AI-powered economic insights based on real data
-    try:
-        if WORKING_ANALYTICS_AVAILABLE:
-            economic_insights = await get_economic_insights(
-                country_name,
-                tariff_rate,
-                country_info.gdp_billions,
-                country_info.trade_volume_millions,
-            )
-        else:
-            # Use fallback analysis
-            fallback_analysis = await fallback_economic_analysis(country_name, tariff_rate)
-            economic_insights = [
-                f"Economic analysis for {country_name} with {tariff_rate}% tariff rate",
-                f"Trade volume impact: {fallback_analysis['trade_impacts'][0]['trade_volume_change']:.1f}%",
-                f"Price impact: {fallback_analysis['trade_impacts'][0]['price_impact']:.1f}%",
-                "Analysis derived from tariff impact models"
-            ]
-    except Exception as e:
-        logger.error(f"Error getting economic insights for {country_name}: {e}")
-        economic_insights = [
-            f"Economic analysis for {country_name} with {tariff_rate}% tariff rate",
-            "Impact assessment based on tariff data",
-            "Analysis derived from official US government sources",
-        ]
+    # Generate economic insights based on calculated data
+    trade_impact_pct = -(trade_elasticity * 100)
+    economic_insights = [
+        f"Economic analysis for {country_name} with {tariff_rate}% tariff rate",
+        f"Estimated trade volume reduction: {abs(trade_impact_pct):.1f}%",
+        f"Consumer price increase: {price_increase_pct:.1f}%",
+        f"Potential employment impact: {employment_effect_jobs:,} jobs",
+        f"GDP impact: {gdp_impact_pct:.2f}% of GDP",
+        "Analysis based on economic elasticity models and real tariff data"
+    ]
 
-    # Generate AI-powered mitigation strategies based on real data
-    try:
-        if WORKING_ANALYTICS_AVAILABLE:
-            mitigation_strategies = await get_mitigation_strategies(
-                country_name,
-                tariff_rate,
-                country_info.gdp_billions,
-                country_info.emerging_market,
-                country_info.affected_sectors,
-            )
-        else:
-            # Use fallback strategies
-            fallback_strategies = await fallback_mitigation_analysis(country_name, "Trade")
-            mitigation_strategies = [
-                strategy["strategy"] for strategy in fallback_strategies
-            ]
-    except Exception as e:
-        logger.error(f"Error getting mitigation strategies for {country_name}: {e}")
+    # Generate mitigation strategies based on affected sectors
+    mitigation_strategies = []
+    if country_info.affected_sectors:
+        strategies_map = {
+            "Steel and Aluminum": "Diversify supply chains to non-tariff countries",
+            "Electronics": "Develop domestic production capabilities", 
+            "Automotive": "Strengthen regional trade partnerships",
+            "Agriculture": "Explore alternative export markets",
+            "Textiles": "Enhance trade agreement utilization",
+            "Technology": "Invest in innovation and R&D partnerships"
+        }
+        
+        for sector in country_info.affected_sectors[:3]:  # Limit to first 3
+            strategy = strategies_map.get(sector, f"Develop sector-specific trade strategies for {sector}")
+            mitigation_strategies.append(strategy)
+        
+        mitigation_strategies.append("Monitor trade policy developments closely")
+        mitigation_strategies.append("Engage in bilateral trade negotiations")
+    else:
         mitigation_strategies = [
-            f"Mitigation strategies for {country_name} in affected sectors",
-            "Focus on tariff-impacted industries",
-            "Strategies based on economic analysis",
+            f"General trade diversification strategies for {country_name}",
+            "Strengthen existing trade relationships",
+            "Monitor potential tariff developments"
         ]
 
     return CountryAnalysisResponse(
@@ -678,18 +445,7 @@ async def get_available_sectors():
     return {"sectors": sectors}
 
 
-# Get Atlantic Council dataset summary
-@app.get("/api/dataset/summary")
-async def get_dataset_summary():
-    """Get comprehensive summary of Atlantic Council tariff dataset"""
-    return get_tariff_summary()
-
-
-# Get all countries from Atlantic Council dataset
-@app.get("/api/dataset/countries")
-async def get_dataset_countries():
-    """Get list of all countries in Atlantic Council dataset"""
-    return {"countries": get_all_countries()}
+# Removed unused Atlantic Council endpoints
 
 
 # NEW: Average tariff rates summary for all countries
@@ -701,17 +457,8 @@ async def get_tariff_summary_all_countries():
 
         tariff_summary = []
 
-        # Get all countries from current data sources
-        # Use the main API countries list as the definitive source
-        api_countries = await get_available_countries()
-        
-        # Also try to get countries from authoritative parser if available
-        try:
-            excel_countries = get_all_countries()
-            all_countries = sorted(list(set(api_countries + excel_countries)))
-        except Exception as e:
-            logger.warning(f"Excel countries not available: {e}")
-            all_countries = api_countries
+        # Use only the main API countries list (30 countries)
+        all_countries = await get_available_countries()
 
         for country in all_countries:
             try:
@@ -814,14 +561,7 @@ async def get_tariff_summary_all_countries():
 
 
 # Refresh Atlantic Council dataset
-@app.post("/api/dataset/refresh")
-async def refresh_dataset():
-    """Refresh tariff data from Atlantic Council"""
-    # Data is loaded from Excel file, no refresh needed
-    return {
-        "success": True,
-        "message": "Dataset is loaded from Excel file",
-    }
+# Removed unused refresh endpoint
 
 
 # Helper functions
