@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TIPM API Connection Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
+        .success { background-color: #d4edda; border-color: #c3e6cb; color: #155724; }
+        .error { background-color: #f8d7da; border-color: #f5c6cb; color: #721c24; }
+        .info { background-color: #d1ecf1; border-color: #bee5eb; color: #0c5460; }
+        button { padding: 10px 20px; margin: 5px; background: #007bff; color: white; border: none; border-radius: 3px; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        pre { background: #f8f9fa; padding: 10px; border-radius: 3px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>🔧 TIPM API Connection Test</h1>
+    
+    <div class="test-section info">
+        <h3>📋 Test Configuration</h3>
+        <p><strong>Environment:</strong> <span id="environment">Loading...</span></p>
+        <p><strong>API Base URL:</strong> <span id="apiBase">Loading...</span></p>
+        <p><strong>Frontend Origin:</strong> <span id="frontendOrigin">Loading...</span></p>
+        <p><strong>Deployment Type:</strong> <span id="deploymentType">Loading...</span></p>
+    </div>
+
+    <div class="test-section">
+        <h3>🧪 API Tests</h3>
+        <button onclick="testHealth()">Test Health Endpoint</button>
+        <button onclick="testCountries()">Test Countries Endpoint</button>
+        <button onclick="testCORS()">Test CORS Preflight</button>
+        <button onclick="testAll()">Run All Tests</button>
+    </div>
+
+    <div class="test-section">
+        <h3>📊 Test Results</h3>
+        <div id="results"></div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8000';
+        
+        // Display configuration
+        const isLocalDev = API_BASE.includes('localhost') || API_BASE.includes('127.0.0.1');
+        const isProduction = API_BASE.includes('onrender.com') || API_BASE.includes('vercel.app') || API_BASE.includes('railway.app');
+        
+        document.getElementById('environment').textContent = isLocalDev ? 'Development' : 'Production';
+        document.getElementById('apiBase').textContent = API_BASE;
+        document.getElementById('frontendOrigin').textContent = window.location.origin;
+        document.getElementById('deploymentType').textContent = isLocalDev ? 'Local Development' : 
+            API_BASE.includes('onrender.com') ? 'Render Backend' : 
+            API_BASE.includes('vercel.app') ? 'Vercel Frontend' : 'Other';
+
+        function addResult(message, type = 'info') {
+            const resultsDiv = document.getElementById('results');
+            const resultDiv = document.createElement('div');
+            resultDiv.className = `test-section ${type}`;
+            resultDiv.innerHTML = `<strong>${new Date().toLocaleTimeString()}</strong>: ${message}`;
+            resultsDiv.appendChild(resultDiv);
+            resultsDiv.scrollTop = resultsDiv.scrollHeight;
+        }
+
+        async function testHealth() {
+            try {
+                addResult('Testing health endpoint...', 'info');
+                const response = await fetch(`${API_BASE}/health`);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    addResult(`✅ Health check passed: ${data.status}`, 'success');
+                    addResult(`📊 Real data available: ${data.real_data_available}`, 'success');
+                } else {
+                    addResult(`❌ Health check failed: ${response.status}`, 'error');
+                }
+            } catch (error) {
+                addResult(`❌ Health check error: ${error.message}`, 'error');
+            }
+        }
+
+        async function testCountries() {
+            try {
+                addResult('Testing countries endpoint...', 'info');
+                const response = await fetch(`${API_BASE}/api/countries`);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    addResult(`✅ Countries endpoint passed: ${data.length} countries`, 'success');
+                    addResult(`🌍 Sample countries: ${data.slice(0, 3).join(', ')}...`, 'success');
+                } else {
+                    addResult(`❌ Countries endpoint failed: ${response.status}`, 'error');
+                }
+            } catch (error) {
+                addResult(`❌ Countries endpoint error: ${error.message}`, 'error');
+            }
+        }
+
+        async function testCORS() {
+            try {
+                addResult('Testing CORS preflight...', 'info');
+                const response = await fetch(`${API_BASE}/health`, {
+                    method: 'OPTIONS',
+                    headers: {
+                        'Origin': window.location.origin,
+                        'Access-Control-Request-Method': 'GET',
+                        'Access-Control-Request-Headers': 'Content-Type'
+                    }
+                });
+                
+                if (response.ok) {
+                    addResult('✅ CORS preflight passed', 'success');
+                    addResult(`🔒 CORS headers: ${response.headers.get('access-control-allow-origin')}`, 'success');
+                } else {
+                    addResult(`❌ CORS preflight failed: ${response.status}`, 'error');
+                }
+            } catch (error) {
+                addResult(`❌ CORS preflight error: ${error.message}`, 'error');
+            }
+        }
+
+        async function testAll() {
+            addResult('🚀 Starting comprehensive API test...', 'info');
+            await testHealth();
+            await new Promise(resolve => setTimeout(resolve, 500));
+            await testCountries();
+            await new Promise(resolve => setTimeout(resolve, 500));
+            await testCORS();
+            addResult('🏁 All tests completed!', 'info');
+        }
+
+        // Auto-run health check on page load
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                addResult('🚀 Page loaded, testing API connection...', 'info');
+                testHealth();
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

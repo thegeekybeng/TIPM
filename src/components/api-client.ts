@@ -1,11 +1,18 @@
   // TIPM API Client - Connects React frontend to FastAPI backend
+  import { config, validateConfig } from '../lib/config';
+  
+  // Validate configuration on import
+  validateConfig();
+  
   // Base URL for the FastAPI backend
-  const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE || 'https://tipm-app.onrender.com';
+  const API_BASE_URL = config.apiBaseUrl;
   
   // Debug environment variables
-  console.log('Environment variables:', {
-    NEXT_PUBLIC_API_BASE: process.env.NEXT_PUBLIC_API_BASE,
-    API_BASE_URL,
+  console.log('🌍 TIPM API Client Configuration:', {
+    environment: config.environment,
+    apiBaseUrl: config.apiBaseUrl,
+    isLocalDev: config.isLocalDev,
+    isProduction: config.isProduction,
     NODE_ENV: process.env.NODE_ENV
   });
 

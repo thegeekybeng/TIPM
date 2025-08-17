@@ -16,7 +16,6 @@ services:
 
   - type: web
     name: tipm-app
-    env: node
     plan: free
     region: singapore
     buildCommand: npm install && npm run build
@@ -27,6 +26,6 @@ services:
       - key: NODE_VERSION
         value: 18.18.2
       - key: NEXT_PUBLIC_API_BASE
-        value: https://tipm-app.onrender.com
+        value: https://tipm-api.onrender.com
       - key: PORT
         value: 10001
