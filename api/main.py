@@ -100,6 +100,7 @@ from authoritative_tariff_parser import (
     get_all_countries,
     get_tariff_summary,
 )
+import atlantic_council_fallback
 
 
 # Placeholder functions for compatibility
@@ -310,10 +311,41 @@ async def get_country_info(country_name: str):
         data_confidence = "High - Real US tariff data from USTR/USITC"
         data_sources = ["USTR", "USITC", "Federal Register", "CBP", "WTO"]
     else:
-        real_tariff_rate = 0.0
-        affected_sectors = []
-        data_confidence = "Medium - No US tariffs currently imposed"
-        data_sources = ["USTR Database"]
+        # Try Atlantic Council fallback data
+        try:
+            atlantic_tariffs = atlantic_council_fallback.get_country_tariffs(country_name)
+            if atlantic_tariffs:
+                # Calculate average from Atlantic Council data
+                total_rate = 0
+                count = 0
+                for sector_data in atlantic_tariffs.values():
+                    if isinstance(sector_data, dict) and sector_data.get('status') == 'Active':
+                        rate = sector_data.get('tariff_rate', 0)
+                        if rate > 0:
+                            total_rate += rate
+                            count += 1
+                
+                if count > 0:
+                    real_tariff_rate = total_rate / count
+                    affected_sectors = list(atlantic_tariffs.keys())
+                    data_confidence = "Medium - Atlantic Council tariff data"
+                    data_sources = ["Atlantic Council", "Trump Administration"]
+                else:
+                    real_tariff_rate = 0.0
+                    affected_sectors = []
+                    data_confidence = "Medium - No US tariffs currently imposed"
+                    data_sources = ["USTR Database"]
+            else:
+                real_tariff_rate = 0.0
+                affected_sectors = []
+                data_confidence = "Medium - No US tariffs currently imposed"
+                data_sources = ["USTR Database"]
+        except Exception as e:
+            logger.warning(f"Atlantic Council fallback failed for {country_name}: {e}")
+            real_tariff_rate = 0.0
+            affected_sectors = []
+            data_confidence = "Medium - No US tariffs currently imposed"
+            data_sources = ["USTR Database"]
 
     return CountryInfo(
         name=country_name,
