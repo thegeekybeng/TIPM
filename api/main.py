@@ -27,31 +27,57 @@ app = FastAPI(
     version="2.0.0",
 )
 
-# Add CORS middleware for React frontend
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=[
-        # Local development
+# Environment-based CORS configuration
+import os
+
+# Get environment
+ENVIRONMENT = os.getenv("ENVIRONMENT", "development")
+IS_PRODUCTION = ENVIRONMENT == "production"
+
+# CORS origins based on environment
+if IS_PRODUCTION:
+    # Production: strict CORS for security
+    CORS_ORIGINS = [
+        "https://tipm.vercel.app",
+        "https://tipm-app.vercel.app",
+        "https://tipm-app.onrender.com",
+        "https://tipm-api.onrender.com",
+        "https://tipm-app.railway.app",
+    ]
+else:
+    # Development: allow local development origins
+    CORS_ORIGINS = [
         "http://localhost:3000",
         "http://127.0.0.1:3000",
         "http://localhost:3001",
         "http://localhost:3002",
         "http://127.0.0.1:3001",
         "http://127.0.0.1:3002",
-        # Production deployments
-        "https://tipm.vercel.app",
-        "https://tipm-app.vercel.app",
-        "https://*.vercel.app",
-        "https://tipm-app.onrender.com",
-        "https://tipm-api.onrender.com",
-        "https://tipm-app.railway.app",
-        # Development - allow all origins for local testing
-        "*",
-    ],
+    ]
+
+# Add CORS middleware for React frontend
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=CORS_ORIGINS,
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allow_headers=["*"],
-    expose_headers=["*"],
+    allow_headers=[
+        "Content-Type",
+        "Authorization",
+        "Accept",
+        "Origin",
+        "X-Requested-With",
+        "X-CSRF-Token",
+        "Access-Control-Request-Method",
+        "Access-Control-Request-Headers",
+    ],
+    expose_headers=[
+        "Content-Length",
+        "Content-Type",
+        "X-Total-Count",
+        "X-Page-Count",
+    ],
+    max_age=86400,  # Cache preflight for 24 hours
 )
 
 
@@ -158,7 +184,21 @@ async def root():
 @app.options("/{full_path:path}")
 async def options_handler(full_path: str):
     """Handle CORS preflight requests for all endpoints"""
-    return {"message": "CORS preflight handled"}
+    from fastapi.responses import Response
+
+    response = Response(
+        content="",
+        status_code=200,
+        headers={
+            "Access-Control-Allow-Origin": (
+                "*" if not IS_PRODUCTION else CORS_ORIGINS[0]
+            ),
+            "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+            "Access-Control-Allow-Headers": "Content-Type, Authorization, Accept, Origin, X-Requested-With, X-CSRF-Token",
+            "Access-Control-Max-Age": "86400",
+        },
+    )
+    return response
 
 
 # Health check endpoint

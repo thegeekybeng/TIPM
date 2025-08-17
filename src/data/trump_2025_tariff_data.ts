@@ -134,7 +134,7 @@ export const TRUMP_2025_TARIFF_DATA: Record<string, TrumpTariffData> = {
       agriculture: 10,
       consumer_goods: 15,
       machinery: 15,
-      chemical: 15,
+      chemicals: 15,
     },
     
     trade_volume_usd_millions: 85000, // $85B affected
@@ -177,7 +177,7 @@ export const TRUMP_2025_TARIFF_DATA: Record<string, TrumpTariffData> = {
       agriculture: 10,
       consumer_goods: 15,
       machinery: 15,
-      chemical: 15,
+      chemicals: 15,
     },
     
     trade_volume_usd_millions: 45000, // $45B affected
@@ -220,7 +220,7 @@ export const TRUMP_2025_TARIFF_DATA: Record<string, TrumpTariffData> = {
       agriculture: 10,
       consumer_goods: 15,
       machinery: 15,
-      chemical: 15,
+      chemicals: 15,
     },
     
     trade_volume_usd_millions: 35000, // $35B affected
@@ -263,7 +263,7 @@ export const TRUMP_2025_TARIFF_DATA: Record<string, TrumpTariffData> = {
       agriculture: 20,
       consumer_goods: 15,
       machinery: 15,
-      chemical: 15,
+      chemicals: 15,
     },
     
     trade_volume_usd_millions: 25000, // $25B affected
@@ -307,7 +307,7 @@ export const TRUMP_2025_TARIFF_DATA: Record<string, TrumpTariffData> = {
       agriculture: 10,
       consumer_goods: 15,
       machinery: 15,
-      chemical: 15,
+      chemicals: 15,
     },
     
     trade_volume_usd_millions: 40000, // $40B affected
@@ -350,7 +350,7 @@ export const TRUMP_2025_TARIFF_DATA: Record<string, TrumpTariffData> = {
       agriculture: 10,
       consumer_goods: 15,
       machinery: 15,
-      chemical: 15,
+      chemicals: 15,
     },
     
     trade_volume_usd_millions: 30000, // $30B affected

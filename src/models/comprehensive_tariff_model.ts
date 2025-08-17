@@ -250,7 +250,7 @@ export class ComprehensiveTariffModel {
     
     // Regional breakdown
     const regionalBreakdown: Record<string, any> = {};
-    const continents = [...new Set(countries.map(c => c.continent))];
+    const continents = Array.from(new Set(countries.map(c => c.continent)));
     
     continents.forEach(continent => {
       const continentCountries = countries.filter(c => c.continent === continent);
