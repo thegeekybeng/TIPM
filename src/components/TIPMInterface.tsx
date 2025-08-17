@@ -97,11 +97,16 @@ const TIPMInterface: React.FC = () => {
 
       console.log("✅ TIPM System initialized successfully");
       console.log(`📊 Available countries: ${countries.length}`);
-      console.log(`🔗 Active data sources: ${sources.filter((s: WorkingDataSource) => s.status === 'ACTIVE').length}/${sources.length}`);
-      
+      console.log(
+        `🔗 Active data sources: ${sources.filter((s: WorkingDataSource) => s.status === "ACTIVE").length}/${sources.length}`
+      );
+
       // Debug: Log first few countries to verify data
-      console.log('🔍 Sample countries:', countries.slice(0, 10));
-      console.log('🔍 Data sources:', sources.map(s => `${s.name}: ${s.status}`));
+      console.log("🔍 Sample countries:", countries.slice(0, 10));
+      console.log(
+        "🔍 Data sources:",
+        sources.map((s) => `${s.name}: ${s.status}`)
+      );
     } catch (err) {
       console.error("❌ Error initializing TIPM System:", err);
       setError(
@@ -396,7 +401,8 @@ const TIPMInterface: React.FC = () => {
               ))}
             </select>
             <p className="text-sm text-gray-500 mt-2">
-              {availableCountries.length} countries available from World Bank database.
+              {availableCountries.length} countries available from World Bank
+              database.
             </p>
           </div>
         </div>
@@ -475,7 +481,9 @@ const TIPMInterface: React.FC = () => {
                     Trade Volume
                   </h4>
                   <span className="px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
-                    {analysisResult.trade_volume ? formatPercentage(analysisResult.trade_volume) : 'N/A'}
+                    {analysisResult.trade_volume
+                      ? formatPercentage(analysisResult.trade_volume)
+                      : "N/A"}
                   </span>
                 </div>
 

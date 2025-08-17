@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Data Source Test</title>
+</head>
+<body>
+    <h1>Testing Data Sources</h1>
+    <div id="results"></div>
+    
+    <script>
+        async function testDataSources() {
+            const results = document.getElementById('results');
+            
+            // Test World Bank API
+            try {
+                console.log('Testing World Bank API...');
+                const response = await fetch('https://api.worldbank.org/v2/country?format=json&per_page=5');
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log('World Bank response:', data);
+                    results.innerHTML += '<p>✅ World Bank API: Working</p>';
+                } else {
+                    results.innerHTML += '<p>❌ World Bank API: Failed</p>';
+                }
+            } catch (error) {
+                console.error('World Bank error:', error);
+                results.innerHTML += '<p>❌ World Bank API: Error - ' + error.message + '</p>';
+            }
+            
+            // Test USTR
+            try {
+                console.log('Testing USTR...');
+                const response = await fetch('https://ustr.gov/trade-agreements');
+                if (response.ok) {
+                    results.innerHTML += '<p>✅ USTR: Working</p>';
+                } else {
+                    results.innerHTML += '<p>❌ USTR: Failed</p>';
+                }
+            } catch (error) {
+                console.error('USTR error:', error);
+                results.innerHTML += '<p>❌ USTR: Error - ' + error.message + '</p>';
+            }
+            
+            // Test Atlantic Council
+            try {
+                console.log('Testing Atlantic Council...');
+                const response = await fetch('https://www.atlanticcouncil.org/programs/global-business-and-economics/trump-tariff-tracker/');
+                if (response.ok) {
+                    results.innerHTML += '<p>✅ Atlantic Council: Working</p>';
+                } else {
+                    results.innerHTML += '<p>❌ Atlantic Council: Failed</p>';
+                }
+            } catch (error) {
+                console.error('Atlantic Council error:', error);
+                results.innerHTML += '<p>❌ Atlantic Council: Error - ' + error.message + '</p>';
+            }
+        }
+        
+        testDataSources();
+    </script>
+</body>
+</html>
