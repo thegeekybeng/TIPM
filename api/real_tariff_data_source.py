@@ -30,19 +30,19 @@ class RealTariffDataSource:
     Real tariff data source providing actual US tariff rates
     All data is from authoritative government sources
     """
-    
+
     def __init__(self):
         # Initialize with real tariff data from authoritative sources
         self.tariff_data = self._initialize_real_tariff_data()
         self.last_updated = datetime.now()
         self.data_sources = [
             "USTR - US Trade Representative",
-            "USITC - US International Trade Commission", 
+            "USITC - US International Trade Commission",
             "CBP - Customs and Border Protection",
             "Federal Register",
-            "Executive Orders"
+            "Executive Orders",
         ]
-        
+
     def _initialize_real_tariff_data(self) -> Dict[str, Dict[str, Any]]:
         """
         Initialize with real tariff data from authoritative sources
@@ -56,13 +56,13 @@ class RealTariffDataSource:
                 "section_232_rate": 25.0,  # Section 232 steel/aluminum
                 "affected_sectors": [
                     "Electronics and Technology",
-                    "Steel and Aluminum", 
+                    "Steel and Aluminum",
                     "Machinery and Equipment",
                     "Textiles and Apparel",
                     "Chemicals and Plastics",
                     "Automotive Parts",
                     "Consumer Goods",
-                    "Industrial Equipment"
+                    "Industrial Equipment",
                 ],
                 "special_programs": ["section_301", "section_232"],
                 "tariff_details": {
@@ -73,11 +73,11 @@ class RealTariffDataSource:
                     "textiles": 25.0,
                     "chemicals": 25.0,
                     "automotive": 25.0,
-                    "consumer_goods": 25.0
+                    "consumer_goods": 25.0,
                 },
                 "effective_date": "2024-01-01",
                 "source": "USTR Section 301 + Section 232 + Base MFN",
-                "confidence": "High - Official US Government Data"
+                "confidence": "High - Official US Government Data",
             },
             "Hong Kong": {
                 "average_tariff_rate": 32.9,  # Same as China due to origin rules
@@ -87,12 +87,12 @@ class RealTariffDataSource:
                 "affected_sectors": [
                     "Electronics and Technology",
                     "Steel and Aluminum",
-                    "Machinery and Equipment", 
+                    "Machinery and Equipment",
                     "Textiles and Apparel",
                     "Chemicals and Plastics",
                     "Automotive Parts",
                     "Consumer Goods",
-                    "Industrial Equipment"
+                    "Industrial Equipment",
                 ],
                 "special_programs": ["section_301", "section_232"],
                 "tariff_details": {
@@ -103,11 +103,11 @@ class RealTariffDataSource:
                     "textiles": 25.0,
                     "chemicals": 25.0,
                     "automotive": 25.0,
-                    "consumer_goods": 25.0
+                    "consumer_goods": 25.0,
                 },
                 "effective_date": "2024-01-01",
                 "source": "USTR Section 301 + Section 232 + Base MFN",
-                "confidence": "High - Official US Government Data"
+                "confidence": "High - Official US Government Data",
             },
             "Macau": {
                 "average_tariff_rate": 32.9,  # Same as China due to origin rules
@@ -118,11 +118,11 @@ class RealTariffDataSource:
                     "Electronics and Technology",
                     "Steel and Aluminum",
                     "Machinery and Equipment",
-                    "Textiles and Apparel", 
+                    "Textiles and Apparel",
                     "Chemicals and Plastics",
                     "Automotive Parts",
                     "Consumer Goods",
-                    "Industrial Equipment"
+                    "Industrial Equipment",
                 ],
                 "special_programs": ["section_301", "section_232"],
                 "tariff_details": {
@@ -133,11 +133,11 @@ class RealTariffDataSource:
                     "textiles": 25.0,
                     "chemicals": 25.0,
                     "automotive": 25.0,
-                    "consumer_goods": 25.0
+                    "consumer_goods": 25.0,
                 },
                 "effective_date": "2024-01-01",
                 "source": "USTR Section 301 + Section 232 + Base MFN",
-                "confidence": "High - Official US Government Data"
+                "confidence": "High - Official US Government Data",
             },
             "Russia": {
                 "average_tariff_rate": 35.0,  # Section 232 + additional sanctions
@@ -152,7 +152,7 @@ class RealTariffDataSource:
                     "Machinery",
                     "Aerospace",
                     "Defense",
-                    "Technology"
+                    "Technology",
                 ],
                 "special_programs": ["section_232", "additional_sanctions"],
                 "tariff_details": {
@@ -164,11 +164,11 @@ class RealTariffDataSource:
                     "machinery": 35.0,
                     "aerospace": 35.0,
                     "defense": 35.0,
-                    "technology": 35.0
+                    "technology": 35.0,
                 },
                 "effective_date": "2024-01-01",
                 "source": "Section 232 + Executive Orders + Sanctions",
-                "confidence": "High - Official US Government Data"
+                "confidence": "High - Official US Government Data",
             },
             "Turkey": {
                 "average_tariff_rate": 25.0,  # Section 232 steel/aluminum
@@ -179,7 +179,7 @@ class RealTariffDataSource:
                     "Textiles and Apparel",
                     "Automotive",
                     "Machinery",
-                    "Electronics"
+                    "Electronics",
                 ],
                 "special_programs": ["section_232"],
                 "tariff_details": {
@@ -188,11 +188,11 @@ class RealTariffDataSource:
                     "textiles": 25.0,
                     "automotive": 25.0,
                     "machinery": 25.0,
-                    "electronics": 25.0
+                    "electronics": 25.0,
                 },
                 "effective_date": "2024-01-01",
                 "source": "Section 232 Steel and Aluminum",
-                "confidence": "High - Official US Government Data"
+                "confidence": "High - Official US Government Data",
             },
             "India": {
                 "average_tariff_rate": 15.0,  # Reciprocal tariffs + some MFN
@@ -203,7 +203,7 @@ class RealTariffDataSource:
                     "Textiles and Apparel",
                     "Agricultural Products",
                     "Pharmaceuticals",
-                    "Machinery"
+                    "Machinery",
                 ],
                 "special_programs": ["reciprocal_tariffs"],
                 "tariff_details": {
@@ -212,11 +212,11 @@ class RealTariffDataSource:
                     "textiles": 15.0,
                     "agricultural": 15.0,
                     "pharmaceuticals": 15.0,
-                    "machinery": 15.0
+                    "machinery": 15.0,
                 },
                 "effective_date": "2024-01-01",
                 "source": "Reciprocal Tariffs + MFN",
-                "confidence": "High - Official US Government Data"
+                "confidence": "High - Official US Government Data",
             },
             "Brazil": {
                 "average_tariff_rate": 12.0,  # Mixed tariffs
@@ -227,7 +227,7 @@ class RealTariffDataSource:
                     "Agricultural Products",
                     "Textiles",
                     "Footwear",
-                    "Machinery"
+                    "Machinery",
                 ],
                 "special_programs": ["mixed_tariffs"],
                 "tariff_details": {
@@ -235,11 +235,11 @@ class RealTariffDataSource:
                     "agricultural": 12.0,
                     "textiles": 12.0,
                     "footwear": 12.0,
-                    "machinery": 12.0
+                    "machinery": 12.0,
                 },
                 "effective_date": "2024-01-01",
                 "source": "Mixed Tariffs + MFN",
-                "confidence": "High - Official US Government Data"
+                "confidence": "High - Official US Government Data",
             },
             "Mexico": {
                 "average_tariff_rate": 3.1,  # Mostly MFN due to USMCA
@@ -248,18 +248,18 @@ class RealTariffDataSource:
                 "affected_sectors": [
                     "Steel and Aluminum",
                     "Automotive",
-                    "Agricultural Products"
+                    "Agricultural Products",
                 ],
                 "special_programs": ["usmca_preferential"],
                 "tariff_details": {
                     "steel": 3.1,
                     "aluminum": 3.1,
                     "automotive": 0.0,
-                    "agricultural": 0.0
+                    "agricultural": 0.0,
                 },
                 "effective_date": "2024-01-01",
                 "source": "USMCA + MFN",
-                "confidence": "High - Official US Government Data"
+                "confidence": "High - Official US Government Data",
             },
             "Canada": {
                 "average_tariff_rate": 3.1,  # Mostly MFN due to USMCA
@@ -269,7 +269,7 @@ class RealTariffDataSource:
                     "Steel and Aluminum",
                     "Automotive",
                     "Agricultural Products",
-                    "Forestry Products"
+                    "Forestry Products",
                 ],
                 "special_programs": ["usmca_preferential"],
                 "tariff_details": {
@@ -277,51 +277,41 @@ class RealTariffDataSource:
                     "aluminum": 3.1,
                     "automotive": 0.0,
                     "agricultural": 0.0,
-                    "forestry": 0.0
+                    "forestry": 0.0,
                 },
                 "effective_date": "2024-01-01",
                 "source": "USMCA + MFN",
-                "confidence": "High - Official US Government Data"
+                "confidence": "High - Official US Government Data",
             },
             "Japan": {
                 "average_tariff_rate": 3.1,  # Mostly MFN
                 "base_mfn_rate": 3.1,
-                "affected_sectors": [
-                    "Automotive",
-                    "Electronics",
-                    "Machinery",
-                    "Steel"
-                ],
+                "affected_sectors": ["Automotive", "Electronics", "Machinery", "Steel"],
                 "special_programs": ["mfn_only"],
                 "tariff_details": {
                     "automotive": 2.5,
                     "electronics": 0.0,
                     "machinery": 0.0,
-                    "steel": 3.1
+                    "steel": 3.1,
                 },
                 "effective_date": "2024-01-01",
                 "source": "MFN Tariffs",
-                "confidence": "High - Official US Government Data"
+                "confidence": "High - Official US Government Data",
             },
             "South Korea": {
                 "average_tariff_rate": 3.1,  # Mostly MFN
                 "base_mfn_rate": 3.1,
-                "affected_sectors": [
-                    "Automotive",
-                    "Electronics",
-                    "Steel",
-                    "Textiles"
-                ],
+                "affected_sectors": ["Automotive", "Electronics", "Steel", "Textiles"],
                 "special_programs": ["mfn_only"],
                 "tariff_details": {
                     "automotive": 2.5,
                     "electronics": 0.0,
                     "steel": 3.1,
-                    "textiles": 3.1
+                    "textiles": 3.1,
                 },
                 "effective_date": "2024-01-01",
                 "source": "MFN Tariffs",
-                "confidence": "High - Official US Government Data"
+                "confidence": "High - Official US Government Data",
             },
             "European Union": {
                 "average_tariff_rate": 15.0,  # Reciprocal tariffs
@@ -332,7 +322,7 @@ class RealTariffDataSource:
                     "Automotive",
                     "Agricultural Products",
                     "Luxury Goods",
-                    "Machinery"
+                    "Machinery",
                 ],
                 "special_programs": ["reciprocal_tariffs"],
                 "tariff_details": {
@@ -341,11 +331,11 @@ class RealTariffDataSource:
                     "automotive": 15.0,
                     "agricultural": 15.0,
                     "luxury_goods": 15.0,
-                    "machinery": 15.0
+                    "machinery": 15.0,
                 },
                 "effective_date": "2024-01-01",
                 "source": "Reciprocal Tariffs + Section 232",
-                "confidence": "High - Official US Government Data"
+                "confidence": "High - Official US Government Data",
             },
             "Germany": {
                 "average_tariff_rate": 15.0,  # EU member rates
@@ -356,7 +346,7 @@ class RealTariffDataSource:
                     "Automotive",
                     "Machinery",
                     "Chemicals",
-                    "Electronics"
+                    "Electronics",
                 ],
                 "special_programs": ["eu_reciprocal_tariffs"],
                 "tariff_details": {
@@ -365,11 +355,11 @@ class RealTariffDataSource:
                     "automotive": 15.0,
                     "machinery": 15.0,
                     "chemicals": 15.0,
-                    "electronics": 15.0
+                    "electronics": 15.0,
                 },
                 "effective_date": "2024-01-01",
                 "source": "EU Reciprocal Tariffs + Section 232",
-                "confidence": "High - Official US Government Data"
+                "confidence": "High - Official US Government Data",
             },
             "France": {
                 "average_tariff_rate": 15.0,  # EU member rates
@@ -380,7 +370,7 @@ class RealTariffDataSource:
                     "Automotive",
                     "Luxury Goods",
                     "Wine and Spirits",
-                    "Aerospace"
+                    "Aerospace",
                 ],
                 "special_programs": ["eu_reciprocal_tariffs"],
                 "tariff_details": {
@@ -389,11 +379,11 @@ class RealTariffDataSource:
                     "automotive": 15.0,
                     "luxury_goods": 15.0,
                     "wine_spirits": 15.0,
-                    "aerospace": 15.0
+                    "aerospace": 15.0,
                 },
                 "effective_date": "2024-01-01",
                 "source": "EU Reciprocal Tariffs + Section 232",
-                "confidence": "High - Official US Government Data"
+                "confidence": "High - Official US Government Data",
             },
             "United Kingdom": {
                 "average_tariff_rate": 15.0,  # Post-Brexit reciprocal tariffs
@@ -404,7 +394,7 @@ class RealTariffDataSource:
                     "Automotive",
                     "Financial Services",
                     "Textiles",
-                    "Machinery"
+                    "Machinery",
                 ],
                 "special_programs": ["uk_reciprocal_tariffs"],
                 "tariff_details": {
@@ -413,11 +403,11 @@ class RealTariffDataSource:
                     "automotive": 15.0,
                     "financial": 15.0,
                     "textiles": 15.0,
-                    "machinery": 15.0
+                    "machinery": 15.0,
                 },
                 "effective_date": "2024-01-01",
                 "source": "UK Reciprocal Tariffs + Section 232",
-                "confidence": "High - Official US Government Data"
+                "confidence": "High - Official US Government Data",
             },
             "Italy": {
                 "average_tariff_rate": 15.0,  # EU member rates
@@ -428,7 +418,7 @@ class RealTariffDataSource:
                     "Automotive",
                     "Fashion and Luxury",
                     "Machinery",
-                    "Food and Wine"
+                    "Food and Wine",
                 ],
                 "special_programs": ["eu_reciprocal_tariffs"],
                 "tariff_details": {
@@ -437,11 +427,11 @@ class RealTariffDataSource:
                     "automotive": 15.0,
                     "fashion": 15.0,
                     "machinery": 15.0,
-                    "food_wine": 15.0
+                    "food_wine": 15.0,
                 },
                 "effective_date": "2024-01-01",
                 "source": "EU Reciprocal Tariffs + Section 232",
-                "confidence": "High - Official US Government Data"
+                "confidence": "High - Official US Government Data",
             },
             "Spain": {
                 "average_tariff_rate": 15.0,  # EU member rates
@@ -452,7 +442,7 @@ class RealTariffDataSource:
                     "Automotive",
                     "Agricultural Products",
                     "Textiles",
-                    "Machinery"
+                    "Machinery",
                 ],
                 "special_programs": ["eu_reciprocal_tariffs"],
                 "tariff_details": {
@@ -461,11 +451,11 @@ class RealTariffDataSource:
                     "automotive": 15.0,
                     "agricultural": 15.0,
                     "textiles": 15.0,
-                    "machinery": 15.0
+                    "machinery": 15.0,
                 },
                 "effective_date": "2024-01-01",
                 "source": "EU Reciprocal Tariffs + Section 232",
-                "confidence": "High - Official US Government Data"
+                "confidence": "High - Official US Government Data",
             },
             "Netherlands": {
                 "average_tariff_rate": 15.0,  # EU member rates
@@ -476,7 +466,7 @@ class RealTariffDataSource:
                     "Automotive",
                     "Chemicals",
                     "Machinery",
-                    "Electronics"
+                    "Electronics",
                 ],
                 "special_programs": ["eu_reciprocal_tariffs"],
                 "tariff_details": {
@@ -485,11 +475,11 @@ class RealTariffDataSource:
                     "automotive": 15.0,
                     "chemicals": 15.0,
                     "machinery": 15.0,
-                    "electronics": 15.0
+                    "electronics": 15.0,
                 },
                 "effective_date": "2024-01-01",
                 "source": "EU Reciprocal Tariffs + Section 232",
-                "confidence": "High - Official US Government Data"
+                "confidence": "High - Official US Government Data",
             },
             "Belgium": {
                 "average_tariff_rate": 15.0,  # EU member rates
@@ -500,7 +490,7 @@ class RealTariffDataSource:
                     "Automotive",
                     "Chemicals",
                     "Machinery",
-                    "Textiles"
+                    "Textiles",
                 ],
                 "special_programs": ["eu_reciprocal_tariffs"],
                 "tariff_details": {
@@ -509,11 +499,11 @@ class RealTariffDataSource:
                     "automotive": 15.0,
                     "chemicals": 15.0,
                     "machinery": 15.0,
-                    "textiles": 15.0
+                    "textiles": 15.0,
                 },
                 "effective_date": "2024-01-01",
                 "source": "EU Reciprocal Tariffs + Section 232",
-                "confidence": "High - Official US Government Data"
+                "confidence": "High - Official US Government Data",
             },
             "Switzerland": {
                 "average_tariff_rate": 3.1,  # Mostly MFN
@@ -522,18 +512,18 @@ class RealTariffDataSource:
                     "Machinery",
                     "Chemicals",
                     "Pharmaceuticals",
-                    "Watches and Jewelry"
+                    "Watches and Jewelry",
                 ],
                 "special_programs": ["mfn_only"],
                 "tariff_details": {
                     "machinery": 0.0,
                     "chemicals": 3.1,
                     "pharmaceuticals": 0.0,
-                    "watches_jewelry": 3.1
+                    "watches_jewelry": 3.1,
                 },
                 "effective_date": "2024-01-01",
                 "source": "MFN Tariffs",
-                "confidence": "High - Official US Government Data"
+                "confidence": "High - Official US Government Data",
             },
             "Australia": {
                 "average_tariff_rate": 3.1,  # Mostly MFN
@@ -542,18 +532,18 @@ class RealTariffDataSource:
                     "Agricultural Products",
                     "Mining and Metals",
                     "Machinery",
-                    "Textiles"
+                    "Textiles",
                 ],
                 "special_programs": ["mfn_only"],
                 "tariff_details": {
                     "agricultural": 3.1,
                     "mining": 3.1,
                     "machinery": 0.0,
-                    "textiles": 3.1
+                    "textiles": 3.1,
                 },
                 "effective_date": "2024-01-01",
                 "source": "MFN Tariffs",
-                "confidence": "High - Official US Government Data"
+                "confidence": "High - Official US Government Data",
             },
             "Singapore": {
                 "average_tariff_rate": 0.0,  # FTA partner
@@ -563,18 +553,18 @@ class RealTariffDataSource:
                     "Electronics",
                     "Machinery",
                     "Chemicals",
-                    "Textiles"
+                    "Textiles",
                 ],
                 "special_programs": ["us_singapore_fta"],
                 "tariff_details": {
                     "electronics": 0.0,
                     "machinery": 0.0,
                     "chemicals": 0.0,
-                    "textiles": 0.0
+                    "textiles": 0.0,
                 },
                 "effective_date": "2024-01-01",
                 "source": "US-Singapore FTA",
-                "confidence": "High - Official US Government Data"
+                "confidence": "High - Official US Government Data",
             },
             "Malaysia": {
                 "average_tariff_rate": 3.1,  # Mostly MFN
@@ -583,18 +573,18 @@ class RealTariffDataSource:
                     "Electronics",
                     "Textiles and Apparel",
                     "Agricultural Products",
-                    "Machinery"
+                    "Machinery",
                 ],
                 "special_programs": ["mfn_only"],
                 "tariff_details": {
                     "electronics": 0.0,
                     "textiles": 3.1,
                     "agricultural": 3.1,
-                    "machinery": 0.0
+                    "machinery": 0.0,
                 },
                 "effective_date": "2024-01-01",
                 "source": "MFN Tariffs",
-                "confidence": "High - Official US Government Data"
+                "confidence": "High - Official US Government Data",
             },
             "Thailand": {
                 "average_tariff_rate": 3.1,  # Mostly MFN
@@ -603,18 +593,18 @@ class RealTariffDataSource:
                     "Textiles and Apparel",
                     "Agricultural Products",
                     "Automotive",
-                    "Electronics"
+                    "Electronics",
                 ],
                 "special_programs": ["mfn_only"],
                 "tariff_details": {
                     "textiles": 3.1,
                     "agricultural": 3.1,
                     "automotive": 2.5,
-                    "electronics": 0.0
+                    "electronics": 0.0,
                 },
                 "effective_date": "2024-01-01",
                 "source": "MFN Tariffs",
-                "confidence": "High - Official US Government Data"
+                "confidence": "High - Official US Government Data",
             },
             "Vietnam": {
                 "average_tariff_rate": 3.1,  # Mostly MFN
@@ -623,18 +613,18 @@ class RealTariffDataSource:
                     "Textiles and Apparel",
                     "Footwear",
                     "Electronics",
-                    "Agricultural Products"
+                    "Agricultural Products",
                 ],
                 "special_programs": ["mfn_only"],
                 "tariff_details": {
                     "textiles": 3.1,
                     "footwear": 3.1,
                     "electronics": 0.0,
-                    "agricultural": 3.1
+                    "agricultural": 3.1,
                 },
                 "effective_date": "2024-01-01",
                 "source": "MFN Tariffs",
-                "confidence": "High - Official US Government Data"
+                "confidence": "High - Official US Government Data",
             },
             "Indonesia": {
                 "average_tariff_rate": 3.1,  # Mostly MFN
@@ -643,18 +633,18 @@ class RealTariffDataSource:
                     "Textiles and Apparel",
                     "Agricultural Products",
                     "Mining and Metals",
-                    "Machinery"
+                    "Machinery",
                 ],
                 "special_programs": ["mfn_only"],
                 "tariff_details": {
                     "textiles": 3.1,
                     "agricultural": 3.1,
                     "mining": 3.1,
-                    "machinery": 0.0
+                    "machinery": 0.0,
                 },
                 "effective_date": "2024-01-01",
                 "source": "MFN Tariffs",
-                "confidence": "High - Official US Government Data"
+                "confidence": "High - Official US Government Data",
             },
             "Philippines": {
                 "average_tariff_rate": 3.1,  # Mostly MFN
@@ -663,18 +653,18 @@ class RealTariffDataSource:
                     "Textiles and Apparel",
                     "Electronics",
                     "Agricultural Products",
-                    "Machinery"
+                    "Machinery",
                 ],
                 "special_programs": ["mfn_only"],
                 "tariff_details": {
                     "textiles": 3.1,
                     "electronics": 0.0,
                     "agricultural": 3.1,
-                    "machinery": 0.0
+                    "machinery": 0.0,
                 },
                 "effective_date": "2024-01-01",
                 "source": "MFN Tariffs",
-                "confidence": "High - Official US Government Data"
+                "confidence": "High - Official US Government Data",
             },
             "Taiwan": {
                 "average_tariff_rate": 3.1,  # Mostly MFN
@@ -683,18 +673,18 @@ class RealTariffDataSource:
                     "Electronics and Technology",
                     "Machinery",
                     "Textiles and Apparel",
-                    "Automotive Parts"
+                    "Automotive Parts",
                 ],
                 "special_programs": ["mfn_only"],
                 "tariff_details": {
                     "electronics": 0.0,
                     "machinery": 0.0,
                     "textiles": 3.1,
-                    "automotive": 2.5
+                    "automotive": 2.5,
                 },
                 "effective_date": "2024-01-01",
                 "source": "MFN Tariffs",
-                "confidence": "High - Official US Government Data"
+                "confidence": "High - Official US Government Data",
             },
             "South Africa": {
                 "average_tariff_rate": 3.1,  # Mostly MFN
@@ -703,18 +693,18 @@ class RealTariffDataSource:
                     "Mining and Metals",
                     "Agricultural Products",
                     "Textiles",
-                    "Machinery"
+                    "Machinery",
                 ],
                 "special_programs": ["mfn_only"],
                 "tariff_details": {
                     "mining": 3.1,
                     "agricultural": 3.1,
                     "textiles": 3.1,
-                    "machinery": 0.0
+                    "machinery": 0.0,
                 },
                 "effective_date": "2024-01-01",
                 "source": "MFN Tariffs",
-                "confidence": "High - Official US Government Data"
+                "confidence": "High - Official US Government Data",
             },
             "Ukraine": {
                 "average_tariff_rate": 0.0,  # US supports Ukraine - preferential treatment
@@ -722,9 +712,9 @@ class RealTariffDataSource:
                 "preferential_rate": 0.0,
                 "affected_sectors": [
                     "Steel and Aluminum",
-                    "Agricultural Products", 
+                    "Agricultural Products",
                     "Textiles and Apparel",
-                    "Machinery"
+                    "Machinery",
                 ],
                 "special_programs": ["ukraine_support", "preferential_treatment"],
                 "tariff_details": {
@@ -732,21 +722,21 @@ class RealTariffDataSource:
                     "aluminum": 0.0,
                     "agricultural": 0.0,
                     "textiles": 0.0,
-                    "machinery": 0.0
+                    "machinery": 0.0,
                 },
                 "effective_date": "2024-01-01",
                 "source": "Ukraine Support Program - Preferential Treatment",
-                "confidence": "High - Official US Government Policy"
-            }
+                "confidence": "High - Official US Government Policy",
+            },
         }
-    
+
     def get_country_tariff_data(self, country_name: str) -> Dict[str, Any]:
         """
         Get comprehensive tariff data for a country
         Returns real data from authoritative sources
         """
         country_data = self.tariff_data.get(country_name, {})
-        
+
         if not country_data:
             return {
                 "country_name": country_name,
@@ -756,9 +746,9 @@ class RealTariffDataSource:
                 "last_updated": self.last_updated.isoformat(),
                 "data_source": "Real Tariff Data Source",
                 "confidence": "No Data Available",
-                "note": "Country not found in tariff database"
+                "note": "Country not found in tariff database",
             }
-        
+
         return {
             "country_name": country_name,
             "country_code": "",
@@ -768,81 +758,91 @@ class RealTariffDataSource:
             "recent_changes": [],
             "last_updated": self.last_updated.isoformat(),
             "data_source": country_data.get("source", "Real Tariff Data Source"),
-            "confidence": country_data.get("confidence", "High - Official US Government Data"),
+            "confidence": country_data.get(
+                "confidence", "High - Official US Government Data"
+            ),
             "tariff_details": country_data.get("tariff_details", {}),
             "base_mfn_rate": country_data.get("base_mfn_rate", 0.0),
             "special_rates": {
                 "section_301": country_data.get("section_301_rate", 0.0),
                 "section_232": country_data.get("section_232_rate", 0.0),
                 "reciprocal": country_data.get("reciprocal_rate", 0.0),
-                "additional": country_data.get("additional_sanctions", 0.0)
-            }
+                "additional": country_data.get("additional_sanctions", 0.0),
+            },
         }
-    
+
     def get_all_countries_tariff_data(self) -> Dict[str, Dict[str, Any]]:
         """
         Get tariff data for all countries
         Returns real data for all countries
         """
         all_countries = {}
-        
+
         for country in self.tariff_data.keys():
             all_countries[country] = self.get_country_tariff_data(country)
-        
+
         return all_countries
-    
+
     def get_country_average_tariff(self, country_name: str) -> Tuple[float, str, str]:
         """
         Get the average tariff rate for a country
         Returns (rate, source, confidence)
         """
         country_data = self.get_country_tariff_data(country_name)
-        
-        if "error" in country_data or country_data.get("confidence") == "No Data Available":
+
+        if (
+            "error" in country_data
+            or country_data.get("confidence") == "No Data Available"
+        ):
             return 0.0, "Real Tariff Data Source", "No Data"
-        
+
         tariff_rate = country_data.get("average_tariff_rate", 0.0)
         source = country_data.get("data_source", "Real Tariff Data Source")
         confidence = country_data.get("confidence", "Unknown")
-        
+
         return tariff_rate, source, confidence
-    
+
     def get_affected_sectors(self, country_name: str) -> List[str]:
         """
         Get affected sectors for a country
         Returns real data from authoritative sources
         """
         country_data = self.get_country_tariff_data(country_name)
-        
+
         if "error" in country_data:
             return []
-        
+
         return country_data.get("affected_sectors", [])
-    
+
     def get_tariff_summary(self) -> Dict[str, Any]:
         """
         Get a comprehensive tariff summary for all countries
         Returns real data with no hardcoded values
         """
         all_countries = self.get_all_countries_tariff_data()
-        
+
         # Calculate summary statistics
         total_countries = len(all_countries)
-        countries_with_tariffs = sum(1 for data in all_countries.values() 
-                                   if data.get("average_tariff_rate", 0) > 0)
-        
+        countries_with_tariffs = sum(
+            1
+            for data in all_countries.values()
+            if data.get("average_tariff_rate", 0) > 0
+        )
+
         # Calculate average tariff rates
-        tariff_rates = [data.get("average_tariff_rate", 0) 
-                       for data in all_countries.values() 
-                       if data.get("average_tariff_rate", 0) > 0]
-        
+        tariff_rates = [
+            data.get("average_tariff_rate", 0)
+            for data in all_countries.values()
+            if data.get("average_tariff_rate", 0) > 0
+        ]
+
         avg_tariff_rate = sum(tariff_rates) / len(tariff_rates) if tariff_rates else 0
-        
+
         # Get special programs
         special_programs = set()
         for data in all_countries.values():
             special_programs.update(data.get("special_programs", []))
-        
+
         return {
             "total_countries": total_countries,
             "countries_with_tariffs": countries_with_tariffs,
@@ -851,9 +851,9 @@ class RealTariffDataSource:
             "last_updated": self.last_updated.isoformat(),
             "data_source": "Real Tariff Data Source - Authoritative US Government Data",
             "confidence": "High - Official US Government Data",
-            "countries": all_countries
+            "countries": all_countries,
         }
-    
+
     def get_special_duty_programs(self) -> Dict[str, Any]:
         """
         Get information about special duty programs
@@ -866,25 +866,42 @@ class RealTariffDataSource:
                 "rate": 25.0,
                 "affected_countries": ["China", "Hong Kong", "Macau"],
                 "effective_date": "2018-07-06",
-                "source": "USTR Executive Order"
+                "source": "USTR Executive Order",
             },
             "section_232": {
                 "name": "Section 232 - Steel and Aluminum",
                 "description": "National security tariffs on steel and aluminum imports",
                 "steel_rate": 25.0,
                 "aluminum_rate": 10.0,
-                "affected_countries": ["China", "Russia", "Ukraine", "Turkey", "EU", "Canada", "Mexico"],
+                "affected_countries": [
+                    "China",
+                    "Russia",
+                    "Ukraine",
+                    "Turkey",
+                    "EU",
+                    "Canada",
+                    "Mexico",
+                ],
                 "effective_date": "2018-03-23",
-                "source": "Commerce Department + Executive Order"
+                "source": "Commerce Department + Executive Order",
             },
             "reciprocal_tariffs": {
                 "name": "Reciprocal Tariffs",
                 "description": "Tariffs imposed in response to foreign tariffs on US exports",
                 "rate": 15.0,
-                "affected_countries": ["EU", "Germany", "France", "Italy", "Spain", "Netherlands", "Belgium", "UK"],
+                "affected_countries": [
+                    "EU",
+                    "Germany",
+                    "France",
+                    "Italy",
+                    "Spain",
+                    "Netherlands",
+                    "Belgium",
+                    "UK",
+                ],
                 "effective_date": "2018-06-01",
-                "source": "Executive Order + USTR"
-            }
+                "source": "Executive Order + USTR",
+            },
         }
 
 
@@ -934,24 +951,25 @@ def test_real_data_source():
     """Test the real tariff data source"""
     try:
         print("🧪 Testing Real Tariff Data Source...")
-        
+
         # Test getting China data
         china_data = get_real_country_tariff("China")
         print(f"China tariff data: {china_data}")
-        
+
         # Test getting all countries
         all_countries = get_real_all_countries()
         print(f"Total countries: {len(all_countries)}")
-        
+
         # Test getting tariff summary
         summary = get_real_tariff_summary()
         print(f"Tariff summary: {summary}")
-        
+
         print("✅ Real data source test completed successfully")
-        
+
     except Exception as e:
         print(f"❌ Test failed: {e}")
         import traceback
+
         traceback.print_exc()
 
 
