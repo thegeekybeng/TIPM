@@ -198,7 +198,7 @@ export class WorkingTariffModel {
   async getGlobalOverview(): Promise<GlobalTariffOverview> {
     try {
       const countries = await this.dataManager.getAvailableCountries();
-      const activeSources = await this.dataManager.getActiveDataSources();
+      const activeSources = await this.dataManager.getActiveSources();
       
       let totalCountries = countries.length;
       let countriesWithData = 0;
