@@ -8,7 +8,7 @@ import {
   WorldBankData, 
   AtlanticCouncilData, 
   USTRData 
-} from '@/lib/working-data-connectors';
+} from '../lib/working-data-connectors';
 
 export interface CountryTariffProfile {
   countryCode: string;
