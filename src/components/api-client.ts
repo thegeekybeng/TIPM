@@ -1,5 +1,5 @@
   // TIPM API Client - Connects React frontend to FastAPI backend
-  import { config, validateConfig } from '@/lib/config';
+  import { config, validateConfig } from '../lib/config';
   
   // Validate configuration on import
   validateConfig();
