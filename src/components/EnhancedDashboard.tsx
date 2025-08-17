@@ -80,12 +80,28 @@ export const EnhancedDashboard: React.FC = () => {
         setCountries(response);
       } else {
         // Fallback countries for display
-        setCountries(['China', 'European Union', 'Japan', 'South Korea', 'India', 'Mexico', 'Canada']);
+        setCountries([
+          "China",
+          "European Union",
+          "Japan",
+          "South Korea",
+          "India",
+          "Mexico",
+          "Canada",
+        ]);
       }
     } catch (err) {
       setError("Failed to load countries - using fallback data");
       // Fallback countries for display
-      setCountries(['China', 'European Union', 'Japan', 'South Korea', 'India', 'Mexico', 'Canada']);
+      setCountries([
+        "China",
+        "European Union",
+        "Japan",
+        "South Korea",
+        "India",
+        "Mexico",
+        "Canada",
+      ]);
       console.error("Error loading countries:", err);
     } finally {
       setLoading(false);
