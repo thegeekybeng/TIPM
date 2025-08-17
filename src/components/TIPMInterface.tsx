@@ -43,6 +43,7 @@ interface AnalysisResult {
   risk_factors: string[];
   recommendations: string[];
   data_sources: string[];
+  trade_volume?: number; // Added trade_volume to the interface
 }
 
 const TIPMInterface: React.FC = () => {
@@ -96,9 +97,11 @@ const TIPMInterface: React.FC = () => {
 
       console.log("✅ TIPM System initialized successfully");
       console.log(`📊 Available countries: ${countries.length}`);
-      console.log(
-        `🔗 Active data sources: ${sources.filter((s: WorkingDataSource) => s.status === "ACTIVE").length}/${sources.length}`
-      );
+      console.log(`🔗 Active data sources: ${sources.filter((s: WorkingDataSource) => s.status === 'ACTIVE').length}/${sources.length}`);
+      
+      // Debug: Log first few countries to verify data
+      console.log('🔍 Sample countries:', countries.slice(0, 10));
+      console.log('🔍 Data sources:', sources.map(s => `${s.name}: ${s.status}`));
     } catch (err) {
       console.error("❌ Error initializing TIPM System:", err);
       setError(
@@ -138,6 +141,7 @@ const TIPMInterface: React.FC = () => {
         risk_factors: analysis.riskFactors,
         recommendations: analysis.recommendations,
         data_sources: analysis.country.dataSources,
+        trade_volume: analysis.country.tradeVolume, // Assign trade_volume
       };
 
       setAnalysisResult(result);
@@ -385,15 +389,14 @@ const TIPMInterface: React.FC = () => {
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="">Choose a country...</option>
-              {availableCountries.slice(0, 50).map((countryCode) => (
+              {availableCountries.map((countryCode) => (
                 <option key={countryCode} value={countryCode}>
                   {countryCode}
                 </option>
               ))}
             </select>
             <p className="text-sm text-gray-500 mt-2">
-              Showing first 50 countries. {availableCountries.length} total
-              countries available.
+              {availableCountries.length} countries available from World Bank database.
             </p>
           </div>
         </div>
@@ -446,7 +449,7 @@ const TIPMInterface: React.FC = () => {
                 Analysis Results for {analysisResult.country}
               </h3>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                 <div>
                   <h4 className="font-medium text-gray-700 mb-2">
                     Tariff Impact
@@ -464,6 +467,15 @@ const TIPMInterface: React.FC = () => {
                     className={`px-3 py-1 rounded-full text-sm font-medium ${getImpactColor(analysisResult.risk_level)}`}
                   >
                     {analysisResult.risk_level}
+                  </span>
+                </div>
+
+                <div>
+                  <h4 className="font-medium text-gray-700 mb-2">
+                    Trade Volume
+                  </h4>
+                  <span className="px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
+                    {analysisResult.trade_volume ? formatPercentage(analysisResult.trade_volume) : 'N/A'}
                   </span>
                 </div>
 

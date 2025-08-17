@@ -22,6 +22,7 @@ export interface CountryTariffProfile {
   currentGDP: number;
   gdpGrowth: number;
   tradeIntensity: number;
+  tradeVolume: number;
   tariffRate: number;
   tariffImpact: 'HIGH' | 'MEDIUM' | 'LOW';
   
@@ -118,6 +119,7 @@ export class WorkingTariffModel {
       const currentGDP = this.calculateCurrentGDP(rawData.gdp);
       const gdpGrowth = this.calculateGDPGrowth(rawData.gdp);
       const tradeIntensity = this.calculateTradeIntensity(rawData.trade);
+      const tradeVolume = this.calculateTradeVolume(rawData.trade, currentGDP);
       const tariffRate = rawData.tariffs?.tariffRate || 0;
       const tariffImpact = this.calculateTariffImpact(tariffRate, tradeIntensity);
       
@@ -137,6 +139,7 @@ export class WorkingTariffModel {
         currentGDP,
         gdpGrowth,
         tradeIntensity,
+        tradeVolume,
         tariffRate,
         tariffImpact,
         dataConfidence,
@@ -311,6 +314,15 @@ export class WorkingTariffModel {
     if (!validValues.length) return 0;
     
     return validValues.reduce((sum, val) => sum + val, 0) / validValues.length;
+  }
+
+  private calculateTradeVolume(tradeData: WorldBankData[], currentGDP: number): number {
+    if (!tradeData.length) return 0;
+
+    // Calculate total trade volume as a percentage of GDP
+    const totalTradeValue = tradeData.reduce((sum, item) => sum + item.value, 0);
+    if (currentGDP === 0) return 0;
+    return (totalTradeValue / currentGDP) * 100;
   }
 
   private calculateTariffImpact(tariffRate: number, tradeIntensity: number): 'HIGH' | 'MEDIUM' | 'LOW' {
