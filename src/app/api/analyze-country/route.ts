@@ -5,7 +5,7 @@ export async function POST(request: NextRequest) {
     const { country, tariff_rate } = await request.json();
 
     // Call your Python backend (you'll need to start it on a different port)
-    const pythonBackendUrl = 'http://localhost:7861'; // Your Gradio app port
+    const pythonBackendUrl = 'https://tipm-app.onrender.com';
     
     try {
       // Try to call the Python backend first
