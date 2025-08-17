@@ -347,8 +347,8 @@ async def analyze_country(request: CountryAnalysisRequest):
 
     # GDP impact: Calculate as percentage of GDP affected by trade disruption
     gdp_impact_pct = (
-        trade_disruption_usd / (country_info.gdp_billions * 1000000000)
-    ) * 100
+        trade_disruption_usd / (max(country_info.gdp_billions, 0.001) * 1000000000)
+    ) * 100 if country_info.gdp_billions > 0 else 0.0
 
     industry_severity = (
         "Critical"
