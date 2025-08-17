@@ -671,6 +671,7 @@ async def get_country_gdp(country_name: str) -> float:
             "South Africa": 419.0,
             "Hong Kong": 365.0,
             "Macau": 55.0,
+            "Ukraine": 200.0,
         }
         return gdp_data.get(country_name, 500.0)  # Default 500B
     except Exception as e:
@@ -712,6 +713,7 @@ async def get_country_trade_volume(country_name: str) -> float:
             "South Africa": 98000.0,
             "Hong Kong": 1113000.0,
             "Macau": 10000.0,
+            "Ukraine": 35000.0,
         }
         return trade_data.get(country_name, 50000.0)  # Default 50B
     except Exception as e:
@@ -840,6 +842,7 @@ async def get_country_trade_volume(country_name: str) -> float:
         "Malaysia": 65000.0,
         "Singapore": 75000.0,
         "Indonesia": 35000.0,
+        "Ukraine": 5000.0,
     }
     return us_census_trade_estimates.get(country_name, 1000.0)
 
