@@ -101,6 +101,7 @@ from authoritative_tariff_parser import (
     get_tariff_summary,
 )
 import atlantic_council_fallback
+from correct_tariff_calculator import get_correct_country_rate, get_correct_affected_sectors
 
 
 # Placeholder functions for compatibility
@@ -283,69 +284,17 @@ async def get_available_countries():
 @app.get("/api/countries/{country_name}", response_model=CountryInfo)
 async def get_country_info(country_name: str):
     """Get comprehensive information about a specific country"""
-    # Get verified tariff data for the country from public records
-    country_tariffs = get_country_tariffs(country_name)
-
-    if country_tariffs:
-        # Calculate average tariff rate from real data
-        active_tariffs = []
-        for sector, products in country_tariffs.items():
-            for product in products:
-                if (
-                    product.get("total_duty", 0) > 0
-                ):  # Consider any tariff > 0 as active
-                    active_tariffs.append(product)
-
-        if active_tariffs:
-            real_tariff_rate = sum(
-                product.get("total_duty", 0) for product in active_tariffs
-            ) / len(active_tariffs)
-        else:
-            real_tariff_rate = 0.0
-
-        affected_sectors = [
-            sector
-            for sector, products in country_tariffs.items()
-            if any(product.get("total_duty", 0) > 0 for product in products)
-        ]
-        data_confidence = "High - Real US tariff data from USTR/USITC"
-        data_sources = ["USTR", "USITC", "Federal Register", "CBP", "WTO"]
+    # Use correct tariff calculator (replaces broken calculation system)
+    real_tariff_rate, data_source, data_confidence = get_correct_country_rate(country_name)
+    affected_sectors = get_correct_affected_sectors(country_name)
+    
+    # Set data sources based on the source
+    if "USTR Excel" in data_source:
+        data_sources = ["USTR", "US Trade Representative", "Federal Register"]
+    elif "Atlantic Council" in data_source:
+        data_sources = ["Atlantic Council", "Trump Administration"]
     else:
-        # Try Atlantic Council fallback data
-        try:
-            atlantic_tariffs = atlantic_council_fallback.get_country_tariffs(country_name)
-            if atlantic_tariffs:
-                # Calculate average from Atlantic Council data
-                total_rate = 0
-                count = 0
-                for sector_data in atlantic_tariffs.values():
-                    if isinstance(sector_data, dict) and sector_data.get('status') == 'Active':
-                        rate = sector_data.get('tariff_rate', 0)
-                        if rate > 0:
-                            total_rate += rate
-                            count += 1
-                
-                if count > 0:
-                    real_tariff_rate = total_rate / count
-                    affected_sectors = list(atlantic_tariffs.keys())
-                    data_confidence = "Medium - Atlantic Council tariff data"
-                    data_sources = ["Atlantic Council", "Trump Administration"]
-                else:
-                    real_tariff_rate = 0.0
-                    affected_sectors = []
-                    data_confidence = "Medium - No US tariffs currently imposed"
-                    data_sources = ["USTR Database"]
-            else:
-                real_tariff_rate = 0.0
-                affected_sectors = []
-                data_confidence = "Medium - No US tariffs currently imposed"
-                data_sources = ["USTR Database"]
-        except Exception as e:
-            logger.warning(f"Atlantic Council fallback failed for {country_name}: {e}")
-            real_tariff_rate = 0.0
-            affected_sectors = []
-            data_confidence = "Medium - No US tariffs currently imposed"
-            data_sources = ["USTR Database"]
+        data_sources = ["USTR Database"]
 
     return CountryInfo(
         name=country_name,
