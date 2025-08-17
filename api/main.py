@@ -811,6 +811,89 @@ def get_global_groups(country_name: str) -> List[str]:
     return groups.get(country_name, [])
 
 
+async def get_country_gdp(country_name: str) -> float:
+    """Get GDP data for a country (placeholder for now)"""
+    try:
+        # GDP data in billions USD (estimated)
+        gdp_data = {
+            "China": 17734.0,
+            "United States": 23315.0,
+            "Japan": 4940.0,
+            "Germany": 4259.0,
+            "India": 3176.0,
+            "United Kingdom": 3131.0,
+            "France": 2938.0,
+            "Italy": 2106.0,
+            "Brazil": 1869.0,
+            "Canada": 1988.0,
+            "Russia": 1829.0,
+            "South Korea": 1811.0,
+            "Spain": 1394.0,
+            "Mexico": 1289.0,
+            "Indonesia": 1319.0,
+            "Netherlands": 914.0,
+            "Saudi Arabia": 833.0,
+            "Turkey": 761.0,
+            "Taiwan": 669.0,
+            "Belgium": 531.0,
+            "Australia": 1553.0,
+            "Switzerland": 812.0,
+            "Thailand": 544.0,
+            "Malaysia": 401.0,
+            "Singapore": 372.0,
+            "Philippines": 394.0,
+            "Vietnam": 409.0,
+            "South Africa": 419.0,
+            "Hong Kong": 365.0,
+            "Macau": 55.0
+        }
+        return gdp_data.get(country_name, 500.0)  # Default 500B
+    except Exception as e:
+        logger.error(f"Error getting GDP for {country_name}: {e}")
+        return 500.0
+
+
+async def get_country_trade_volume(country_name: str) -> float:
+    """Get trade volume data for a country (placeholder for now)"""
+    try:
+        # Trade volume in millions USD (estimated)
+        trade_data = {
+            "China": 4616000.0,
+            "United States": 3960000.0,
+            "Germany": 1776000.0,
+            "Japan": 1367000.0,
+            "United Kingdom": 1095000.0,
+            "France": 1055000.0,
+            "Netherlands": 883000.0,
+            "Italy": 714000.0,
+            "South Korea": 644000.0,
+            "Canada": 598000.0,
+            "India": 572000.0,
+            "Mexico": 491000.0,
+            "Spain": 478000.0,
+            "Belgium": 469000.0,
+            "Russia": 447000.0,
+            "Singapore": 425000.0,
+            "Switzerland": 414000.0,
+            "Taiwan": 404000.0,
+            "Turkey": 378000.0,
+            "Australia": 324000.0,
+            "Thailand": 296000.0,
+            "Malaysia": 278000.0,
+            "Brazil": 280000.0,
+            "Indonesia": 231000.0,
+            "Vietnam": 229000.0,
+            "Philippines": 97000.0,
+            "South Africa": 98000.0,
+            "Hong Kong": 1113000.0,
+            "Macau": 10000.0
+        }
+        return trade_data.get(country_name, 50000.0)  # Default 50B
+    except Exception as e:
+        logger.error(f"Error getting trade volume for {country_name}: {e}")
+        return 50000.0
+
+
 def is_emerging_market(country_name: str) -> bool:
     emerging_markets = [
         "China",
